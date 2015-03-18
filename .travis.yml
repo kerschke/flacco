@@ -17,16 +17,19 @@ before_install:
 
 install:
   - ./travis-tool.sh aptget_install r-cran-rjava
-  - sudo R CMD javareconf
+  - ./travis-tool.sh github_package jimhester/covr
+  - ./travis-tool.sh github_package hadley/testthat
+  - ./travis-tool.sh github_package hadley/assertthat
   - ./travis-tool.sh github_package berndbischl/BBmisc
   - ./travis-tool.sh install_deps
 
+script: ./travis-tool.sh run_tests
 
-script: travis_wait ./travis-tool.sh run_tests
+after_success:
+  - Rscript -e 'library(covr);coveralls()'
 
-on_failure:
+after_failure:
   - ./travis-tool.sh dump_logs
-
 
 notifications:
   email:
