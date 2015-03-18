@@ -1,2 +1,2 @@
-# cola
-Continuous Optimization Problem based Landscape Analysis
+# flacco
+Feature-based Landscape Analysis of Continuous and Constraint Optimization Problems
