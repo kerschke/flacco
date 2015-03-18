@@ -13,21 +13,23 @@ Authors@R: c(person("Pascal", "Kerschke", role = c("aut", "cre"),
 Maintainer: Pascal Kerschke <kerschke@uni-muenster.de>
 Depends:
     R (>= 3.0.0),
-    BBmisc (>= 1.9),
-    checkmate (>= 1.5.1)
+    BBmisc,
+    checkmate
 Suggests:
-    plyr (>= 1.8),
-    devtools (>= 1.5),
-    numDeriv (>= 2012.9),
-    e1071 (>= 1.6),
-    expm (>= 0.99),
-    lhs (>= 0.1),
-    Matrix (>= 1.1),
-    testthat (>= 0.8.1),
-    mlbench (>= 2.1-1),
-    shape (>= 1.4.2),
-    mlr (>= 2.3),
-    mda, MASS
+    devtools,
+    e1071,
+    expm,
+    lhs,
+    MASS,
+    Matrix,
+    mda, 
+    mlbench,
+    mlr,
+    numDeriv,
+    plyr,
+    rpart,
+    shape,
+    testthat
 License: BSD_3_clause + file LICENSE
 URL: https://github.com/kerschke/flacco
 BugReports: https://github.com/kerschke/flacco/issues
