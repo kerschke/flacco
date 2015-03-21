@@ -55,48 +55,39 @@ create <- function (feat.object, approach) {
   fun = extractObjective(feat.object)
   
 
-  if (approach %in% c("min", "mean")) { # handle min, mean different from near
-    # initialise list of values per cell
-    valuesPerCell  <- vector( "list", prod(feat.object$blocks) ) # [ orig: cell(prod(divisions), 1) ]
-    
-    rowNum <- 0
-    apply(var, 1, function(row) {
-      rowNum <<- rowNum + 1
-      # puts all function values (from fun) into appropriate positions in "valuesPerCell" list
-      cells = ztocell(xtoz(  row , feat.object$cell.size, feat.object$lower), feat.object$blocks)
-      valuesPerCell[[cells]] <<- c( valuesPerCell[[cells]], fun[rowNum] ) # append function value to list [ orig: [z{cells}; fx(i, :)]; ]
-    })
-    
-    # fe: either min or mean function evaluation of each cell, depending on mode.
-    #     Inf, iff there are no values in cell.
-    fe <- sapply(valuesPerCell, function(values) {
-      if (is.null(values)) {
-        return ( Inf )
-      } else {
-        if (approach == "min") {
-          return ( min(values) )
-        } else { #mean
-          return ( mean(values) )
-        }
+  if (approach == "min") { 
+    fe <- sapply(seq_len( prod(feat.object$blocks) ), function (i) {
+      if (length(which(feat.object$init.grid$cell.ID == i)) == 0) {
+        return(Inf)
       }
+      min(feat.object$init.grid$y[feat.object$init.grid$cell.ID == i])
     })
+    
+  } else if(approach == "mean") {
+    fe <- sapply(seq_len( prod(feat.object$blocks) ), function (i) {
+      if (length(which(feat.object$init.grid$cell.ID == i)) == 0) {
+        return(Inf)
+      }
+      mean(feat.object$init.grid$y[feat.object$init.grid$cell.ID == i])
+    })
+    
   } else { # approach == near
     nearest = findNearestPrototype(feat.object)
     fe = vector()
     fe[nearest$represented.cell] = nearest[[feat.object$objective.name]]
+    
   }
   
   fromcell <- c() # fromcell
   tocell <- c() # tocell
   
   probability <- na.omit( unlist(
-    lapply(seq_len( prod(feat.object$blocks) ), FUN=function(i) { # length of valuesPerCell is prod(divisions) by definition. Somehow, seq_len(valuesPerCell) won't work (Error in seq_len(valuesPerCell): argument must be coercible to non-negative integer)
+    lapply(seq_len( prod(feat.object$blocks) ), FUN=function(i) { # length of valuesPerCell is prod(divisions) by definition.
       if ( fe[i] == Inf ) {
         return (NA)
       }
       
       
-      #ev <- 0 # TODO better name? (or not, as this is not used)
       noBetterCells <- TRUE 
       coordinate <- celltoz(i, feat.object$blocks)
       
