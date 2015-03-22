@@ -127,11 +127,6 @@ evaluateGCM = function(fe, cf, # fe and cf are specific to the mode
   # Assume the idea is canonicalForm^(infinity). 
   Q = expm::"%^%"(canonicalForm, 64) # [ orig:  Q = Cf^50; ]
   
-  #Indicators (Preparation f. output statements at the end)
-  ratioUncertainBoxes = 0
-  bestCellProbability = 0
-  
-  
   #Write the matrix of closedClass columns of Q    
   Fm = as.matrix(Q[ , seqClosedClasses])
   
@@ -179,23 +174,20 @@ evaluateGCM = function(fe, cf, # fe and cf are specific to the mode
   diffcell = prod(feat.object$blocks)-length(pcell)-length(tcell)
   
   
-  counterx = 0;
   #Compute number of uncertain boxes
-  for (i in seq_len( nrow(Fm) )) { # [ orig: for iter2 = 1:size(Fm,1) ]
-    if (nnz(Fm[i, ]) > 1) {
-      counterx = counterx + 1
-    }
-  }
-  ratioUncertainBoxes = ratioUncertainBoxes + counterx/prod(feat.object$blocks)
+  counterx = sum(
+    sapply(seq_len( nrow(Fm) ), FUN=function(i) {
+      nnz(Fm[i, ]) > 1
+    }))
+  ratioUncertainBoxes = counterx/prod(feat.object$blocks)
   
   #Compute the probability to find each periodic cell
-  for (iter2 in seqClosedClasses) {
-    idx = which(Fm[iter2, ] != 0)
-    tmp = 0;
-    for (iter3 in idx) {
-      tmp = tmp + sum(Fm[ ,iter3])/prod(feat.object$blocks);
-    }
-    sBoA[iter2] = tmp;
+  for (closed in seqClosedClasses) {
+    idx = which(Fm[closed, ] != 0)
+    tmp = sum(sapply(idx, FUN=function(i) {
+      sum(Fm[ ,i]) / prod(feat.object$blocks);
+    }))
+    sBoA[closed] = tmp;
   }
   
   hi = calcBasins(Fm)$hi
@@ -218,7 +210,7 @@ evaluateGCM = function(fe, cf, # fe and cf are specific to the mode
   }
   
   #Compute the probability to find the best cell found
-  bestCellProbability = bestCellProbability + sBoA[
+  bestCellProbability = sBoA[
     min( # adds determinism: In case multiple cells evaluate to the minimum value, choose the first one.
       which(
         fe[ indexPermutation[seqClosedClasses] ] == min( fe[ indexPermutation[seqClosedClasses] ])
@@ -232,7 +224,7 @@ evaluateGCM = function(fe, cf, # fe and cf are specific to the mode
                prob_best = bestCellProbability,     # probability to find the best
                pcell = pcell, tcell = tcell,        # lists of cells (periodic / transient)
                diffcell = diffcell,                 # number of cells in neither list
-               std_bs = std_bs,                       # loc / disp of basin sizes
+               std_bs = std_bs,                     # loc / disp of basin sizes
                min_bs = min_bs, 
                mean_bs = mean_bs, 
                max_bs = max_bs
