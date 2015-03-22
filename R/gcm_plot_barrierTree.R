@@ -16,16 +16,14 @@ plotBarrierTree3d <- function(z2, pred2, w2, root2, fe, divisions, levels,
   
   Fe <- matrix(nrow=divisions[1], ncol = divisions[2])
   
-  coords <- sapply(1:length(fe), FUN = function(i) {
+  sapply(1:length(fe), FUN = function(i) {
     coord <- celltoz(i, divisions)
     if (fe[i] != Inf) {
       Fe[coord[1], coord[2]] <<- fe[i]
     } else {
       Fe[coord[1], coord[2]] <<- NA
     }
-    coord
   })
-  cell2fe <- data.frame(cellX = coords[1, ], cellY = coords[2, ], fe = fe)
 
   persp3d <- persp(1:divisions[2], 1:divisions[1], t(Fe),
                    theta=330, phi=15, border="grey",
@@ -96,9 +94,7 @@ plotBarrierTreePCA <- function(z2, pred2, w2, root2, fe, divisions) {
   #Fe <- matrix(nrow=divisions[1], ncol = divisions[2])
   
   coords <- sapply(1:length(fe), FUN = function(i) {
-    coord <- celltoz(i, divisions)
-    #Fe[coord[1], coord[2]] <<- fe[i]
-    #coord
+    celltoz(i, divisions)
   })
   cell2fe <- data.frame(cellX = coords[1, ], cellY = coords[2, ], fe = fe)
   

@@ -51,10 +51,6 @@ create <- function (feat.object, approach) {
   assertClass(feat.object, "FeatureObject")
   assertChoice(approach, c("min", "mean", "near"))
   
-  var = extractFeatures(feat.object)
-  fun = extractObjective(feat.object)
-  
-
   if (approach == "min") { 
     fe <- sapply(seq_len( prod(feat.object$blocks) ), function (i) {
       if (length(which(feat.object$init.grid$cell.ID == i)) == 0) {
