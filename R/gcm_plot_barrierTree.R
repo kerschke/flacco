@@ -1,8 +1,8 @@
 plotBarrierTree3d <- function(z2, pred2, w2, root2, fe, divisions, levels,
                               custom.colors) {
   orig.margins <- par("mar")
-  par(mar=c(0,1,0,0))
   on.exit ( par(mar=orig.margins) )
+  par(mar=c(0,1,0,0))
   
   # prepare colour palette
   palette <- c("lightgrey", topo.colors(levels))

@@ -3,8 +3,8 @@
 # [orig: function [pcells, nattr, punc] = plotgcm(Fm, R, N, h, lb, ub, fn, iterx, fe) {]
 plotgcm <- function(Fm, indexPermutation, feat.object, plot.gcm.colors) {
   orig.margins <- par("mar")
-  par(mar=c(3,3,3,3))
   on.exit ( par(mar=orig.margins) )
+  par(mar=c(3,3,3,3))
   
   divisions = feat.object$blocks
   assert(length(divisions) == 2)
