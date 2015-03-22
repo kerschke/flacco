@@ -235,6 +235,37 @@ calculateInformationContent = function(feat.object, control = list()) {
       abline(h=M[ max( which(M > 0.5*Mzero) ) ], lty = 3)
     } 
   }
+  
+  #draw legend
+  if (debug.plot) {
+    #lines
+    legend.descr  = c(expression(H(epsilon)))
+    legend.points = c(NA)
+    legend.lines  = c(1)
+    
+    if (calculate.partial.ic) {
+      legend.descr  = c(legend.descr,  expression(M(epsilon)))
+      legend.points = c(legend.points, NA)
+      legend.lines  = c(legend.lines,  2)
+    }
+    
+    #points
+    legend.descr  = c(legend.descr,  expression(H[max]), expression(epsilon[s]))
+    legend.points = c(legend.points, 1, 0)
+    legend.lines  = c(legend.lines,  NA, NA)
+    
+    if (calculate.partial.ic) {
+      legend.descr  = c(legend.descr,  expression(M[0]), expression(epsilon[0.5]))
+      legend.points = c(legend.points, 5, 6)
+      legend.lines  = c(legend.lines,  NA, NA)
+    }
+    
+    
+    legend("topright",
+           legend = legend.descr,
+           pch    = legend.points,
+           lty    = legend.lines)
+  }
 
   list(
     ic.Hmax = Hmax,           #maximum information content
