@@ -50,13 +50,15 @@ convertInitDesignToGrid = function(init, lower, upper, blocks) {
     blocks = rep(blocks, dims)
   }
   block.widths = (upper - lower) / blocks
+  cp = cumprod(c(1L, blocks))
   init$cell.ID = sapply(1L:nrow(init), function(init.row) {
-    x = 0L
-    for (dim in 1L:dims) {
-      x = x + cumprod(c(1, blocks))[dim] * 
-        floor((init[init.row, dim] - lower[dim]) / block.widths[dim])
-    }
-    return(x)
+    z = as.numeric(init[init.row, 1L:dims])
+    cell.ID = sapply(1L:dims, function(dim) {
+      cp[dim] * floor((z[dim] - lower[dim]) / block.widths[dim])
+    })
+    ## if observation is on upper limit of a dimension,
+    ## it needs to be adjusted
+    sum(cell.ID - cp[seq_along(blocks)] * (z == upper))
   })
   # adjust the range to 1 to prod(blocks) instead of 0 to prod(blocks) - 1
   init$cell.ID = init$cell.ID + 1L
