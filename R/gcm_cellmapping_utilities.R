@@ -2,9 +2,8 @@
 
 # (origin: findneighbours.m)
 # returns possible coordinates of neighbours of a cell, one coordinate per row.
-## FIXME: check, how reasonable it is that a cell is a neighbour of itself..
-## (Fix necessary? Will be eliminated in next step (see "isNeighbourInvalid" below),
-## together with neighbours outside the bounds)
+## A cell is considered a neighbour of itself, but this is eliminated in next step
+## (see "isNeighbourInvalid" below), together with neighbours outside the bounds.
 
 ## coordinate: vector, defining the cell by its block-dimensions
 ## nsize: ???
