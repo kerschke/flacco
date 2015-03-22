@@ -22,7 +22,7 @@ findAllNeighbours = function (nsize, coord, cellSize) {
 ## currentCoord: Coordinate of the current cell
 ## neighbourCoord: Coordinate of the neighbour
 ## divisions: Given GCM divisions
-isNeighbourInvalid <- function(currentCoord, neighbourCoord, divisions) {
+isNeighbourInvalid = function(currentCoord, neighbourCoord, divisions) {
   any(neighbourCoord <= 0) || 
     any( neighbourCoord > divisions ) ||
     all(neighbourCoord == currentCoord)
@@ -55,6 +55,6 @@ celltoz = function (cell, divisions) {
 }
 
 ## computes the center point of a given cell coordinate z
-ztox <- function(z, cellSize, lowerBounds) {
+ztox = function(z, cellSize, lowerBounds) {
   return (lowerBounds + ( cellSize * z ) - (cellSize/2))
 }

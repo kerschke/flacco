@@ -1,22 +1,22 @@
 # ( origins: plotgcm.m, plot2.m )
 
 # [orig: function [pcells, nattr, punc] = plotgcm(Fm, R, N, h, lb, ub, fn, iterx, fe) {]
-plotgcm <- function(Fm, indexPermutation, feat.object, plot.gcm.colors) {
-  orig.margins <- par("mar")
+plotgcm = function(Fm, indexPermutation, feat.object, plot.gcm.colors) {
+  orig.margins = par("mar")
   on.exit ( par(mar=orig.margins) )
   par(mar=c(3,3,3,3))
   
   divisions = feat.object$blocks
   assert(length(divisions) == 2)
   
-  attractors <- seq_len(ncol(Fm))
-  colors <- matrix(nrow=divisions[1], ncol=divisions[2])
+  attractors = seq_len(ncol(Fm))
+  colors = matrix(nrow=divisions[1], ncol=divisions[2])
   
   # To how many basins of attraction do cells belong?
-  belongsTo <- rowSums(Fm != 0)
+  belongsTo = rowSums(Fm != 0)
   
   # cells belonging to more than one basin of attraction => col #1
-  colors[ indexPermutation[belongsTo > 1] ] <- 1
+  colors[ indexPermutation[belongsTo > 1] ] = 1
   
   # cells belonging to exactly one basin of attraction (but which one?)
   #  => col #2+i
@@ -28,25 +28,25 @@ plotgcm <- function(Fm, indexPermutation, feat.object, plot.gcm.colors) {
   })
   
   # attractors (those cells which belong to themselves) => col #2
-  colors[ indexPermutation[attractors] ] <- 2
+  colors[ indexPermutation[attractors] ] = 2
   
-  arrows <- NULL  # will be a matrix with 4 rows and one column per arrow
+  arrows = NULL  # will be a matrix with 4 rows and one column per arrow
   for(toID in attractors) {
     basincoord = celltoz( indexPermutation[toID], divisions )
     
-    attracted <- which(Fm[, toID] != 0)
+    attracted = which(Fm[, toID] != 0)
     # remove itself (would result in vector of length 0, which raises warnings)
-    attracted <- attracted[-(attracted == toID)]
+    attracted = attracted[-(attracted == toID)]
     if(length(attracted) == 0) {
       next;
     }
     
-    arrows.toID <- sapply (attracted, FUN=function(fromID) {
-      fromcoord <- celltoz( indexPermutation[fromID], divisions )
+    arrows.toID = sapply (attracted, FUN=function(fromID) {
+      fromcoord = celltoz( indexPermutation[fromID], divisions )
       
-      components <- basincoord-fromcoord
-      components.norm <- components/sqrt(sum(components^2))
-      components.weighted <- components.norm * Fm[fromID, toID]
+      components = basincoord-fromcoord
+      components.norm = components/sqrt(sum(components^2))
+      components.weighted = components.norm * Fm[fromID, toID]
       
       return(
         c(fromcoord,
@@ -55,20 +55,20 @@ plotgcm <- function(Fm, indexPermutation, feat.object, plot.gcm.colors) {
     })
     
     if (is.null(arrows)) {
-      arrows <- arrows.toID
+      arrows = arrows.toID
     } else {
-      arrows <- cbind(arrows, arrows.toID)
+      arrows = cbind(arrows, arrows.toID)
     }
   }
-  rownames(arrows) <- c("from.x", "from.y", "component.x", "component.y")
+  rownames(arrows) = c("from.x", "from.y", "component.x", "component.y")
   
   # prepare colour palette
-  palette <- c("#cccccc","#333333", topo.colors(length(attractors)))
+  palette = c("#cccccc","#333333", topo.colors(length(attractors)))
   # overwrite with user-defined colours, if any
   if (length(plot.gcm.colors) > 0) {
     # how many?
-    overwrite <- min(length(palette), length(plot.gcm.colors))
-    palette[1:overwrite] <- plot.gcm.colors[1:overwrite]
+    overwrite = min(length(palette), length(plot.gcm.colors))
+    palette[1:overwrite] = plot.gcm.colors[1:overwrite]
   }
   
   # cell information
@@ -89,7 +89,7 @@ plotgcm <- function(Fm, indexPermutation, feat.object, plot.gcm.colors) {
   
   # attraction
   apply(arrows, 2, FUN = function(arr) {
-    arr.length <- sqrt( arr[3]^2 + arr[4]^2 )
+    arr.length = sqrt( arr[3]^2 + arr[4]^2 )
     shape::Arrows(arr[2],                arr[1], 
                   arr[2] + arr[4] * 0.9, arr[1] + arr[3] * 0.9,
                   arr.length = arr.length * 0.1, 

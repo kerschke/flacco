@@ -1,20 +1,20 @@
-plotBarrierTree3d <- function(z2, pred2, w2, root2, fe, divisions, levels,
+plotBarrierTree3d = function(z2, pred2, w2, root2, fe, divisions, levels,
                               custom.colors) {
-  orig.margins <- par("mar")
+  orig.margins = par("mar")
   on.exit ( par(mar=orig.margins) )
   par(mar=c(0,1,0,0))
   
   # prepare colour palette
-  palette <- c("lightgrey", topo.colors(levels))
+  palette = c("lightgrey", topo.colors(levels))
   # overwrite with user-defined colours, if any
   if (length(custom.colors) > 0) {
     # how many?
-    overwrite <- min(length(palette), length(custom.colors))
-    palette[1:overwrite] <- custom.colors[1:overwrite]
+    overwrite = min(length(palette), length(custom.colors))
+    palette[1:overwrite] = custom.colors[1:overwrite]
   }
   
   
-  Fe <- matrix(nrow=divisions[1], ncol = divisions[2])
+  Fe = matrix(nrow=divisions[1], ncol = divisions[2])
   
   coords <- sapply(1:length(fe), FUN = function(i) {
     coord <- celltoz(i, divisions)
@@ -27,14 +27,14 @@ plotBarrierTree3d <- function(z2, pred2, w2, root2, fe, divisions, levels,
   })
   cell2fe <- data.frame(cellX = coords[1, ], cellY = coords[2, ], fe = fe)
 
-  persp3d <- persp(1:divisions[2], 1:divisions[1], t(Fe),
+  persp3d = persp(1:divisions[2], 1:divisions[1], t(Fe),
                    theta=330, phi=15, border="grey",
                    xlab=expression(x[2]), ylab=expression(x[1]),
                    zlab=expression(y),
                    col=palette[1])
   
   # draw root
-  rootCoord <- celltoz( root2, divisions )
+  rootCoord = celltoz( root2, divisions )
   rootPoint = trans3d(
     rootCoord[2], rootCoord[1],
     fe[ root2 ], persp3d)
@@ -53,16 +53,16 @@ plotBarrierTree3d <- function(z2, pred2, w2, root2, fe, divisions, levels,
     
     # draw nodes of current level (BFS)
     for (i in currentLevel) {
-      thisCoord <- celltoz( z2[i], divisions ) # -> thisCoord[1] == cellX
-      thisFe <- fe[ z2[i] ]
-      predCoord <- celltoz( pred2[i], divisions )
-      predFe <- fe[ pred2[i] ]
+      thisCoord = celltoz( z2[i], divisions ) # -> thisCoord[1] == cellX
+      thisFe = fe[ z2[i] ]
+      predCoord = celltoz( pred2[i], divisions )
+      predFe = fe[ pred2[i] ]
       
-      this3dPoint <- trans3d(
+      this3dPoint = trans3d(
         thisCoord[2], thisCoord[1],
         thisFe, persp3d)
       
-      pred3dPoint <- trans3d(
+      pred3dPoint = trans3d(
         predCoord[2], predCoord[1],
         predFe, persp3d)
       
@@ -70,7 +70,7 @@ plotBarrierTree3d <- function(z2, pred2, w2, root2, fe, divisions, levels,
       text(this3dPoint,
            labels = z2[i], pos=1, col=palette[1+level]) # label point
       
-      lineBreak3dPoint <- trans3d(
+      lineBreak3dPoint = trans3d(
         thisCoord[2], thisCoord[1],
         predFe, persp3d)
       
@@ -92,21 +92,21 @@ plotBarrierTree3d <- function(z2, pred2, w2, root2, fe, divisions, levels,
   assert(drawn == length(z2)) # otherwise, an error has caused that some nodes weren't drawn...
 }
 
-plotBarrierTreePCA <- function(z2, pred2, w2, root2, fe, divisions) {
-  #Fe <- matrix(nrow=divisions[1], ncol = divisions[2])
+plotBarrierTreePCA = function(z2, pred2, w2, root2, fe, divisions) {
+  #Fe = matrix(nrow=divisions[1], ncol = divisions[2])
   
-  coords <- sapply(1:length(fe), FUN = function(i) {
-    coord <- celltoz(i, divisions)
+  coords = sapply(1:length(fe), FUN = function(i) {
+    coord = celltoz(i, divisions)
     #Fe[coord[1], coord[2]] <<- fe[i]
     #coord
   })
-  cell2fe <- data.frame(cellX = coords[1, ], cellY = coords[2, ], fe = fe)
+  cell2fe = data.frame(cellX = coords[1, ], cellY = coords[2, ], fe = fe)
   
   
-  principals <- princomp(~ cellX + cellY, data = cell2fe)
+  principals = princomp(~ cellX + cellY, data = cell2fe)
   #print(principals$loadings[,1]) # loadings of first PC
   
-  cell2fe$pca <- apply(cell2fe, 1, function (row) {
+  cell2fe$pca = apply(cell2fe, 1, function (row) {
     print (row)
     sum( c( row[1], row[2] ) 
          * principals$loadings[, 1] )
