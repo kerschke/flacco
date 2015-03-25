@@ -47,7 +47,7 @@
 #' # (2) compute the GCM-based Barrier Tree features:
 #' calculateBarrierTrees(feat.object = feat.object, control = list(barrierTree.plot=TRUE))
 #' @export 
-calculateBarrierTrees <- function (feat.object, control = list()) {
+calculateBarrierTrees = function (feat.object, control = list()) {
   assertClass(feat.object, "FeatureObject")
   assertList(control)
   # [ for gcm: x is var, y is fun ]
@@ -58,28 +58,28 @@ calculateBarrierTrees <- function (feat.object, control = list()) {
   }
 
   # Visualisation option
-  visualise_barrierTrees <- control_parameter(control, "barrierTree.plot", FALSE)
-  visualise_barrierTrees.colors <- control_parameter(control, "barrierTree.plot.colors", NULL)
+  visualise_barrierTrees = control_parameter(control, "barrierTree.plot", FALSE)
+  visualise_barrierTrees.colors = control_parameter(control, "barrierTree.plot.colors", NULL)
   
   # ensure that canonical form and representatives per cell are initialised (for min, mean, and near)
   gcm_init(feat.object)
   
   #Evaluate barrier tree features for Min
-  barrierTree.min <- evaluate_barrierTree(
+  barrierTree.min = evaluate_barrierTree(
                       feat.object$env$gcm.representatives$min, 
                       feat.object$env$gcm.canonicalForm$min,
                       feat.object$blocks, feat.object$lower, feat.object$upper, feat.object$cell.size,
                       visualise_barrierTrees, visualise_barrierTrees.colors)
   
   #Evaluate barrier tree features for Mean
-  barrierTree.mean <- evaluate_barrierTree(
+  barrierTree.mean = evaluate_barrierTree(
                       feat.object$env$gcm.representatives$mean, 
                       feat.object$env$gcm.canonicalForm$mean,
                       feat.object$blocks, feat.object$lower, feat.object$upper, feat.object$cell.size,
                       visualise_barrierTrees, visualise_barrierTrees.colors)
   
   #Evaluate barrier tree features for Near
-  barrierTree.near <- evaluate_barrierTree(
+  barrierTree.near = evaluate_barrierTree(
                       feat.object$env$gcm.representatives$near, 
                       feat.object$env$gcm.canonicalForm$near,
                       feat.object$blocks, feat.object$lower, feat.object$upper, feat.object$cell.size,
@@ -93,7 +93,7 @@ calculateBarrierTrees <- function (feat.object, control = list()) {
 }
 
 # ( origin: barrierTreeGCM3.m, features.m )
-evaluate_barrierTree <- function(fe, canform,
+evaluate_barrierTree = function(fe, canform,
                                  divisions, lowerBounds, upperBounds, cellSize,
                                  visualise_barrierTrees, visualise_barrierTrees.colors) {
   # rename canform list's components
@@ -101,25 +101,25 @@ evaluate_barrierTree <- function(fe, canform,
   indexPermutation = canform$indexPermutation
   closedClassIndex = canform$closedClassIndex
   
-  seqClosedClasses <- seq_len( closedClassIndex ) # used often -> cached for speedup & smaller memory footprint
+  seqClosedClasses = seq_len( closedClassIndex ) # used often => cached for speedup & smaller memory footprint
   
   #initialise return values
-  levels <- depth <- ratioDepthLevels <- 
-    minw <- meanw <- maxw <- stdw <- 
-    ratioLevelsLeaves <-
-    minDistance <- meanDistance <- maxDistance <- stdDistance <- 
-    bratioUncertain <- bratioCertain <- bratioMax <- 
-    minBasinIntersectionCount <- meanBasinIntersectionCount <- 
-    maxBasinIntersectionCount <- stdBasinIntersectionCount <- range <- 0
+  levels = depth = ratioDepthLevels = 
+    minw = meanw = maxw = stdw = 
+    ratioLevelsLeaves =
+    minDistance = meanDistance = maxDistance = stdDistance = 
+    bratioUncertain = bratioCertain = bratioMax = 
+    minBasinIntersectionCount = meanBasinIntersectionCount = 
+    maxBasinIntersectionCount = stdBasinIntersectionCount = range = 0
   
   if (closedClassIndex > 1) {
     # submatrices Q and R from the canonical form:
     #Q: Probability of transitioning from some transient state [Q = P(idx(sv+1:end),idx(sv+1:end));]
-    Q <- canonicalForm[(closedClassIndex+1) : length(indexPermutation),
+    Q = canonicalForm[(closedClassIndex+1) : length(indexPermutation),
                        (closedClassIndex+1) : length(indexPermutation)]
     
     #R: Probability of transitioning from some transient state to some absorbing state [R = P(idx(sv+1:end),idx(1:sv));]
-    R <- canonicalForm[(closedClassIndex+1) : length(indexPermutation),
+    R = canonicalForm[(closedClassIndex+1) : length(indexPermutation),
                        seqClosedClasses]
     
     # calculate absorbing probabilities (Apr)
@@ -129,15 +129,15 @@ evaluate_barrierTree <- function(fe, canform,
     ## in R, list [L,U,P] = expand(lu(A)) implies A= (P %*% L) %*% U.
     ## Therefore, P needs to be considered (see below).
     ## Furthermore, note that the decomposition is not necessarily unique.)
-    decomp <- Matrix::expand( Matrix::lu( diag(nrow(Q)) - Q ) ) # [ orig: [L,U] = lu( speye(length(Q)) - Q ) ) ]
+    decomp = Matrix::expand( Matrix::lu( diag(nrow(Q)) - Q ) ) # [ orig: [L,U] = lu( speye(length(Q)) - Q ) ) ]
     
     ## (translation note: A\B should equal solve(A, B), as both solve the
     ##  equation A %*% x = B for x )
-    Apr <- solve(decomp$U, solve( decomp$P %*% decomp$L, R))
+    Apr = solve(decomp$U, solve( decomp$P %*% decomp$L, R))
     # Apr(isnan(Apr)) = 0; # TODO check for isnan necessary? what is the equivalent in R? up to now, there are no missing values or thelike
     
     # calculate barrier tree
-    barrierTree <- create_barrierTree(
+    barrierTree = create_barrierTree(
       canonicalForm[seqClosedClasses, seqClosedClasses], # [ orig: I ]
       Apr, fe, indexPermutation, closedClassIndex)
     
@@ -148,7 +148,7 @@ evaluate_barrierTree <- function(fe, canform,
           minDistance, meanDistance, maxDistance, stdDistance,
           bratioUncertain, bratioCertain, bratioMax,
           minBasinIntersectionCount, meanBasinIntersectionCount, maxBasinIntersectionCount,
-          stdBasinIntersectionCount, range] <- features_barrierTree( 
+          stdBasinIntersectionCount, range] = features_barrierTree( 
             fe, barrierTree$cells, root = barrierTree$root, barrierTree$diffs, divisions, 
             cellSize, lowerBounds, Apr, 
             indexPermutation, closedClassIndex, barrierTree$preds)
@@ -188,114 +188,114 @@ evaluate_barrierTree <- function(fe, canform,
 # I contains the minimums
 # Apr contains the saddle points
 # [ orig: function [z pred w root] = barrierTreeGCM3(I, Apr, fx, idx, sv) ]
-create_barrierTree <- function(I, Apr, fe, indexPermutation, closedClassIndex) {
-  seqClosedClasses <- seq_len(closedClassIndex)
+create_barrierTree = function(I, Apr, fe, indexPermutation, closedClassIndex) {
+  seqClosedClasses = seq_len(closedClassIndex)
   
-  cells <- seq_len(  length(indexPermutation) )
-  pred <- rep(0, length(indexPermutation)) # "0" indicates no predecessor. Elements corresponding to pred==0 will be removed from all vectors in the end.
-  diffs <- rep(0, length(indexPermutation))
+  cells = seq_len(  length(indexPermutation) )
+  pred = rep(0, length(indexPermutation)) # "0" indicates no predecessor. Elements corresponding to pred==0 will be removed from all vectors in the end.
+  diffs = rep(0, length(indexPermutation))
   # [ orig: %Make full [I; Apr] ]
-  fe2 <- fe # create copy of function evaluations for later comparison
+  fe2 = fe # create copy of function evaluations for later comparison
   
   # Add (i.e. combine) columns that belong to the same basins
-  key2 <- rowSums(I != 0) >= 2 # [ orig: key2 = sum(I~=0,2) >= 2 ]
+  key2 = rowSums(I != 0) >= 2 # [ orig: key2 = sum(I~=0,2) >= 2 ]
   
-  removeCols <- c()
+  removeCols = c()
   for (i in seq_len( length(key2) ) ) {
     # find the columns of this row for which the cell value is > 0
-    nonZeroColumns <- which(I[i, ] != 0)
+    nonZeroColumns = which(I[i, ] != 0)
     if (length(nonZeroColumns) <= 1) {
       next
       # the following is basically a no-op if there is only one such column -- therefore save time!
     } 
     
     # then, combine all column values of that basin into the first column
-    I[ , nonZeroColumns[1] ] <- rowSums( as.matrix(I[ , nonZeroColumns]))
-    Apr[ , nonZeroColumns[1] ] <- rowSums( as.matrix(Apr[ , nonZeroColumns]))
+    I[ , nonZeroColumns[1] ] = rowSums( as.matrix(I[ , nonZeroColumns]))
+    Apr[ , nonZeroColumns[1] ] = rowSums( as.matrix(Apr[ , nonZeroColumns]))
     
     # prepare for removing the remaining columns
-    removeCols <- c(removeCols, nonZeroColumns[ 2:length(nonZeroColumns) ])
+    removeCols = c(removeCols, nonZeroColumns[ 2:length(nonZeroColumns) ])
   }
   
   # Update matrices
   if (length(removeCols) > 0) {
-    removeCols <- unique(removeCols)  
-    I <- as.matrix(I[-removeCols , -removeCols])
-    Apr <- as.matrix(Apr[ , -removeCols])
+    removeCols = unique(removeCols)  
+    I = as.matrix(I[-removeCols , -removeCols])
+    Apr = as.matrix(Apr[ , -removeCols])
   }
   
-  key <- rowSums(Apr != 0) < 2  # [ orig: key = sum(Apr~=0, 2) < 2 ]
-  Apr <- as.matrix(Apr)[-which(key), ]
+  key = rowSums(Apr != 0) < 2  # [ orig: key = sum(Apr~=0, 2) < 2 ]
+  Apr = as.matrix(Apr)[-which(key), ]
   
-  keep <- sort(indexPermutation[closedClassIndex+which(key == FALSE)])
-  fe <- fe[-c(     #  [ orig: fe([indexPermutation(1:closedClassIndex); indexPermutation(closedClassIndex+find(key ~= 0))]) = []; ]
+  keep = sort(indexPermutation[closedClassIndex+which(key == FALSE)])
+  fe = fe[-c(     #  [ orig: fe([indexPermutation(1:closedClassIndex); indexPermutation(closedClassIndex+find(key ~= 0))]) = []; ]
     indexPermutation[seqClosedClasses],
     indexPermutation[closedClassIndex+which(key == TRUE)]
   )]
   
   #Update indexPermutation
   if (length(removeCols) > 0) {
-    indexPermutation <- indexPermutation[-removeCols]
-    closedClassIndex <- closedClassIndex - length(removeCols)
+    indexPermutation = indexPermutation[-removeCols]
+    closedClassIndex = closedClassIndex - length(removeCols)
   }
   seqClosedClasses = seq_len(closedClassIndex)
   
   #Put all I in the buffer    
-  buffer <- indexPermutation[seqClosedClasses]
+  buffer = indexPermutation[seqClosedClasses]
   # remove those which are actually zero-columns
-  zeroCols <- which(colSums(I) == 0)
+  zeroCols = which(colSums(I) == 0)
   if (length(zeroCols) > 0) {
-    buffer <- buffer[-zeroCols]
+    buffer = buffer[-zeroCols]
   }
   
   #sort fe, obtain permutation ($ix of sort output)
-  indexPermutation2 <- sort(fe, index.return=TRUE)$ix # [ orig: #   [~, indexPermutation2] = sort(fe); ]
+  indexPermutation2 = sort(fe, index.return=TRUE)$ix # [ orig: #   [~, indexPermutation2] = sort(fe); ]
   
   
   for (i in 1:length(fe)) {
     #make predecesor graph        
-    key3 <- which(Apr[indexPermutation2[i], ] != 0)
+    key3 = which(Apr[indexPermutation2[i], ] != 0)
     if (length(key3) == 1) {
       next
     }
     
-    g1 <- rowSums( I  [ , key3] != 0) > 0 # [ orig: g1 = sum(I(:, key3) ~= 0, 2) > 0; ]
-    g2 <- rowSums( Apr[ , key3] != 0) > 0 # [ orig: g2 = sum(Apr(:, key3) ~= 0, 2) > 0; ]
-    g  <- c(  # [ orig: g = [indexPermutation[length(g1)][g1]; keep(g2)]; ]
+    g1 = rowSums( I  [ , key3] != 0) > 0 # [ orig: g1 = sum(I(:, key3) ~= 0, 2) > 0; ]
+    g2 = rowSums( Apr[ , key3] != 0) > 0 # [ orig: g2 = sum(Apr(:, key3) ~= 0, 2) > 0; ]
+    g  = c(  # [ orig: g = [indexPermutation[length(g1)][g1]; keep(g2)]; ]
       indexPermutation[1:length(g1)][g1],
       keep[g2]
     ) # TODO rename g
     
     
     # build intersection to join columns
-    ib <- intersect(g, buffer) # [ orig: [ib, ~, ic] = intersect(g, buffer); ]
-    ic <- match(ib, buffer) # TODO rename ib (intersection) and ic (indices in ib)
-    pred[ib]  <- keep[ indexPermutation2[i] ]
-    diffs[ib] <- fe[ indexPermutation2[i] ] - fe2[ib]
+    ib = intersect(g, buffer) # [ orig: [ib, ~, ic] = intersect(g, buffer); ]
+    ic = match(ib, buffer) # TODO rename ib (intersection) and ic (indices in ib)
+    pred[ib]  = keep[ indexPermutation2[i] ]
+    diffs[ib] = fe[ indexPermutation2[i] ] - fe2[ib]
     
-    buffer <- c(
+    buffer = c(
       buffer[-ic], # [ orig: buffer(ic) = []; ]
       keep[ indexPermutation2[i] ] # [ orig: buffer = [buffer; keep(indexPermutation2(i))]; ]
     )
     
     #join basins (add columns)
-    I[ , key3[1]] <- rowSums( I[ , key3]) # join
-    I <- as.matrix(I [ -key3[2:length(key3)] , -key3[2:length(key3)] ]) # remove
-    Apr[ , key3[1]] <- rowSums(Apr [ , key3])
-    Apr <- as.matrix(Apr[ , -key3[2:length(key3)] ])
+    I[ , key3[1]] = rowSums( I[ , key3]) # join
+    I = as.matrix(I [ -key3[2:length(key3)] , -key3[2:length(key3)] ]) # remove
+    Apr[ , key3[1]] = rowSums(Apr [ , key3])
+    Apr = as.matrix(Apr[ , -key3[2:length(key3)] ])
     
     # update cci, indices
-    closedClassIndex <- closedClassIndex - length(key3) + 1 # [ orig: closedClassIndex - length(key3(2:end)) ]
-    indexPermutation <- indexPermutation[ -key3[2:length(key3)] ]
+    closedClassIndex = closedClassIndex - length(key3) + 1 # [ orig: closedClassIndex - length(key3(2:end)) ]
+    indexPermutation = indexPermutation[ -key3[2:length(key3)] ]
   }
   
-  root <- buffer # the last element in buffer becomes the root of the barrier tree
+  root = buffer # the last element in buffer becomes the root of the barrier tree
   
   # clean up lists: only remaining elements are those cells which part of the tree
   if ( length(pred[ pred == 0 ]) > 0) {
-    cells    <- cells[-which(pred==0)]
-    diffs    <- diffs[-which(pred==0)]
-    pred     <- pred[-which(pred==0)]
+    cells    = cells[-which(pred==0)]
+    diffs    = diffs[-which(pred==0)]
+    pred     = pred[-which(pred==0)]
   }
   
   #%     DG = sparse(pred, z, true, len, len);
@@ -308,7 +308,7 @@ create_barrierTree <- function(I, Apr, fe, indexPermutation, closedClassIndex) {
 
 
 # [ orig: function [levels, depth, ratio1, minw, meanw, maxw, stdw, ratio2, mind, meand, maxd, stdd, bratio1, bratio2, bratio3, mini, meani, maxi, stdi, range] = features( fe, z2, root, weights, N, h, lb, Apr, idx, sv, pred2 ) ]
-features_barrierTree <- function( fe, cells, root, weights, divisions, 
+features_barrierTree = function( fe, cells, root, weights, divisions, 
                                   cellSize, lowerBounds, Apr, indexPermutation, 
                                   closedClassIndex, preds ) {
   seqClosedClasses = seq_len(closedClassIndex)
@@ -340,32 +340,32 @@ features_barrierTree <- function( fe, cells, root, weights, divisions,
   
   
   #Depth of tree
-  depth <- abs(fe[root] - min(fe)) # diverted from the very suspicious "abs(fe[root]) - abs(min(fe))"
+  depth = abs(fe[root] - min(fe)) # diverted from the very suspicious "abs(fe[root]) - abs(min(fe))"
   
   #ratio of depth/longest
-  ratioDepthLevels <- depth/levels
+  ratioDepthLevels = depth/levels
   
   #location and dispersion of weights
-  minw  <- min(weights)
-  meanw <- mean(weights)
-  maxw  <- max(weights)
-  stdw  <- sd(weights)
+  minw  = min(weights)
+  meanw = mean(weights)
+  maxw  = max(weights)
+  stdw  = sd(weights)
   
   #ratio levels/leaves
-  ratioLevelsLeaves <- levels/closedClassIndex
+  ratioLevelsLeaves = levels/closedClassIndex
   
   #Distances locals to global
-  minValueIdx <- which.min(fe)
-  gopt <- ztox(celltoz(minValueIdx, divisions), cellSize, 
+  minValueIdx = which.min(fe)
+  gopt = ztox(celltoz(minValueIdx, divisions), cellSize, 
                lowerBounds) # center of the cell containing the global optimum
   
-  distances <- na.omit(
+  distances = na.omit(
     sapply( seqClosedClasses , function(i) {
       if ( i == which(indexPermutation==minValueIdx) ) {
         return (NA)
       }
       
-      lopt <- ztox(celltoz(indexPermutation[i], divisions), cellSize, lowerBounds)
+      lopt = ztox(celltoz(indexPermutation[i], divisions), cellSize, lowerBounds)
       return (
         sqrt( sum( (gopt-lopt)^2 ) )
       )
@@ -373,53 +373,53 @@ features_barrierTree <- function( fe, cells, root, weights, divisions,
     })
   )
   
-  minDistance  <- min(distances)
-  meanDistance <- mean(distances)
-  maxDistance  <- max(distances)
-  stdDistance  <- sd(distances)
+  minDistance  = min(distances)
+  meanDistance = mean(distances)
+  maxDistance  = max(distances)
+  stdDistance  = sd(distances)
   
   
   #----------------------------------
   #Basins size ratio
   
-  basinUncertain <- sapply(seqClosedClasses , function(i) {
+  basinUncertain = sapply(seqClosedClasses , function(i) {
     nnz( Apr[ , i] )
   })
-  basinCertain <- sapply(seqClosedClasses, function(i) {
+  basinCertain = sapply(seqClosedClasses, function(i) {
     nnz( Apr[ , i] == 1 )
   })
   
-  b1 <- apply(Apr, 1, function(x) { match( max(x), x ) }) # [ orig: #   [a1, b1] = max(Apr,[],2); ], a1 unused
-  basinMax <- table(b1) # [ orig: histc(b1, 1:closedClassIndex); ]
+  b1 = apply(Apr, 1, function(x) { match( max(x), x ) }) # [ orig: #   [a1, b1] = max(Apr,[],2); ], a1 unused
+  basinMax = table(b1) # [ orig: histc(b1, 1:closedClassIndex); ]
   
-  bratioUncertain <- max(basinUncertain) / min(basinUncertain)
-  bratioCertain   <- max(basinCertain)   / min(basinCertain)
-  bratioMax       <- max(basinMax)       / min(basinMax)
+  bratioUncertain = max(basinUncertain) / min(basinUncertain)
+  bratioCertain   = max(basinCertain)   / min(basinCertain)
+  bratioMax       = max(basinMax)       / min(basinMax)
   
   
   #Intersection of (global with local) basins
-  gbasin <- which( Apr[ , which(indexPermutation==minValueIdx)] !=0 )
-  basinIntersectionCount <- na.omit(
+  gbasin = which( Apr[ , which(indexPermutation==minValueIdx)] !=0 )
+  basinIntersectionCount = na.omit(
     sapply(seqClosedClasses, function(i) {
       if ( i == which(indexPermutation==minValueIdx) ) {
         return (NA)
       }
-      lbasin <- which(Apr[ , i] != 0)
+      lbasin = which(Apr[ , i] != 0)
       return ( length( intersect(gbasin, lbasin) ) )
     })
   )
   
   
-  minBasinIntersectionCount  <- min(basinIntersectionCount)
-  meanBasinIntersectionCount <- mean(basinIntersectionCount)
-  maxBasinIntersectionCount  <- max(basinIntersectionCount)
-  stdBasinIntersectionCount  <- sd(basinIntersectionCount)
+  minBasinIntersectionCount  = min(basinIntersectionCount)
+  meanBasinIntersectionCount = mean(basinIntersectionCount)
+  maxBasinIntersectionCount  = max(basinIntersectionCount)
+  stdBasinIntersectionCount  = sd(basinIntersectionCount)
   
   #range of basin
-  coord <- sapply(1:length(gbasin), FUN = function(i) {
+  coord = sapply(1:length(gbasin), FUN = function(i) {
     celltoz(gbasin[i], divisions)
   })
-  range <-  sqrt( sum( # calculate range. suspicious: why don't we (nor the matlab version) care about dimensions?
+  range =  sqrt( sum( # calculate range. suspicious: why don't we (nor the matlab version) care about dimensions?
     (
       max(coord)-   # [ orig: max(coord,[],1) ]
         min(coord))   # [ orig: min(coord,[],1) ]

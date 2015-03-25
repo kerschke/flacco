@@ -51,7 +51,7 @@
 #' # (2) compute the Generalized Cell Mapping features:
 #' calculateGCMFeatures(feat.object = feat.object, control = list(gcm.plot=TRUE))
 #' @export 
-calculateGCMFeatures <- function (feat.object, control = list()) {
+calculateGCMFeatures = function (feat.object, control = list()) {
   assertClass(feat.object, "FeatureObject")
   assertList(control)
   # [ for gcm: x is var, y is fun ]
@@ -62,28 +62,28 @@ calculateGCMFeatures <- function (feat.object, control = list()) {
   }
   
   # Visualisation options
-  plot.gcm <- control_parameter(control, "gcm.plot", FALSE)
-  plot.gcm.colors <- control_parameter(control, "gcm.plot.colors", NULL)
+  plot.gcm = control_parameter(control, "gcm.plot", FALSE)
+  plot.gcm.colors = control_parameter(control, "gcm.plot.colors", NULL)
   
   # ensure that canonical form and representatives per cell are initialised (for min, mean, and near)
   gcm_init(feat.object)
   
   #Evaluate GCM features for Min
-  features.min <- evaluateGCM(
+  features.min = evaluateGCM(
                       feat.object$env$gcm.representatives$min, 
                       feat.object$env$gcm.canonicalForm$min,
                       feat.object,
                       plot.gcm, plot.gcm.colors)
   
   #Evaluate GCM features for Mean
-  features.mean <- evaluateGCM(
+  features.mean = evaluateGCM(
                       feat.object$env$gcm.representatives$mean, 
                       feat.object$env$gcm.canonicalForm$mean,
                       feat.object,
                       plot.gcm, plot.gcm.colors)
   
   #Evaluate GCM features for Near
-  features.near <- evaluateGCM(
+  features.near = evaluateGCM(
                       feat.object$env$gcm.representatives$near, 
                       feat.object$env$gcm.canonicalForm$near,
                       feat.object,
@@ -91,13 +91,13 @@ calculateGCMFeatures <- function (feat.object, control = list()) {
   
   
   # Evaluate overall features (min + mean)
-  common_p <- length(intersect(features.min$pcell, features.mean$pcell))
-  common_t <- length(intersect(features.min$tcell, features.mean$tcell))
+  common_p = length(intersect(features.min$pcell, features.mean$pcell))
+  common_t = length(intersect(features.min$tcell, features.mean$tcell))
   
   # Truncate non-feature results
-  features.min$pcell <- features.mean$pcell <- features.near$pcell <- 
-    features.min$tcell <- features.mean$tcell <- features.near$tcell <-
-    features.min$diffcell <- features.mean$diffcell <- features.near$diffcell <- NULL
+  features.min$pcell = features.mean$pcell = features.near$pcell = 
+    features.min$tcell = features.mean$tcell = features.near$tcell =
+    features.min$diffcell = features.mean$diffcell = features.near$diffcell = NULL
   
   return (list(
     gcm.min = features.min,
@@ -112,7 +112,7 @@ calculateGCMFeatures <- function (feat.object, control = list()) {
 
 # [orig: function [no_attr, unc_rat, prob_best, pcell, tcell, diffcell, sd_bs, min_bs, mean_bs, max_bs] = evaluate_features(filename, option, range_x, range_y) ]
 # Perform GCM Calculation for a Specific Mode (i.e. either min, mean, or near)
-evaluateGCM <- function(fe, cf, # fe and cf are specific to the mode
+evaluateGCM = function(fe, cf, # fe and cf are specific to the mode
                         feat.object, # passed for common parameters
                         plot.gcm, plot.gcm.colors) {
   # rename canform list's components
@@ -120,34 +120,29 @@ evaluateGCM <- function(fe, cf, # fe and cf are specific to the mode
   indexPermutation = cf$indexPermutation
   closedClassIndex = cf$closedClassIndex
   
-  seqClosedClasses <- 1:closedClassIndex # used often -> cached for speedup & smaller memory footprint
+  seqClosedClasses = 1:closedClassIndex # used often -> cached for speedup & smaller memory footprint
   
   #Compute fundamenta matrix of Cf
   
   # Assume the idea is canonicalForm^(infinity). 
-  Q <- expm::"%^%"(canonicalForm, 64) # [ orig:  Q = Cf^50; ]
-  
-  #Indicators (Preparation f. output statements at the end)
-  ratioUncertainBoxes <- 0
-  bestCellProbability <- 0
-  
+  Q = expm::"%^%"(canonicalForm, 64) # [ orig:  Q = Cf^50; ]
   
   #Write the matrix of closedClass columns of Q    
-  Fm <- as.matrix(Q[ , seqClosedClasses])
+  Fm = as.matrix(Q[ , seqClosedClasses])
   
   #Remove zero rows and cols. first: Rows
-  zeroRows <- na.omit( # remove all NAs; result: Indices of rows w. only zeroes
+  zeroRows = na.omit( # remove all NAs; result: Indices of rows w. only zeroes
     sapply(seq_len( nrow(Fm) ), function (i) { # for each row:
       if (all(Fm[i,] == 0)) i         # return index if all entries in row are 0
       else NA
     } )
   )
   if (length(zeroRows) != 0) {
-    Fm <- as.matrix(Fm[-zeroRows, ]) # removing zero rows [ orig: Fm( !any(Fm,2), : ) = []; ]
+    Fm = as.matrix(Fm[-zeroRows, ]) # removing zero rows [ orig: Fm( !any(Fm,2), : ) = []; ]
   }
   
   # now: Columns (and recalculate no. of closed classes)
-  zeroColumns <- na.omit( # remove all NAs; result: Indices of columns w. only zeroes
+  zeroColumns = na.omit( # remove all NAs; result: Indices of columns w. only zeroes
     sapply(seq_len( ncol(Fm) ), function (i) { # for each column:
       if (all(Fm[,i] == 0)) i         # return index if all entries in column are 0
       else NA
@@ -156,74 +151,58 @@ evaluateGCM <- function(fe, cf, # fe and cf are specific to the mode
   
   if (length(zeroColumns) != 0) {
     # calculate new number of closed classes
-    rtmp <- indexPermutation[seqClosedClasses]
-    rtmp <- rtmp[-zeroColumns]
-    closedClassIndex <- length(rtmp) # careful, closedClassIndex now: Number of closed classes after removing zero columns
-    seqClosedClasses <- seq_len(closedClassIndex)
+    rtmp = indexPermutation[seqClosedClasses]
+    rtmp = rtmp[-zeroColumns]
+    closedClassIndex = length(rtmp) # careful, closedClassIndex now: Number of closed classes after removing zero columns
+    seqClosedClasses = seq_len(closedClassIndex)
     
     # actually remove columns now:
-    indexPermutation <- indexPermutation[-zeroColumns] # remove Zerocols from permutation vector [ orig: %Index ]
-    Fm <- as.matrix(Fm[ , -zeroColumns]) # also remove Zerocols from fundamental matrix [ orig: Fm( :, !any(Fm,1) ) = [];  %columns ]
+    indexPermutation = indexPermutation[-zeroColumns] # remove Zerocols from permutation vector [ orig: %Index ]
+    Fm = as.matrix(Fm[ , -zeroColumns]) # also remove Zerocols from fundamental matrix [ orig: Fm( :, !any(Fm,1) ) = [];  %columns ]
   }  
   
-  
-  # Fundamental matrix Fm fully calculated! Export to file
-  #write.table(Fm, paste(
-  #  outputFile, '-fundamentalmat.csv', sep=""),
-  #  col.names=FALSE, row.names=FALSE, sep=",") # [ orig: dlmwrite(paste(outputFile,'-fundamentalmat'),Fm) ]
-  
-  
+  # Fundamental matrix Fm fully calculated!  
   
   #Compute number of attractors
-  numberOfAttractors <- closedClassIndex
-  #for (i in seq_len( ncol(Fm) )) {
-  #  if (all(Fm[i,1:(i-1)] == 0)) { # TODO stimmt die Operatorenbindung  : vs - hier?
-  #    # not needed: flag <- true
-  #    numberOfAttractors <- numberOfAttractors + 1
-  #  }  
-  #}#TODO: unplausibel -- wieso ist das Ergebnis identisch zu "number of closed cells"? Falls Absicht: wieso neu berechnen?
+  numberOfAttractors = closedClassIndex
   
-  
-  sBoA <- c() #TODO what is sBoA? Rename!
+  sBoA = c() #TODO what is sBoA? Rename!
   
   #compute number of periodic cells and transient cells
-  pcell <- indexPermutation[ seqClosedClasses ]
-  tcell <- indexPermutation[ (closedClassIndex+1) : length(indexPermutation) ]
-  diffcell <- prod(feat.object$blocks)-length(pcell)-length(tcell)
+  pcell = indexPermutation[ seqClosedClasses ]
+  tcell = indexPermutation[ (closedClassIndex+1) : length(indexPermutation) ]
+  diffcell = prod(feat.object$blocks)-length(pcell)-length(tcell)
   
   
-  counterx <- 0;
   #Compute number of uncertain boxes
-  for (i in seq_len( nrow(Fm) )) { # [ orig: for iter2 = 1:size(Fm,1) ]
-    if (nnz(Fm[i, ]) > 1) {
-      counterx <- counterx + 1
-    }
-  }
-  ratioUncertainBoxes <- ratioUncertainBoxes + counterx/prod(feat.object$blocks)
+  counterx = sum(
+    sapply(seq_len( nrow(Fm) ), FUN=function(i) {
+      nnz(Fm[i, ]) > 1
+    }))
+  ratioUncertainBoxes = counterx/prod(feat.object$blocks)
   
   #Compute the probability to find each periodic cell
-  for (iter2 in seqClosedClasses) {
-    idx <- which(Fm[iter2, ] != 0)
-    tmp <- 0;
-    for (iter3 in idx) {
-      tmp <- tmp + sum(Fm[ ,iter3])/prod(feat.object$blocks);
-    }
-    sBoA[iter2] <- tmp;
+  for (closed in seqClosedClasses) {
+    idx = which(Fm[closed, ] != 0)
+    tmp = sum(sapply(idx, FUN=function(i) {
+      sum(Fm[ ,i]) / prod(feat.object$blocks);
+    }))
+    sBoA[closed] = tmp;
   }
   
-  hi <- calcBasins(Fm)$hi
+  hi = calcBasins(Fm)$hi
   if (length(hi) > 2) {
-    basinsize <- hi[1:(length(hi) - 2)]
-    std_bs     <- sd(basinsize)
-    min_bs    <- min(basinsize)
-    mean_bs   <- mean(basinsize)
-    max_bs    <- max(basinsize)
+    basinsize = hi[1:(length(hi) - 2)]
+    std_bs    = sd(basinsize)
+    min_bs    = min(basinsize)
+    mean_bs   = mean(basinsize)
+    max_bs    = max(basinsize)
   }
   if (length(hi) <= 2) {
-    std_bs     <- 0
-    min_bs    <- 0
-    mean_bs   <- 0
-    max_bs    <- 0
+    std_bs    = 0
+    min_bs    = 0
+    mean_bs   = 0
+    max_bs    = 0
   }
   
   if (plot.gcm) {
@@ -231,7 +210,7 @@ evaluateGCM <- function(fe, cf, # fe and cf are specific to the mode
   }
   
   #Compute the probability to find the best cell found
-  bestCellProbability <- bestCellProbability + sBoA[
+  bestCellProbability = sBoA[
     min( # adds determinism: In case multiple cells evaluate to the minimum value, choose the first one.
       which(
         fe[ indexPermutation[seqClosedClasses] ] == min( fe[ indexPermutation[seqClosedClasses] ])
@@ -245,7 +224,7 @@ evaluateGCM <- function(fe, cf, # fe and cf are specific to the mode
                prob_best = bestCellProbability,     # probability to find the best
                pcell = pcell, tcell = tcell,        # lists of cells (periodic / transient)
                diffcell = diffcell,                 # number of cells in neither list
-               std_bs = std_bs,                       # loc / disp of basin sizes
+               std_bs = std_bs,                     # loc / disp of basin sizes
                min_bs = min_bs, 
                mean_bs = mean_bs, 
                max_bs = max_bs
@@ -253,25 +232,25 @@ evaluateGCM <- function(fe, cf, # fe and cf are specific to the mode
 }
 
 # [orig: function [hi, uni] = calcBasins(Fm) ]
-calcBasins <- function(Fm) {
-  gm <- c() #TODO rename
-  gr <- 0 #TODO rename
+calcBasins = function(Fm) {
+  gm = c() #TODO rename
+  gr = 0 #TODO rename
   for (i in seq_len(ncol(Fm) )) {
-    ci <- c() # TODO rename
-    keys <- c() # TODO rename
-    flag <- FALSE #TODO rename
+    ci = c() # TODO rename
+    keys = c() # TODO rename
+    flag = FALSE #TODO rename
     if ( i == 1 || all(Fm[i,1:(i-1)] == 0) ) {
-      flag <- TRUE
-      gr <- gr + 1
+      flag = TRUE
+      gr = gr + 1
     } else {
-      keys <- which(Fm[i, ] != 0)
+      keys = which(Fm[i, ] != 0)
     }
     for (j in (ncol(Fm)+1):nrow(Fm)) {
       if (Fm[j, i] != 0) {
         keys2 = which(Fm[j, ] != 0)
         
-        columns <- seq_len( ncol(Fm) )
-        columns <- columns[columns != i]
+        columns = seq_len( ncol(Fm) )
+        columns = columns[columns != i]
         if ( flag && (any(Fm[j, columns] != 0) ) || 
                (!flag && length(keys2) > length(keys)) || 
                (!flag && length(keys2) == length(keys)  && any(keys2 != keys) ) ) {
@@ -281,16 +260,16 @@ calcBasins <- function(Fm) {
         }
       }
     }
-    gm <- c(gm, ci)
+    gm = c(gm, ci)
   }
   
-  ci <- rep(ncol(Fm)+2,  ncol(Fm)) # [ orig: ci = [];  for j=1:size(Fm, 2) ci = [ci; size(Fm,2)+2];  end ]
+  ci = rep(ncol(Fm)+2,  ncol(Fm)) # [ orig: ci = [];  for j=1:size(Fm, 2) ci = [ci; size(Fm,2)+2];  end ]
   
-  gm <- c(gm, ci)
+  gm = c(gm, ci)
   
-  frequencies <- table(gm)
+  frequencies = table(gm)
   
-  uni <- as.numeric(names(frequencies)) # [ orig: unique(gm) ]
-  hi <- as.vector(frequencies) # [ orig: hi = histc(gm, uni) ]
+  uni = as.numeric(names(frequencies)) # [ orig: unique(gm) ]
+  hi = as.vector(frequencies) # [ orig: hi = histc(gm, uni) ]
   return( list( hi=hi, uni=uni ) )
 }
