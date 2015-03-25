@@ -66,6 +66,7 @@ test_that("GCM initialisation computations for near are performed", {
   expect_null(featobj$env$gcm.canonicalForm$near)
   
   # execution
+  set.seed(2015*03*25) #selectMin (used for finding values near to cell center) is not deterministic, so let's force it to be that way!
   gcm_init(featobj)
   
   # postconditions
@@ -76,7 +77,7 @@ test_that("GCM initialisation computations for near are performed", {
   expect_equal(length(which(featobj$env$gcm.representatives$near == Inf)), 0) # ALWAYS for near!!
   
   # number of closed classes
-  # TODO expect_equal(featobj$env$gcm.canonicalForm$near$closedClassIndex, 12)
+  expect_equal(featobj$env$gcm.canonicalForm$near$closedClassIndex, 12)
   
   # TODO values of featobj$env$gcm.canonicalForm$near$indexPermutation
   # TODO values of featobj$env$gcm.canonicalForm$near$canonicalForm
