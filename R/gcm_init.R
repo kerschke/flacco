@@ -49,6 +49,7 @@ gcm_init = function(feat.object) {
 # return list( fromcell = fromcell, tocell = tocell, probabilities = probabilities, fe = fe);
 create = function (feat.object, approach) {
   assertClass(feat.object, "FeatureObject")
+  assert(feat.object$allows.cellmapping)
   assertChoice(approach, c("min", "mean", "near"))
   
   if (approach == "min") { 
