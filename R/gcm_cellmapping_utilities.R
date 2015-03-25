@@ -27,13 +27,6 @@ isNeighbourInvalid = function(currentCoord, neighbourCoord, divisions) {
     all(neighbourCoord == currentCoord)
 }
 
-## Check whether boundary checks are needed..
-## also check the upper bounds..
-#   stopifnot(xd >= lowerBound)
-xtoz = function (xd, cellSize, lowerBound) {
-  (xd - lowerBound) %/% cellSize + 1L
-}
-
 ## converts a vector of blocks per dimension into a single cell ID
 ztocell = function (z, divisions) {
   z = z - 1L
