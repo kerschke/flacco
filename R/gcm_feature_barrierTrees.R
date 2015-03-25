@@ -324,7 +324,6 @@ features_barrierTree = function( fe, cells, root, weights, divisions,
   # initialise BFS
   nextLevel = which(preds == root) #children(root)
   levels = 0
-  drawn = 0
   while (length(nextLevel) > 0) {
     # change to next level (BFS)
     currentLevel = nextLevel
