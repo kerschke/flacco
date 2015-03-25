@@ -7,9 +7,6 @@ test_that("GCM-based Barrier Tree features are computed", {
   featobj = createFeatureObject(X = X, y = y, 
    lower = -1000, upper = 1000, blocks = 10)  
   
-  # preconditions
-  gcm_init(featobj)
-  
   # execution
   features = calculateBarrierTrees(featobj)
  
@@ -26,9 +23,6 @@ test_that("GCM-based Barrier Tree fallback is computed for boring barrier trees"
   y = apply(X, 1, function(x) {sum(x^2)})
   featobj = createFeatureObject(X = X, y = y, 
                                 lower = -1000, upper = 1000, blocks = 10)  
-  
-  # preconditions
-  gcm_init(featobj)
   
   # execution
   features = calculateBarrierTrees(featobj)
@@ -49,4 +43,17 @@ test_that("GCM-based Barrier Tree fallback is computed for boring barrier trees"
   sapply( names(features$barrierTree.near), function(name) {
     expect_equal(features$barrierTree.near[[name]], 0, info = paste("name=", name))
   })
+})
+
+test_that("GCM-based Barrier Tree cannot compute on non-cellmapping object", {
+  set.seed(2015*03*25)
+  X = t(replicate(5000, runif(2, -1000, 1000)))
+  y = apply(X, 1, function(x) {sum(x^2)})
+  featobj = createFeatureObject(X = X, y = y, 
+                                lower = -1000, upper = 1000)  
+  
+  # execution
+  expect_error( calculateBarrierTrees(featobj) )
+  
+ 
 })
