@@ -8,7 +8,7 @@ test_that("GCM initialisation for factor-valued objectives is not possible", {
 })
 
 test_that("GCM initialisation computations for min are performed correctly", {
-  values <- iris[, -5] # strip factor column "Species"
+  values = iris[, -5] # strip factor column "Species"
   
   # preconditions
   featobj = createFeatureObject(values, objective = "Petal.Width", blocks = 5)
@@ -33,7 +33,7 @@ test_that("GCM initialisation computations for min are performed correctly", {
 })
 
 test_that("GCM initialisation computations for mean are performed", {
-  values <- iris[, -5] # strip factor column "Species"
+  values = iris[, -5] # strip factor column "Species"
   
   # preconditions
   featobj = createFeatureObject(values, objective = "Petal.Width", blocks = 5)
@@ -58,7 +58,7 @@ test_that("GCM initialisation computations for mean are performed", {
 })
 
 test_that("GCM initialisation computations for near are performed", {
-  values <- iris[, -5] # strip factor column "Species"
+  values = iris[, -5] # strip factor column "Species"
   
   # preconditions
   featobj = createFeatureObject(values, objective = "Petal.Width", blocks = 5)
