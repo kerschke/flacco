@@ -98,9 +98,9 @@ createFeatureObject = function(init, X, y, fun, minimize,
         y = init[, objective]
       }
       if (missing(X)) {
-        X = init[, feat.names]
+        X = as.data.frame(init[, feat.names])
       }
-      init = init[, c(feat.names, objective)]
+      init = as.data.frame(init[, c(feat.names, objective)])
     }
     if (missing(minimize)) {
       minimize = TRUE
