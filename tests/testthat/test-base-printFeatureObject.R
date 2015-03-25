@@ -22,13 +22,9 @@ test_that("FeatureObject Output with more than 5 feature dims", {
   featobj = createFeatureObject(init, objective = "a6")
   
   expect_output(print(featobj), regexp=paste(
-    "^Feature Object:",
-    "- Number of Observations:\\s\\d+",
-    "- Number of Features:\\s\\d+",
     "- Lower Boundaries: [0-9e+.-]+(, [0-9e+-.]+)*, ...",
     "- Upper Boundaries: [0-9e+.-]+(, [0-9e+-.]+)*, ...",
-    "- Name of Features: [^,\\s]*(, [^,\\s]*)*",
-    "- Optimization problem: (minimize|maximize) [^\\s]+?",
+    "- Name of Features: [^,\\s]*(, [^,\\s]*)*, ...",
     sep="\\r?\\n")
   )
   
@@ -44,3 +40,37 @@ test_that("FeatureObject Output with a function", {
   )
   
 })
+
+test_that("FeatureObject Output with cellmapping and dim < 5", {
+  init = matrix(1:10, ncol=5, nrow=10)
+  colnames(init) = c("a1", "a2", "a3", "a4", "a5")
+  featobj = createFeatureObject(init, objective = "a5", blocks=4)
+  
+  expect_output(print(featobj), regexp=paste(
+    "- Number of Cells per Dimension: \\d+(, \\d+)*",
+    "- Size of Cells per Dimension: [0-9e+.-]+(, [0-9e+-.]+)*",
+    "- Number of Cells:",
+    "\\s+- total: \\d+",
+    "\\s+- non-empty: \\d+ \\([0-9e+-.]+%\\)",
+    "\\s+- empty: \\d+ \\([0-9e+-.]+%\\)",
+    "- Average Number of Observations per Cell:",
+    "\\s+- total: [0-9e+-.]+",
+    "\\s+- non-empty: [0-9e+-.]+",
+    sep="\\r?\\n")
+  )
+  
+})
+
+test_that("FeatureObject Output with cellmapping and dim >= 5", {
+  init = matrix(1:10, ncol=6, nrow=10)
+  colnames(init) = c("a1", "a2", "a3", "a4", "a5", "a6")
+  featobj = createFeatureObject(init, objective = "a6", blocks=4)
+  
+  expect_output(print(featobj), regexp=paste(
+      "- Number of Cells per Dimension: \\d+(, \\d+)*, ...",
+      "- Size of Cells per Dimension: [0-9e+.-]+(, [0-9e+-.]+)*, ...",
+      sep="\\r?\\n")
+  )
+  
+})
+                                        
