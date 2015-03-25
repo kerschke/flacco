@@ -56,7 +56,7 @@ create = function (feat.object, approach) {
       if (length(which(feat.object$init.grid$cell.ID == i)) == 0) {
         return(Inf)
       }
-      min(feat.object$init.grid$y[feat.object$init.grid$cell.ID == i])
+      min(extractObjective(feat.object)[feat.object$init.grid$cell.ID == i])
     })
     
   } else if(approach == "mean") {
@@ -64,7 +64,7 @@ create = function (feat.object, approach) {
       if (length(which(feat.object$init.grid$cell.ID == i)) == 0) {
         return(Inf)
       }
-      mean(feat.object$init.grid$y[feat.object$init.grid$cell.ID == i])
+      mean(extractObjective(feat.object)[feat.object$init.grid$cell.ID == i])
     })
     
   } else { # approach == near
