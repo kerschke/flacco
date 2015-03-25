@@ -1,11 +1,50 @@
 context("Utility Functions (main and GCM)")
 
 test_that("findAllNeighbours", {
-  # TODO
+  h = c(1, 1)
+  N = rep(h[1], length(h))
+  expect_equal(
+    findAllNeighbours(N, c(1,1), h),
+    as.matrix( expand.grid(c(0,1,2), c(0,1,2)) )
+  )
+  
+  h = c(2,1)
+  N = rep(h[1], length(h))
+  expect_equal(
+    findAllNeighbours(N, c(2,2), h),
+    as.matrix( expand.grid(c(1,2,3), c(1,2,3)) )
+  )
+    
+  h = c(1, 1, 1)
+  N = rep(h[1], length(h))
+  expect_equal(
+    findAllNeighbours(N, c(5,5,5), h),
+    as.matrix( expand.grid( c(4,5,6), c(4,5,6), c(4,5,6) ) )
+  )
 })
 
 test_that("isNeighbourInvalid", {
-  # TODO
+  N = c(10, 10, 10)
+  
+  # neighbour of itself
+  current = c(1, 1, 1)
+  expect_true( isNeighbourInvalid(current, current, N) )
+  
+  # out-of-bounds => too low
+  expect_true( isNeighbourInvalid(current, c(0, 1, 1), N) )
+  expect_true( isNeighbourInvalid(current, c(1, 0, 1), N) )
+  expect_true( isNeighbourInvalid(current, c(1, 1, 0), N) )
+  
+  # out-of-bounds => too high
+  expect_true( isNeighbourInvalid(current, c(11, 1,   1), N) )
+  expect_true( isNeighbourInvalid(current, c(1,  11,  1), N) )
+  expect_true( isNeighbourInvalid(current, c(1,  1,  11), N) )
+  
+  # within-bounds, but not itself
+  expect_false( isNeighbourInvalid(c(5,5,5), c(1,  1,  1 ), N) )
+  expect_false( isNeighbourInvalid(current,  c(1,  1,  2 ), N) )
+  expect_false( isNeighbourInvalid(current,  c(10, 10, 10), N) )
+  expect_false( isNeighbourInvalid(current,  c(1,  5,  6 ), N) )
 })
 
 test_that("ztocell", {
