@@ -47,5 +47,20 @@ test_that("celltoz", {
 })
 
 test_that("ztox", {
-  # TODO
+  lb = c(-5, -5)
+  h = c(2, 1)
+  expect_equal(ztox(c(1, 1), h, lb), c(-4.0, -4.5))
+  expect_equal(ztox(c(10, 5), h, lb), c(14, -0.5))
+  expect_equal(ztox(c(10, 10), h, lb), c(14, 4.5))
+  
+  lb = c(-5, -5)
+  h = c(1, 2)
+  expect_equal(ztox(c(1, 1), h, lb), c(-4.5, -4.0))
+  expect_equal(ztox(c(10, 5), h, lb), c(4.5, 4.0))
+  expect_equal(ztox(c(10, 10), h, lb), c(4.5, 14))
+  
+  lb = c(-5, -5, -5, -5)
+  h = c(2, 2, 2, 2)
+  expect_equal(ztox(c(4,3,9,8), h, lb), c(2, 0, 12, 10))
+  
 })
