@@ -169,11 +169,8 @@ createFeatureObject = function(init, X, y, fun, minimize,
 
 #' @export
 print.FeatureObject = function(x, ...) {
-  if ("CellMappingObject" %in% class(x)) {
-    cat("Cell Mapping Object:\n")
-  } else {
-    cat("Feature Object:\n")
-  }
+  cat("Feature Object:\n")
+
   catf("- Number of Observations: %i", x$n.obs)
   catf("- Number of Features: %i", x$dim)
   if (x$dim < 5L) {
