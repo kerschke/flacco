@@ -44,9 +44,8 @@ plotgcm = function(Fm, indexPermutation, feat.object, plot.gcm.colors) {
     arrows.toID = sapply (attracted, FUN=function(fromID) {
       fromcoord = celltoz( indexPermutation[fromID], divisions )
       
-      components = basincoord-fromcoord
-      components.norm = components/sqrt(sum(components^2))
-      components.weighted = components.norm * Fm[fromID, toID]
+      components = normalizeVector( basincoord-fromcoord )
+      components.weighted = components * Fm[fromID, toID]
       
       return(
         c(fromcoord,
