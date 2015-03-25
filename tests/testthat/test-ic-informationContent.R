@@ -72,3 +72,32 @@ test_that("Information content-based features are not computed for wrong epsilon
                                            list(ic.epsilon = c(1,2)) )
   )
 })
+
+test_that("Information content-based features are able to compute random samples", {
+  set.seed(2015*03*25)
+  X = t(replicate(50, runif(2, -1000, 1000)))
+  fun = function(x) {sum(sqrt(abs(x)))}
+  featobj = createFeatureObject(X = X, fun = fun, 
+                                lower = -1000, upper = 1000)  
+  
+  # execution
+  features = calculateInformationContent(featobj, control = 
+            list(ic.generate_sample = TRUE,
+                 ic.epsilon = c(
+                   0, 10^(seq(-5,15,length.out=300)) # => fewer epsilons for quicker tests
+                 )) )
+  
+  # postconditions (sadly, samples cannot be tested :( ))
+  expect_true( testNumber(features$ic.Hmax, FALSE, 0, 1) )
+  # TODO epsilonS
+  expect_true( is.na(features$ic.Mzero) ) 
+  expect_true( is.na(features$ic.epsilon05) ) 
+})
+
+test_that("Information content-based features are unable to compute samples without a function", {
+  X = matrix(1, ncol=2, nrow=2)
+  y = rep(1,2)
+  featobj = createFeatureObject(X = X, y = y)  
+  expect_error( calculateInformationContent(featobj, control = 
+                                              list(ic.generate_sample = TRUE)) )
+})
