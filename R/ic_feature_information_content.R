@@ -93,8 +93,8 @@ calculateInformationContent = function(feat.object, control = list()) {
     # If individual ranges per dimension are required, please generate the sample yourself.)
     generate.sample.min = control_parameter(control, "ic.generate_sample.min", .Machine$double.xmin)
     generate.sample.max = control_parameter(control, "ic.generate_sample.max", .Machine$double.xmax)
-    assertInt(generate.sample.min, .var.name="control$ic.generate_sample.min")
-    assertInt(generate.sample.max, .var.name="control$ic.generate_sample.max")
+    assertNumeric(generate.sample.min, .var.name="control$ic.generate_sample.min")
+    assertNumeric(generate.sample.max, .var.name="control$ic.generate_sample.max")
   }
   
   debug.plot = control_parameter(control, "ic.plot", FALSE)
