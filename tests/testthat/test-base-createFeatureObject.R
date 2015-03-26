@@ -79,3 +79,29 @@ test_that("Erroneous FeatureObject with differing rows of features and variables
   )
 })
 
+test_that("Erroneous FeatureObject with differing dimensions for the lower bound", {
+  expect_error(
+    createFeatureObject( X = matrix(1, nrow=2, ncol=3), y = rep(1, 2),
+                         lower=c(-1, -1), # two dimensions; expected three
+                         upper=10,
+                         blocks=5)
+  )
+})
+
+test_that("Erroneous FeatureObject with differing dimensions for the upper bound", {
+  expect_error(
+    createFeatureObject( X = matrix(1, nrow=2, ncol=3), y = rep(1, 2),
+                         lower=-1,
+                         upper=c(10, 10), # two dimensions; expected three
+                         blocks=5)
+  )
+})
+
+test_that("Erroneous FeatureObject with differing dimensions for the lower bound", {
+  expect_error(
+    createFeatureObject( X = matrix(1, nrow=2, ncol=3), y = rep(1, 2),
+                         lower=-1,
+                         upper=10,
+                         blocks=c(5, 5)) # two dimensions; expected three
+  )
+})
