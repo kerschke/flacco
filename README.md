@@ -21,6 +21,8 @@ Introduction
 
 To be continued..
 
+If you want to get started quickly, have a look at the [flacco Tutorial](http://kerschke.github.io/flacco-tutorial/site/)
+
 *If you like the package, please "star" it on Github.*
 
 
