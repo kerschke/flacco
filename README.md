@@ -1,7 +1,7 @@
 flacco: Feature-based Landscape Analysis of Continuous and Constraint Optimization Problems
 ==========================
 
-[![Build Status](https://travis-ci.org/kerschke/flacco.png)](https://travis-ci.org/kerschke/flacco)
+[![Build Status](https://travis-ci.org/kerschke/flacco.svg?branch=master)](https://travis-ci.org/kerschke/flacco)
 [![Build status](https://ci.appveyor.com/api/projects/status/cd170v2xlpw8db47/branch/master?svg=true)](https://ci.appveyor.com/project/kerschke/flacco/branch/master)
 [![Coverage Status](https://coveralls.io/repos/kerschke/flacco/badge.svg)](https://coveralls.io/r/kerschke/flacco)
 [![Tutorial](https://img.shields.io/badge/flacco-tutorial-ff69b5.svg)](http://kerschke.github.io/flacco-tutorial/site/)
