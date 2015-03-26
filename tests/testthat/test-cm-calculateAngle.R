@@ -1,15 +1,19 @@
 context("calculateAngle")
 
-test_that("calculateAngle", {
+test_that("A cell mapping-enabled FeatureObject is required", {
   featobj = createFeatureObject(init = iris[, -5], objective = "Sepal.Length")
   expect_error(calculateAngle(featobj))
-  
+})
+
+test_that("calculateAngle -- first use case", {
   featobj = createFeatureObject(init = iris[, -5], objective = "Sepal.Length", blocks = 3)
   angle.feats = suppressWarnings(calculateAngle(featobj))
   expect_equal(length(angle.feats), 8)
   expect_is(angle.feats, class = "list")
   expect_equal(as.character(sapply(angle.feats, class)), rep("numeric", 8))
-  
+})
+
+test_that("calculateAngle -- second use case", {
   A = rbind(c(0, 0), c(0, 3), c(4, 3))
   featobj = createFeatureObject(X = A, y = 1:3, blocks = 1)
   angle.feats = suppressWarnings(calculateAngle(featobj))
