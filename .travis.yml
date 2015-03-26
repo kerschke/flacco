@@ -2,6 +2,8 @@
 
 language: c
 
+sudo: true
+
 env:
    global:
      - _R_CHECK_TIMINGS_=0
