@@ -51,7 +51,7 @@ calculateConvexity = function(feat.object, control) {
   assertList(control)
   f = feat.object$fun
   if (is.null(f))
-    stop("The local search features require the exact function!")
+    stop("The convexity features require the exact function!")
   X = extractFeatures(feat.object)
   y = extractObjective(feat.object)
   if (missing(control))
@@ -66,7 +66,7 @@ calculateConvexity = function(feat.object, control) {
     drop(f(xn) - y[i] %*% wt)
   }
   n = feat.object$n.obs
-  N = control_parameter(control, "convex.nsamp", 1000L)
+  N = control_parameter(control, "convex.nsample", 1000L)
   eps = control_parameter(control, "convex.threshold", 1e-10)
   delta = replicate(N, calcDistance(n))
   list(conv.conv_prob = mean(delta < -eps),
