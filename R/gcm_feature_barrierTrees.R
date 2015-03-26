@@ -255,7 +255,7 @@ create_barrierTree = function(I, Apr, fe, indexPermutation, closedClassIndex) {
   for (i in 1:length(fe)) {
     #make predecesor graph        
     key3 = which(Apr[indexPermutation2[i], ] != 0)
-    if (length(key3) == 1) {
+    if (length(key3) <= 1) {
       next
     }
     
