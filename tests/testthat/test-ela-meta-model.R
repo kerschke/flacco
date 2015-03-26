@@ -11,24 +11,20 @@ test_that("Calculation of MetaModel is possible", {
   # (2) compute the meta model features
   features = calculateMetaModel(feat.object)
   
-  # test return value types
+  # test return value types and ranges
   expect_is(features, "list")
-  expect_true( testNumber(features$appr.lin.simple.adj_r2) )
+  expect_true( testNumber(features$appr.lin.simple.adj_r2, lower=-1, upper=1) )
   expect_true( testNumber(features$appr.lin.simple.intercept) )
   expect_true( testNumber(features$appr.lin.simple.coef.min) )
   expect_true( testNumber(features$appr.lin.simple.coef.max) )
   expect_true( testNumber(features$appr.lin.simple.coef.max_by_min) )
-  expect_true( testNumber(features$appr.lin.w_interact.adj_r2) )
-  expect_true( testNumber(features$appr.quad.simple.adj_r2) )
+  expect_true( testNumber(features$appr.lin.w_interact.adj_r2, lower=-1, upper=1) )
+  expect_true( testNumber(features$appr.quad.simple.adj_r2, lower=-1, upper=1) )
   expect_true( testNumber(features$appr.quad.simple.cond) )
-  expect_true( testNumber(features$appr.quad.w_interact.adj_r2) )
+  expect_true( testNumber(features$appr.quad.w_interact.adj_r2, lower=-1, upper=1) )
   
-  # test return values and ranges
+  # test return values
   expect_equal( features$appr.lin.simple.coef.max_by_min, 
                 features$appr.lin.simple.coef.max / features$appr.lin.simple.coef.min, 
                 tolerance = 0.00001 )
-  expect_true( testNumber(features$appr.lin.simple.adj_r2, lower=-1, upper=1) )
-  expect_true( testNumber(features$appr.lin.w_interact.adj_r2, lower=-1, upper=1) )
-  expect_true( testNumber(features$appr.quad.simple.adj_r2, lower=-1, upper=1) )
-  expect_true( testNumber(features$appr.quad.w_interact.adj_r2, lower=-1, upper=1) )
 })
