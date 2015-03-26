@@ -30,3 +30,18 @@ test_that("GCM features cannot compute on non-cellmapping object", {
   expect_error( calculateGCMFeatures(featobj) )
   
 })
+
+test_that("GCM features draw three plots for two-dimensional inputs", {
+  values = iris[, 1:3] # make 2d + objective
+  
+  # preconditions
+  featobj = createFeatureObject(values, objective = "Petal.Length", blocks = 5)
+  
+  # execution
+  calculateGCMFeatures(featobj, control = list(gcm.plot = TRUE))
+  
+  # since we cannot capture the created plot properly -- not even using 
+  # evaluate::evaluate --, we can only test whether no errors were raised.
+  
+  expect_true(TRUE) # this can only happen if no error has forced the execution to stop.
+})
