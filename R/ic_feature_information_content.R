@@ -4,8 +4,8 @@
 #' Computes features based on the Information Content of Fitness 
 #' Sequences (ICoFiS) approach.
 #' 
-#' In this approach, the information content of a 
-#' continuous landscapes, i.e. smoothness, ruggedness, or neutrality, are
+#' In this approach, the information content of a
+#' continuous landscape, i.e. smoothness, ruggedness, or neutrality, are
 #' quantified. While common analysis methods were able to calculate the information
 #' content of discrete landscapes, the ICoFiS approach provides an adaptation to 
 #' continuous landscapes that accounts e.g. for variable step sizes in random walk
