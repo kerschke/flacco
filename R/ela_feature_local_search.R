@@ -27,7 +27,7 @@
 #' the clusters.
 #' @param ... [any]\cr
 #' Further arguments handled by \code{optim}.
-#' @return [\code{\link{list}(13)} of \code{\link{numeric}(1)}].\cr
+#' @return [\code{\link{list}(14)} of \code{\link{numeric}(1)}].\cr
 #' List of features.\cr
 #' For further information, see details.
 #' @details 
@@ -46,9 +46,11 @@
 #' The following three features (\code{ls.basin_sizes.avg}) aggregate the
 #' basin sizes of the the best, non-best (all except for the best) and worst
 #' basins (w.r.t. the objective value).\cr
-#' The remaining six features (\code{ls.f_evals}) aggregate the number of
+#' The next six features (\code{ls.f_evals}) aggregate the number of
 #' function evaluations, which were needed for the local searches (aggregated
 #' using minimum, 1st quartile, mean, median, 3rd quartile and maximum).\cr
+#' At last, the number of executed function evaluations (\code{ls.fun_evals})
+#' is being computed.
 #' 
 #' \bold{Note}:\cr
 #' These calculations cause additional function evaluations, caused by the
@@ -73,7 +75,7 @@
 #' @export 
 calculateLocalSearch = function(feat.object, control, ...) {
   assertClass(feat.object, "FeatureObject")
-  f = feat.object$fun
+  f = initializeCounter(feat.object$fun)
   if (is.null(f))
     stop("The local search features require the exact function!")
   X = extractFeatures(feat.object)
@@ -95,8 +97,8 @@ calculateLocalSearch = function(feat.object, control, ...) {
     function(cl) as.numeric(quantile(cl$height, 0.1)))
   
   calcOptim = function(par) {
-    res = optim(par, f, method = opt.algo, control = opt.algo.control, ...)
-    return(list(par = res$par, counts = showCounts(f)))
+    res = optim(par, fn, method = opt.algo, control = opt.algo.control, ...)
+    return(list(par = res$par, counts = resetCounter(fn)))
   }
   
   if (nrow(X) >= N) {
@@ -105,7 +107,7 @@ calculateLocalSearch = function(feat.object, control, ...) {
   } else
     stop("Error in local_search_feature: More startpoints than Design Points.")
   
-  f = addEvalCounter(f)
+  fn = initializeCounter(f)
   result = lapply(ids, function(i) calcOptim(drop(X[i,])))
   pars = t(sapply(result, function(i) i$par))
   fun.evals = sapply(result, function(i) i$counts)
@@ -136,6 +138,7 @@ calculateLocalSearch = function(feat.object, control, ...) {
     ls.f_evals.mean = mean(fun.evals),
     ls.f_evals.med = median(fun.evals),
     ls.f_evals.uq = as.numeric(quantile(fun.evals, 0.75)),
-    ls.f_evals.max = max(fun.evals)
+    ls.f_evals.max = max(fun.evals),
+    ls.fun_evals = showEvals(f)
   )
 }

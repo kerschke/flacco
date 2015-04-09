@@ -18,7 +18,7 @@ The element \code{curv.sample_size} defines the number of samples that are
 used for calculating the features. The default is \code{1000}.}
 }
 \value{
-[\code{\link{list}(21)} of \code{\link{numeric}(1)}].\cr
+[\code{\link{list}(22)} of \code{\link{numeric}(1)}].\cr
 List of features.\cr
 For further information, see details.
 }
@@ -44,6 +44,10 @@ is always done in the same order:\cr
 (5) upper quartile (also known as 3rd quartile or \code{75\%}-quantile)\cr
 (6) maximum\cr
 (7) standard deviation\cr
+
+As these feature computations require additional function evaluations, the
+exact number of executed function calls is being returned as well
+(\code{curv.fun_evals}).
 
 \bold{Note:}\cr
 These calculations need additional function evaluations. The number of them

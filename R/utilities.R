@@ -1,12 +1,13 @@
 control_parameter = function(control, name, default) {
   v = control[[name]]
   if (is.null(v))
-    return (default)
+    return(default)
   else
-    return (v)
+    return(v)
 }
 
-addEvalCounter = function(fn) {
+## wraps a evaluation counter around the function
+initializeCounter = function(fn) {
   force(fn)
   count = 0L
   structure(function(x, ...) {
@@ -17,38 +18,46 @@ addEvalCounter = function(fn) {
   })
 }
 
-showNumberOfEvals = function(fn) {
+## shows the number of function evaluations / calls
+showEvals = function(fn) {
   environment(fn)$count
 }
 
-resetEvalCounter = function (fn) {
-  last_count = environment(fn)$count
-  environment(fn)$count = 0L
-  last_count
-}
-
-showNumberOfEvals = function(fn) {
-  environment(fn)$count
-}
-
-showCounts = function (fn) {
+## resets the evaluation counter to 0 and returns the number of calls
+resetCounter = function (fn) {
   counts = environment(fn)$count
   last_count = environment(fn)$count
   environment(fn)$count = 0L
   counts
 }
 
-selectMin = function(x) {
+## helper, which returns the minimum of a vector
+selectMin = function(x, tie.breaker = "sample") {
   i = which(x == min(x))
-  if (length(i) > 1L)
-    i = sample(i, 1L)
+  if (length(i) > 1L) {
+    if (tie.breaker == "first") {
+      return(i[1L])
+    } else if (tie.breaker == "last") {
+      return(i[length(i)])
+    } else if (tie.breaker == "sample") {
+      return(sample(i, 1L))
+    }
+  }
   return(i)
 }
 
-selectMax = function(x) {
+## helper, which returns the maximum of a vector
+selectMax = function(x, tie.breaker = "sample") {
   i = which(x == max(x))
-  if (length(i) > 1L)
-    i = sample(i, 1L)
+  if (length(i) > 1L) {
+    if (tie.breaker == "first") {
+      return(i[1L])
+    } else if (tie.breaker == "last") {
+      return(i[length(i)])
+    } else if (tie.breaker == "sample") {
+      return(sample(i, 1L))
+    }
+  }
   return(i)
 }
 

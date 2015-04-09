@@ -12,7 +12,7 @@
 #' \code{convex.threshold} defines the threshold of the linearity, i.e.,
 #' the tolerance (or deviation) from perfect linearity is allowed in order 
 #' to still be considered as linear. Here, the default is \code{1e-10}.
-#' @return [\code{\link{list}(3)} of \code{\link{numeric}(1)}].\cr
+#' @return [\code{\link{list}(4)} of \code{\link{numeric}(1)}].\cr
 #' List of features.\cr
 #' For further information, see details.
 #' @details
@@ -28,7 +28,11 @@
 #' (2) \code{convex.linear_p} shows the percentage of linearity\cr
 #' (3) \code{convex.linear_dev} returns the average deviation between the
 #' linear combination of objectives and the objective of the linear combination
-#' of the observations
+#' of the observations.\cr
+#' 
+#' As those calculations cause additional function evaluations, the number of 
+#' executed function evaluations is also counted and returned
+#' (\code{convex.fun_evals}).
 #' 
 #' \bold{Note}:\cr
 #' These calculations cause \code{convex.nsample} additional function
@@ -49,7 +53,7 @@ calculateConvexity = function(feat.object, control) {
   if (missing(control))
     control = list()
   assertList(control)
-  f = feat.object$fun
+  f = initializeCounter(feat.object$fun)
   if (is.null(f))
     stop("The convexity features require the exact function!")
   X = extractFeatures(feat.object)
@@ -71,5 +75,6 @@ calculateConvexity = function(feat.object, control) {
   delta = replicate(N, calcDistance(n))
   list(conv.conv_prob = mean(delta < -eps),
     conv.lin_prob = mean(abs(delta) <= eps),
-    conv.lin_dev = mean(delta))
+    conv.lin_dev = mean(delta),
+    conv.fun_evals = showEvals(f))
 }

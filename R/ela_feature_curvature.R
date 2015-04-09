@@ -29,11 +29,15 @@
 #' (6) maximum\cr
 #' (7) standard deviation\cr
 #'   
+#' As these feature computations require additional function evaluations, the
+#' exact number of executed function calls is being returned as well
+#' (\code{curv.fun_evals}).
+#'   
 #' \bold{Note:}\cr
 #' These calculations need additional function evaluations. The number of them
 #' heavily depends on the number of iterations needed for estimating the
 #' gradient and hessian of the function.
-#' @return [\code{\link{list}(21)} of \code{\link{numeric}(1)}].\cr
+#' @return [\code{\link{list}(22)} of \code{\link{numeric}(1)}].\cr
 #' List of features.\cr
 #' For further information, see details.
 #' @references
@@ -49,7 +53,7 @@
 #' @export 
 calculateCurvature = function(feat.object, control) {
   assertClass(feat.object, "FeatureObject")
-  f = feat.object$fun
+  f = initializeCounter(feat.object$fun)
   if (is.null(f))
     stop("The curvature features require the exact function!")
   if (missing(control))
@@ -76,5 +80,6 @@ calculateCurvature = function(feat.object, control) {
   nn = c("min", "lq", "mean", "med", "uq", "max", "sd")
   names(fn) = paste(rep(rownames(res), each = length(nn)), nn, sep = ".")
   fn
+  return(c(fn, curv.fun_evals = showEvals(f)))
 }
 

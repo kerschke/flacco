@@ -37,7 +37,7 @@ the clusters.}
 Further arguments handled by \code{optim}.}
 }
 \value{
-[\code{\link{list}(13)} of \code{\link{numeric}(1)}].\cr
+[\code{\link{list}(14)} of \code{\link{numeric}(1)}].\cr
 List of features.\cr
 For further information, see details.
 }
@@ -60,9 +60,11 @@ best local optimum to the mean of all found local optima.\cr
 The following three features (\code{ls.basin_sizes.avg}) aggregate the
 basin sizes of the the best, non-best (all except for the best) and worst
 basins (w.r.t. the objective value).\cr
-The remaining six features (\code{ls.f_evals}) aggregate the number of
+The next six features (\code{ls.f_evals}) aggregate the number of
 function evaluations, which were needed for the local searches (aggregated
 using minimum, 1st quartile, mean, median, 3rd quartile and maximum).\cr
+At last, the number of executed function evaluations (\code{ls.fun_evals})
+is being computed.
 
 \bold{Note}:\cr
 These calculations cause additional function evaluations, caused by the
