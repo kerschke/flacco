@@ -1,12 +1,11 @@
 Package: flacco
 Type: Package
 Version: 1.0
-Date: 2015-03-03
-Title: Feature-based Landscape Analysis of Continuous and Constraint Optimization Problems.
-Description: Provision of features and tools which can be used for an
-    exploratory landscape analysis of continuous optimization problems. It can
-    be used as quantification of rather complex properties of optimization 
-    problems, such as global structure, separability, etc.
+Date: 2015-04-10
+Title: Feature-based Landscape Analysis of Continuous and Constraint Optimization Problems
+Description: Contains tools and features, which can be used for an exploratory landscape
+    analysis of continuous optimization problems. Those are able to quantify rather complex
+    properties of optimization problems, such as the global structure, separability, etc.
 Authors@R: c(person("Pascal", "Kerschke", role = c("aut", "cre"),
     email = "kerschke@uni-muenster.de"),
     person("Jan", "Dagefoerde", role = "aut"))
