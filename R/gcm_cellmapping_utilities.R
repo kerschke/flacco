@@ -29,6 +29,8 @@ isNeighbourInvalid = function(currentCoord, neighbourCoord, divisions) {
 
 ## converts a vector of blocks per dimension into a single cell ID
 ztocell = function (z, divisions) {
+  if (any(z > divisions))
+    return(NULL)
   z = z - 1L
   dim.prod = c(1, cumprod(divisions[-length(divisions)]))
   sum(dim.prod * z) + 1L

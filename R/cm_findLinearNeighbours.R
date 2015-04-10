@@ -32,12 +32,16 @@ findLinearNeighbours = function(cell.ids, blocks, diag = FALSE) {
   max.cell = prod(blocks)
   cell.z = t(sapply(cell.ids, celltoz, blocks))
   if (diag) {
-    combs = expand.grid(lapply(dims, function(d) 0:1))[-1, ]
+    combs = expand.grid(lapply(dims, function(d) -1:1))
+    combs = combs[!apply(combs, 1, function(z) all(z %in% c(-1, 0))), ]
   } else {
     combs = diag(length(dims))
   }
   nbs = lapply(seq_along(cell.ids), function(i) {
     x = cell.z[i, ]
+    if (all((x == blocks) | (x == 1))) {
+      return(list(NULL))
+    }
     lapply(1:nrow(combs), function(k) {
       succ = ztocell(x + combs[k, ], blocks)
       nb = c(2 * cell.ids[i] - succ, cell.ids[i], succ)
@@ -46,5 +50,13 @@ findLinearNeighbours = function(cell.ids, blocks, diag = FALSE) {
     })
   })
   nbs = do.call(c, nbs)
-  nbs[sapply(nbs, function(x) !is.null(x))]
+  nbs = lapply(nbs[sapply(nbs, length) == 3L], as.integer)
+  if (diag & (length(nbs) != 0)) {
+    nbs = lapply(nbs, sort)
+    nbs = nbs[!duplicated(nbs)]
+    ind = sapply(nbs, function(h) h[1:2])
+    return(nbs[order(ind[2,], ind[1,])])
+  } else {
+    return(nbs)
+  }
 }
