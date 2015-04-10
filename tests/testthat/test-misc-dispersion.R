@@ -54,7 +54,7 @@ test_that("Calculation Dispersion based on Different Metrics", {
   expect_is(features1, "list")
   expect_is(features2, "list")
   
-  expect_identical(features, features2)
+  expect_equal(features, features2)
   expect_false(identical(features, features1))
   expect_false(identical(features2, features1))
 })
