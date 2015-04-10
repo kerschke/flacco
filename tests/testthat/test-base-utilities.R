@@ -103,3 +103,30 @@ test_that("ztox", {
   expect_equal(ztox(c(4,3,9,8), h, lb), c(2, 0, 12, 10))
   
 })
+
+test_that("selectMin", {
+  x = c(5, 3, 3, 5, 6, 10, 10, 3, 5.4)
+  ind = which(x == min(x))
+  expect_is(selectMin(x), "integer")
+  expect_true( testNumber(selectMin(x), lower = min(ind), upper = max(ind)) )
+  expect_true(selectMin(x) %in% ind)
+  expect_true( testNumber(selectMin(x, tie.breaker = "sample"), 
+    lower = min(ind), upper = max(ind)) )
+  expect_true(selectMin(x, tie.breaker = "sample") %in% ind)
+  expect_identical(selectMin(x, tie.breaker = "first"), min(ind))
+  expect_identical(selectMin(x, tie.breaker = "last"), max(ind))
+})
+
+
+test_that("selectMax", {
+  x = c(5, 3, 3, 5, 6, 10, 10, 3, 5.4)
+  ind = which(x == max(x))
+  expect_is(selectMax(x), "integer")
+  expect_true( testNumber(selectMax(x), lower = min(ind), upper = max(ind)) )
+  expect_true(selectMax(x) %in% ind)
+  expect_true( testNumber(selectMax(x, tie.breaker = "sample"), 
+    lower = min(ind), upper = max(ind)) )
+  expect_true(selectMax(x, tie.breaker = "sample") %in% ind)
+  expect_identical(selectMax(x, tie.breaker = "first"), min(ind))
+  expect_identical(selectMax(x, tie.breaker = "last"), max(ind))
+})

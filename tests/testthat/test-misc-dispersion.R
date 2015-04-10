@@ -32,3 +32,29 @@ test_that("calculateDispersion -- first use case", {
   expect_true( testNumber(features$disp.diff_median_10) )
   expect_true( testNumber(features$disp.diff_median_25) )
 })
+
+
+test_that("Calculation Dispersion based on Different Metrics", {
+  set.seed(2015*03*26)
+  
+  # (1) create a feature object:
+  X = t(replicate(n = 2000, expr = runif(n = 5, min = -10, max = 10)))
+  y = apply(X, 1, function(x) sum(x^2))
+  feat.object = createFeatureObject(X = X, y = y)
+  
+  # (2) compute the dispersion features
+  features = calculateDispersion(feat.object,
+    control = list(disp.dist_method = "minkowski"))
+  features1 = calculateDispersion(feat.object, 
+    control = list(disp.dist_method = "manhattan"))
+  features2 = calculateDispersion(feat.object)
+  
+  # test return value types and ranges
+  expect_is(features, "list")
+  expect_is(features1, "list")
+  expect_is(features2, "list")
+  
+  expect_identical(features, features2)
+  expect_false(identical(features, features1))
+  expect_false(identical(features2, features1))
+})
