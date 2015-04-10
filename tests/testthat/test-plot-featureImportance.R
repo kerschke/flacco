@@ -43,6 +43,19 @@ test_that("Feature Importance Plots", {
   # importance plot:
   plotFeatureImportance(featureList)
   
+  # In order to check whether the plot properly adjusts the size, when
+  # the number of features is less than 5 (or not), it is called with
+  # a different sized featureList:
+  if (length(unique(unlist(featureList))) < 5) {
+    featureList[[1]] = c("a", "b", "c", "d", "e", "f")
+    plotFeatureImportance(featureList)
+  } else {
+    tab = table(unlist(featureList))
+    tab = sort(tab, decreasing = TRUE)
+    featureList = lapply(featureList, function(x) x %in% names(tab)[1:4])
+    plotFeatureImportance(featureList)
+  }
+  
   # since we cannot capture the created plot properly, we can only test whether
   # no errors were raised.
   expect_true(TRUE) # only TRUE if no error has caused an error
