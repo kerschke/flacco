@@ -8,7 +8,7 @@ test_that("Calculation of Curvature requires the original function", {
   y = apply(X, 1, function(x) sum(x^2))
   feat.object = createFeatureObject(X = X, y = y)
   
-  # (2) compute the meta model features
+  # (2) compute the curvature features
   expect_error( calculateCurvature(feat.object) )
   
 })

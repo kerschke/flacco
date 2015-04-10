@@ -8,7 +8,7 @@ test_that("Calculation of Local Search requires the original function", {
   y = apply(X, 1, function(x) sum(x^2))
   feat.object = createFeatureObject(X = X, y = y)
   
-  # (2) compute the meta model features
+  # (2) compute the local search features
   expect_error( calculateLocalSearch(feat.object) )
   
 })
