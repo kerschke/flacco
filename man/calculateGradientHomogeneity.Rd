@@ -15,7 +15,7 @@ Should possible warnings about (almost) empty cells be shown? The default is
 \code{show.warnings = TRUE}.}
 }
 \value{
-[\code{\link{list}(8)}].\cr
+[\code{\link{list}(4)}].\cr
 List of features.\cr
 For further information, see details.
 }
@@ -32,7 +32,11 @@ within a cell is computed. Based on those measurements (one per cell), this
 function computes two features:\cr
 
 1) The arithmetic mean of those length's; it should lie within [-1, +1].\cr
-2) Their standard deviation.
+2) Their standard deviation.\cr
+
+The final two features show the amount of (additional) function
+evaluations and running time (in seconds) that were needed for the
+computation of these features.
 }
 \examples{
 # (1) create a feature object:

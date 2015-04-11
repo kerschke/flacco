@@ -12,7 +12,7 @@
 #' \code{convex.threshold} defines the threshold of the linearity, i.e.,
 #' the tolerance (or deviation) from perfect linearity is allowed in order 
 #' to still be considered as linear. Here, the default is \code{1e-10}.
-#' @return [\code{\link{list}(4)} of \code{\link{numeric}(1)}].\cr
+#' @return [\code{\link{list}(6)} of \code{\link{numeric}(1)}].\cr
 #' List of features.\cr
 #' For further information, see details.
 #' @details
@@ -26,17 +26,16 @@
 #' The resulting features are:\cr
 #' (1) \code{convex.convex_p} shows the percentage of convexity\cr
 #' (2) \code{convex.linear_p} shows the percentage of linearity\cr
-#' (3) \code{convex.linear_dev} returns the average deviation between the
+#' (3) \code{convex.linear_dev.orig} returns the average deviation between the
 #' linear combination of objectives and the objective of the linear combination
 #' of the observations.\cr
+#' (4) \code{convex.linear_dev.abs} returns the average absolute deviation
+#' between the linear combination of objectives and the objective of the
+#' linear combination of the observations.\cr
 #' 
-#' As those calculations cause additional function evaluations, the number of 
-#' executed function evaluations is also counted and returned
-#' (\code{convex.fun_evals}).
-#' 
-#' \bold{Note}:\cr
-#' These calculations cause \code{convex.nsample} additional function
-#' evaluations.
+#' The final two features show the amount of (additional) function
+#' evaluations and running time (in seconds) that were needed for the
+#' computation of these features.
 #' @references
 #' See Mersmann et al. (2011), \dQuote{Exploratory Landscape Analysis} 
 #' (\url{http://dx.doi.org/10.1145/2001576.2001690}).
@@ -53,28 +52,31 @@ calculateConvexity = function(feat.object, control) {
   if (missing(control))
     control = list()
   assertList(control)
-  f = initializeCounter(feat.object$fun)
-  if (is.null(f))
+  if (is.null(feat.object$fun))
     stop("The convexity features require the exact function!")
-  X = extractFeatures(feat.object)
-  y = extractObjective(feat.object)
-  if (missing(control))
-    control = list()
-  calcDistance = function(n) {
-    i = sample(n, 2L)
-    wt = runif(1)
-    wt = c(wt, 1 - wt)
-    ## Linear compbination of X[i[1],] and X[i[2],]
-    xn = drop(wt %*% X[i, ])
-    ## Distance between xn and linear combination of y[i[1]] and y[i[2]]
-    drop(f(xn) - y[i] %*% wt)
-  }
-  n = feat.object$n.obs
-  N = control_parameter(control, "convex.nsample", 1000L)
-  eps = control_parameter(control, "convex.threshold", 1e-10)
-  delta = replicate(N, calcDistance(n))
-  list(conv.conv_prob = mean(delta < -eps),
-    conv.lin_prob = mean(abs(delta) <= eps),
-    conv.lin_dev = mean(delta),
-    conv.fun_evals = showEvals(f))
+  measureTime(expression({
+    f = initializeCounter(feat.object$fun)
+    X = extractFeatures(feat.object)
+    y = extractObjective(feat.object)
+    if (missing(control))
+      control = list()
+    calcDistance = function(n) {
+      i = sample(n, 2L)
+      wt = runif(1)
+      wt = c(wt, 1 - wt)
+      ## Linear compbination of X[i[1],] and X[i[2],]
+      xn = drop(wt %*% X[i, ])
+      ## Distance between xn and linear combination of y[i[1]] and y[i[2]]
+      drop(f(xn) - y[i] %*% wt)
+    }
+    n = feat.object$n.obs
+    N = control_parameter(control, "convex.nsample", 1000L)
+    eps = control_parameter(control, "convex.threshold", 1e-10)
+    delta = replicate(N, calcDistance(n))
+    list(conv.conv_prob = mean(delta < -eps),
+      conv.lin_prob = mean(abs(delta) <= eps),
+      conv.lin_dev.orig = mean(delta),
+      conv.lin_dev.abs = mean(abs(delta)),
+      conv.costs_fun_evals = showEvals(f))
+  }), "conv")
 }

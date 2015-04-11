@@ -34,16 +34,18 @@ test_that("Calculation of Cell Convexity is possible", {
   features = calculateCellConvexity(feat.object)
   
   # test return value types and ranges
-  expect_equal(length(features), 4)
+  expect_equal(length(features), 6L)
   expect_is(features, class = "list")
-  expect_equal(as.character(sapply(features, class)), rep("numeric", 4))
-  expect_true( testNumber(features$convex.hard, lower = 0, upper = 1) )
-  expect_true( testNumber(features$convex.soft, lower = 0, upper = 1) )
-  expect_true( testNumber(features$concave.hard, lower = 0, upper = 1) )
-  expect_true( testNumber(features$concave.soft, lower = 0, upper = 1) )
+  expect_equal(as.character(sapply(features, class)), c(rep("numeric", 4L), "integer", "numeric"))
+  expect_true( testNumber(features$cm_conv.convex.hard, lower = 0, upper = 1) )
+  expect_true( testNumber(features$cm_conv.convex.soft, lower = 0, upper = 1) )
+  expect_true( testNumber(features$cm_conv.concave.hard, lower = 0, upper = 1) )
+  expect_true( testNumber(features$cm_conv.concave.soft, lower = 0, upper = 1) )
+  expect_identical(features$cm_conv.costs_fun_evals, 0L)
+  expect_true( testNumber(features$cm_conv.costs_runtime, lower = 0) )
   
-  expect_true( features$convex.hard <= features$convex.soft )
-  expect_true( features$concave.hard <= features$concave.soft )
+  expect_true( features$cm_conv.convex.hard <= features$cm_conv.convex.soft )
+  expect_true( features$cm_conv.concave.hard <= features$cm_conv.concave.soft )
 })
 
 
@@ -67,7 +69,7 @@ test_that("Calculation of Nearest Better based on Minkowski Distance", {
   expect_is(features1, "list")
   expect_is(features2, "list")
   
-  expect_identical(features, features2)
-  expect_false(identical(features, features1))
-  expect_false(identical(features2, features1))
+  expect_identical(features[-7], features2[-7])
+  expect_false(identical(features[-7], features1[-7]))
+  expect_false(identical(features2[-7], features1[-7]))
 })

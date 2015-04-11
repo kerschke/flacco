@@ -27,7 +27,7 @@
 #' the clusters.
 #' @param ... [any]\cr
 #' Further arguments handled by \code{optim}.
-#' @return [\code{\link{list}(14)} of \code{\link{numeric}(1)}].\cr
+#' @return [\code{\link{list}(15)} of \code{\link{numeric}(1)}].\cr
 #' List of features.\cr
 #' For further information, see details.
 #' @details 
@@ -49,12 +49,10 @@
 #' The next six features (\code{ls.f_evals}) aggregate the number of
 #' function evaluations, which were needed for the local searches (aggregated
 #' using minimum, 1st quartile, mean, median, 3rd quartile and maximum).\cr
-#' At last, the number of executed function evaluations (\code{ls.fun_evals})
-#' is being computed.
 #' 
-#' \bold{Note}:\cr
-#' These calculations cause additional function evaluations, caused by the
-#' local search optimization algorithms.
+#' The final two features show the amount of (additional) function
+#' evaluations and running time (in seconds) that were needed for the
+#' computation of these features.
 #' @references
 #' See Mersmann et al. (2011), \dQuote{Exploratory Landscape Analysis} 
 #' (\url{http://dx.doi.org/10.1145/2001576.2001690}).
@@ -78,67 +76,69 @@ calculateLocalSearch = function(feat.object, control, ...) {
   f = initializeCounter(feat.object$fun)
   if (is.null(f))
     stop("The local search features require the exact function!")
-  X = extractFeatures(feat.object)
-  y = extractObjective(feat.object)
-  if (!feat.object$minimize)
-    y = -1 * y
-  d = feat.object$dim
-  if (missing(control))
-    control = list()
-  assertList(control)
-  N = control_parameter(control, "local.local_searches", 50L * d)
-  opt.algo = control_parameter(control, "local.optim_method", "BFGS")
-  opt.algo.control = control_parameter(control, "local.optim_method_control", 
-    list())
-  opt.algo.control$fnscale = -1
-  id.seed = control_parameter(control, "local.sample_seed", sample(1:1e6, 1))
-  clust.method = control_parameter(control, "local.clust_method", "single")
-  clust.cutfun = control_parameter(control, "local.clust_cut_function", 
-    function(cl) as.numeric(quantile(cl$height, 0.1)))
-  
-  calcOptim = function(par) {
-    res = optim(par, fn, method = opt.algo, control = opt.algo.control, ...)
-    return(list(par = res$par, counts = resetCounter(fn)))
-  }
-  
-  if (nrow(X) >= N) {
-    set.seed(id.seed)
-    ids = sample(nrow(X), N) 
-  } else
-    stop("Error in local_search_feature: More startpoints than Design Points.")
-  
-  fn = initializeCounter(f)
-  result = lapply(ids, function(i) calcOptim(drop(X[i,])))
-  pars = t(sapply(result, function(i) i$par))
-  fun.evals = sapply(result, function(i) i$counts)
-  
-  cl = hclust(dist(pars), clust.method)
-  clust = cutree(cl, h = clust.cutfun(cl))
-  
-  clust.size = tapply(clust, clust, length)
-  clust.size = clust.size / sum(clust.size) ## Normalize!
-  
-  centers = t(sapply(seq_along(clust.size),
-    function(i) colMeans(pars[clust == i, , drop = FALSE])))
-  centers.funvals = apply(centers, 1, f)
-  centers.best = which(centers.funvals == min(centers.funvals))
-  centers.worst = which(centers.funvals == max(centers.funvals))
-  
-  list(ls.n_loc_opt.abs = max(clust),
-    ls.n_loc_opt.rel = max(clust) / N,
-    ls.best2mean_contr.orig = min(centers.funvals) / mean(centers.funvals),
-    ls.best2mean_contr.ratio = (mean(centers.funvals) - min(centers.funvals)) / 
-      (max(centers.funvals) - min(centers.funvals)),
-    ls.basin_sizes.avg_best = mean(clust.size[centers.best]),
-    ls.basin_sizes.avg_non_best = ifelse(length(clust.size[-centers.best]) == 0L,
-      0, mean(clust.size[-centers.best])),
-    ls.basin_sizes.avg_worst = mean(clust.size[centers.worst]),
-    ls.f_evals.min = min(fun.evals),
-    ls.f_evals.lq = as.numeric(quantile(fun.evals, 0.25)),
-    ls.f_evals.mean = mean(fun.evals),
-    ls.f_evals.med = median(fun.evals),
-    ls.f_evals.uq = as.numeric(quantile(fun.evals, 0.75)),
-    ls.f_evals.max = max(fun.evals),
-    ls.fun_evals = showEvals(f)
-  )
+  measureTime(expression({
+    X = extractFeatures(feat.object)
+    y = extractObjective(feat.object)
+    if (!feat.object$minimize)
+      y = -1 * y
+    d = feat.object$dim
+    if (missing(control))
+      control = list()
+    assertList(control)
+    N = control_parameter(control, "local.local_searches", 50L * d)
+    opt.algo = control_parameter(control, "local.optim_method", "BFGS")
+    opt.algo.control = control_parameter(control, "local.optim_method_control", 
+      list())
+    opt.algo.control$fnscale = -1
+    id.seed = control_parameter(control, "local.sample_seed", sample(1:1e6, 1))
+    clust.method = control_parameter(control, "local.clust_method", "single")
+    clust.cutfun = control_parameter(control, "local.clust_cut_function", 
+      function(cl) as.numeric(quantile(cl$height, 0.1)))
+    
+    calcOptim = function(par) {
+      res = optim(par, fn, method = opt.algo, control = opt.algo.control, ...)
+      return(list(par = res$par, counts = resetCounter(fn)))
+    }
+    
+    if (nrow(X) >= N) {
+      set.seed(id.seed)
+      ids = sample(nrow(X), N) 
+    } else
+      stop("Error in local_search_feature: More startpoints than Design Points.")
+    
+    fn = initializeCounter(f)
+    result = lapply(ids, function(i) calcOptim(drop(X[i,])))
+    pars = t(sapply(result, function(i) i$par))
+    fun.evals = sapply(result, function(i) i$counts)
+    
+    cl = hclust(dist(pars), clust.method)
+    clust = cutree(cl, h = clust.cutfun(cl))
+    
+    clust.size = tapply(clust, clust, length)
+    clust.size = clust.size / sum(clust.size) ## Normalize!
+    
+    centers = t(sapply(seq_along(clust.size),
+      function(i) colMeans(pars[clust == i, , drop = FALSE])))
+    centers.funvals = apply(centers, 1, f)
+    centers.best = which(centers.funvals == min(centers.funvals))
+    centers.worst = which(centers.funvals == max(centers.funvals))
+    
+    list(ls.n_loc_opt.abs = max(clust),
+      ls.n_loc_opt.rel = max(clust) / N,
+      ls.best2mean_contr.orig = min(centers.funvals) / mean(centers.funvals),
+      ls.best2mean_contr.ratio = (mean(centers.funvals) - min(centers.funvals)) / 
+        (max(centers.funvals) - min(centers.funvals)),
+      ls.basin_sizes.avg_best = mean(clust.size[centers.best]),
+      ls.basin_sizes.avg_non_best = ifelse(length(clust.size[-centers.best]) == 0L,
+        0, mean(clust.size[-centers.best])),
+      ls.basin_sizes.avg_worst = mean(clust.size[centers.worst]),
+      ls.fun_evals.min = min(fun.evals),
+      ls.fun_evals.lq = as.numeric(quantile(fun.evals, 0.25)),
+      ls.fun_evals.mean = mean(fun.evals),
+      ls.fun_evals.med = median(fun.evals),
+      ls.fun_evals.uq = as.numeric(quantile(fun.evals, 0.75)),
+      ls.fun_evals.max = max(fun.evals),
+      ls.costs_fun_evals = showEvals(f)
+    )
+  }), "ls")
 }

@@ -12,7 +12,7 @@
 #' @param ... [any]\cr
 #' Further arguments, which are used for the computation of the nearest
 #' prototypes (\link{findNearestPrototype}).
-#' @return [\code{\link{list}(4)} of \code{\link{numeric}(1)}].\cr
+#' @return [\code{\link{list}(6)} of \code{\link{numeric}(1)}].\cr
 #' List of features.\cr
 #' For further information, see details.
 #' @details
@@ -30,7 +30,11 @@
 #' of the outer two, one assumes light support for concavity.\cr
 #' 
 #' In the end, all combinations of neighbouring cells are analyzed w.r.t. those
-#' four cases and averaged over all combinations.
+#' four cases and averaged over all combinations.\cr
+#' 
+#' The final two features show the amount of (additional) function
+#' evaluations and running time (in seconds) that were needed for the
+#' computation of these features.
 #' @references
 #' See Kerschke et al. (2014), \dQuote{Cell Mapping Techniques for Exploratory Landscape Analysis}, 
 #'  in EVOLVE-A Bridge between Probability, Set Oriented Numerics, and Evolutionary Computation V,
@@ -53,30 +57,32 @@ calculateCellConvexity = function(feat.object, diag = FALSE, ...) {
   assertLogical(diag)
   if (!feat.object$allows.cellmapping)
     stop ("This feature object does not support cell mapping. You first need to define the number of cells per dimension before computing these features.")
-  init.grid = feat.object$init.grid
-  cell.centers = feat.object$cell.centers
-  obj = feat.object$objective.name
-  blocks = feat.object$blocks
-  if (all(blocks <= 2L)) {
-    stop("The cell convexity features can only be computed when at least one dimension has more than 2 cells.")
-  }
-  near = findNearestPrototype(feat.object, ...)
-  nb.blocks = findLinearNeighbours(near$represented.cell, blocks, diag = diag)
-  convexity.counter = sapply(nb.blocks, function(cell.pairs) {
-    X = near[near$represented.cell %in% cell.pairs, ]
-    yvals = X[order(X$represented.cell), obj]
-    counter = c(convex.hard = FALSE, concave.hard = FALSE, 
-      convex.soft = FALSE, concave.soft = FALSE)
-    if (yvals[2] > mean(yvals[c(1, 3)])) {
-      counter["concave.soft"] = TRUE
-      if (yvals[2] > max(yvals[c(1,3)]))
-        counter["concave.hard"] = TRUE
-    } else if (yvals[2] < mean(yvals[c(1, 3)])) {
-      counter["convex.soft"] = TRUE
-      if (yvals[2] < min(yvals[c(1, 3)]))
-        counter["convex.hard"] = TRUE
+  measureTime(expression({
+    init.grid = feat.object$init.grid
+    cell.centers = feat.object$cell.centers
+    obj = feat.object$objective.name
+    blocks = feat.object$blocks
+    if (all(blocks <= 2L)) {
+      stop("The cell convexity features can only be computed when at least one dimension has more than 2 cells.")
     }
-    return(counter)
-  })
-  return(as.list(rowMeans(convexity.counter)))
+    near = findNearestPrototype(feat.object, ...)
+    nb.blocks = findLinearNeighbours(near$represented.cell, blocks, diag = diag)
+    convexity.counter = sapply(nb.blocks, function(cell.pairs) {
+      X = near[near$represented.cell %in% cell.pairs, ]
+      yvals = X[order(X$represented.cell), obj]
+      counter = c(cm_conv.convex.hard = FALSE, cm_conv.concave.hard = FALSE,
+        cm_conv.convex.soft = FALSE, cm_conv.concave.soft = FALSE)
+      if (yvals[2] > mean(yvals[c(1, 3)])) {
+        counter["cm_conv.concave.soft"] = TRUE
+        if (yvals[2] > max(yvals[c(1,3)]))
+          counter["cm_conv.concave.hard"] = TRUE
+      } else if (yvals[2] < mean(yvals[c(1, 3)])) {
+        counter["cm_conv.convex.soft"] = TRUE
+        if (yvals[2] < min(yvals[c(1, 3)]))
+          counter["cm_conv.convex.hard"] = TRUE
+      }
+      return(counter)
+    })
+    return(as.list(rowMeans(convexity.counter)))
+  }), "cm_conv")
 }

@@ -8,7 +8,7 @@
 #' @param show.warnings [\code{\link{logical}(1)}]\cr
 #' Should possible warnings about (almost) empty cells be shown? The default is
 #' \code{show.warnings = TRUE}.
-#' @return [\code{\link{list}(8)}].\cr
+#' @return [\code{\link{list}(4)}].\cr
 #' List of features.\cr
 #' For further information, see details.
 #' @details
@@ -20,7 +20,11 @@
 #' function computes two features:\cr
 #' 
 #' 1) The arithmetic mean of those length's; it should lie within [-1, +1].\cr
-#' 2) Their standard deviation.
+#' 2) Their standard deviation.\cr
+#' 
+#' The final two features show the amount of (additional) function
+#' evaluations and running time (in seconds) that were needed for the
+#' computation of these features.
 #' @references
 #' See Kerschke et al. (2014), \dQuote{Cell Mapping Techniques for Exploratory Landscape Analysis}, 
 #'  in EVOLVE-A Bridge between Probability, Set Oriented Numerics, and Evolutionary Computation V,
@@ -39,36 +43,38 @@ calculateGradientHomogeneity = function(feat.object, show.warnings) {
   assertClass(feat.object, "FeatureObject")
   if (!feat.object$allows.cellmapping)
     stop ("This feature object does not support cell mapping. You first need to define the number of cells per dimension before computing these features.")
-  init.grid = feat.object$init.grid
-  dims = feat.object$dim
-  cells = split(init.grid, init.grid$cell.ID)
-  gradhomo = sapply(cells, function(cell) {
-    n.obs = nrow(cell)
-    funvals = cell[, dims + 1L]
-    # 2 or less points are not helpful
-    if(n.obs > 2L) { 
-      dists = as.matrix(dist(cell[, 1L:dims], diag = TRUE, upper = TRUE))
-      # set diagonal to large (infinite) value
-      diag(dists) = Inf
-      norm.vectors = sapply(1:n.obs, function(row) {
-        nearest = as.integer(which.min(dists[row, ]))
-        x = cell[c(row, nearest), 1L:dims]
-        # compute normalized vector
-        ifelse(funvals[row] > funvals[nearest], -1, 1) * apply(x, 2, diff) /
-          as.numeric(dist(x))
-      })
-      # calculate distance of sum of normalized vectors
-      sqrt(sum(rowSums(norm.vectors)^2)) / n.obs
-    } else {
-      NA
-    }                    
-  })
-  if (missing(show.warnings))
-    show.warnings = TRUE
-  if (show.warnings && (mean(is.na(gradhomo)) > 0)) {
-    warningf("%.2f%% of the cells contain less than two observations.", 
-      100 * mean(is.na(gradhomo)))
-  }
-  return(list(gradhomo.mean = mean(gradhomo, na.rm = TRUE),
-    gradhomo.sd = sd(gradhomo, na.rm = TRUE)))
+  measureTime(expression({
+    init.grid = feat.object$init.grid
+    dims = feat.object$dim
+    cells = split(init.grid, init.grid$cell.ID)
+    gradhomo = sapply(cells, function(cell) {
+      n.obs = nrow(cell)
+      funvals = cell[, dims + 1L]
+      # 2 or less points are not helpful
+      if(n.obs > 2L) { 
+        dists = as.matrix(dist(cell[, 1L:dims], diag = TRUE, upper = TRUE))
+        # set diagonal to large (infinite) value
+        diag(dists) = Inf
+        norm.vectors = sapply(1:n.obs, function(row) {
+          nearest = as.integer(which.min(dists[row, ]))
+          x = cell[c(row, nearest), 1L:dims]
+          # compute normalized vector
+          ifelse(funvals[row] > funvals[nearest], -1, 1) * apply(x, 2, diff) /
+            as.numeric(dist(x))
+        })
+        # calculate distance of sum of normalized vectors
+        sqrt(sum(rowSums(norm.vectors)^2)) / n.obs
+      } else {
+        NA
+      }                    
+    })
+    if (missing(show.warnings))
+      show.warnings = TRUE
+    if (show.warnings && (mean(is.na(gradhomo)) > 0)) {
+      warningf("%.2f%% of the cells contain less than two observations.", 
+        100 * mean(is.na(gradhomo)))
+    }
+    return(list(gradhomo.mean = mean(gradhomo, na.rm = TRUE),
+      gradhomo.sd = sd(gradhomo, na.rm = TRUE)))
+  }), "gradhomo")
 }

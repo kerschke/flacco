@@ -31,13 +31,18 @@ computed:\cr
 (3) the smallest (absolute) value of the models coefficients\cr
 (4) the biggest (absolute) value of the models coefficients\cr
 (5) the ratio of the biggest and smallest coefficients, i.e. (4) / (5)\cr
+
 The 6th feature shows the model fit (i.e., adj. R^2) for the
 \emph{linear model with interactions} and the 7th feature does the same
 for a \emph{simple quadratic model}.\cr
 Apart from that, the condition of the latter - i.e. the ratio of
 its biggest and smallest (absolute) coefficients - is computed.\cr
 At last, the model fit of a \emph{quadratic model with interactions} is
-being computed.
+being computed.\cr
+
+The final two features show the amount of (additional) function
+evaluations and running time (in seconds) that were needed for the
+computation of these features.
 }
 \examples{
 # (1) create a feature object:

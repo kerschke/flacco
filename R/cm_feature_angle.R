@@ -8,7 +8,7 @@
 #' @param show.warnings [\code{\link{logical}(1)}]\cr
 #' Should possible warnings about \code{NAs} in the feature computation be 
 #' shown? The default is \code{show.warnings = TRUE}.
-#' @return [\code{\link{list}(8)} of \code{\link{numeric}(1)}].\cr
+#' @return [\code{\link{list}(10)} of \code{\link{numeric}(1)}].\cr
 #' List of features.\cr
 #' For further information, see details.
 #' @details
@@ -29,7 +29,11 @@
 #' (7) Arithmetic mean of the ratios between the distance of the worst and
 #' best element within a cell and the worst and best element in the entire
 #' initial design. The distances are only based on the objective space.\cr
-#' (8) Standard deviation of the ratios from (7).
+#' (8) Standard deviation of the ratios from (7).\cr
+#' 
+#' The final two features show the amount of (additional) function
+#' evaluations and running time (in seconds) that were needed for the
+#' computation of these features.
 #' @references
 #' See Kerschke et al. (2014), \dQuote{Cell Mapping Techniques for Exploratory Landscape Analysis}, 
 #'  in EVOLVE-A Bridge between Probability, Set Oriented Numerics, and Evolutionary Computation V,
@@ -49,56 +53,58 @@ calculateAngle = function(feat.object, show.warnings) {
   assertClass(feat.object, "FeatureObject")
   if (!feat.object$allows.cellmapping)
     stop ("This feature object does not support cell mapping. You first need to define the number of cells per dimension before computing these features.")
-  init.grid = feat.object$init.grid
-  cell.centers = feat.object$cell.centers
-  ft.names = feat.object$feature.names
-  obj = feat.object$objective.name
-  if (!feat.object$minimize)
-    init.grid[, obj] = -1 * init.grid[, obj]
-  grid.best = plyr::ddply(init.grid, "cell.ID", function(x) x[selectMin(x[, obj]), ])
-  grid.worst = plyr::ddply(init.grid, "cell.ID", function(x) x[selectMax(x[, obj]), ])
-  y.global.worst = max(grid.worst[, obj], na.rm = TRUE)
-  y.global.best = min(grid.best[, obj], na.rm = TRUE)
-  cell.values = sapply(1:nrow(cell.centers), function(i) {
-    x.center = cell.centers[i, ft.names]
-    x.worst = grid.worst[i, ft.names]
-    x.best = grid.best[i, ft.names]
-    y.local.worst = grid.worst[i, obj]
-    y.local.best = grid.best[i, obj]
-    b2w.ratio = (y.local.worst - y.local.best) / 
-      (y.global.worst - y.global.best)
-    if (all(!is.na(x.best))) {
-      c2b.vect = x.best - x.center
-      c2b.dist = drop(sqrt(crossprod(as.numeric(c2b.vect))))
-      c2w.vect = x.worst - x.center
-      c2w.dist = drop(sqrt(crossprod(as.numeric(c2w.vect))))
-      x = drop(crossprod(as.numeric(c2b.vect), as.numeric(c2w.vect))) / 
-        (c2b.dist * c2w.dist)
-      if (all(x.worst == x.best)) {
-        angle = 0
+  measureTime(expression({
+    init.grid = feat.object$init.grid
+    cell.centers = feat.object$cell.centers
+    ft.names = feat.object$feature.names
+    obj = feat.object$objective.name
+    if (!feat.object$minimize)
+      init.grid[, obj] = -1 * init.grid[, obj]
+    grid.best = plyr::ddply(init.grid, "cell.ID", function(x) x[selectMin(x[, obj]), ])
+    grid.worst = plyr::ddply(init.grid, "cell.ID", function(x) x[selectMax(x[, obj]), ])
+    y.global.worst = max(grid.worst[, obj], na.rm = TRUE)
+    y.global.best = min(grid.best[, obj], na.rm = TRUE)
+    cell.values = sapply(1:nrow(cell.centers), function(i) {
+      x.center = cell.centers[i, ft.names]
+      x.worst = grid.worst[i, ft.names]
+      x.best = grid.best[i, ft.names]
+      y.local.worst = grid.worst[i, obj]
+      y.local.best = grid.best[i, obj]
+      b2w.ratio = (y.local.worst - y.local.best) / 
+        (y.global.worst - y.global.best)
+      if (all(!is.na(x.best))) {
+        c2b.vect = x.best - x.center
+        c2b.dist = drop(sqrt(crossprod(as.numeric(c2b.vect))))
+        c2w.vect = x.worst - x.center
+        c2w.dist = drop(sqrt(crossprod(as.numeric(c2w.vect))))
+        x = drop(crossprod(as.numeric(c2b.vect), as.numeric(c2w.vect))) / 
+          (c2b.dist * c2w.dist)
+        if (all(x.worst == x.best)) {
+          angle = 0
+        } else {
+          ## this formula automatically results in an angle of max. 180 degree
+          angle = acos(x) * 180 / pi
+        }      
       } else {
-        ## this formula automatically results in an angle of max. 180 degree
-        angle = acos(x) * 180 / pi
-      }      
-    } else {
-      c2w.dist = c2b.dist = angle = NA
+        c2w.dist = c2b.dist = angle = NA
+      }
+      return(c(c2b.dist = c2b.dist, c2w.dist = c2w.dist, 
+        angle = angle, b2w.ratio = b2w.ratio))
+    })
+    prob.cells = mean(apply(cell.values, 2, function(x) any(is.na(x))))
+    if (missing(show.warnings))
+      show.warnings = TRUE
+    if (show.warnings && (prob.cells > 0)) {
+      warningf("%.2f%% of the cells produce NAs during the feature computation.", 
+        100 * prob.cells)
     }
-    return(c(c2b.dist = c2b.dist, c2w.dist = c2w.dist, 
-      angle = angle, b2w.ratio = b2w.ratio))
-  })
-  prob.cells = mean(apply(cell.values, 2, function(x) any(is.na(x))))
-  if (missing(show.warnings))
-    show.warnings = TRUE
-  if (show.warnings && (prob.cells > 0)) {
-    warningf("%.2f%% of the cells produce NAs during the feature computation.", 
-      100 * prob.cells)
-  }
-  return(list(dist.ctr2best.mean = mean(cell.values["c2b.dist", ], na.rm = TRUE),
-    dist.ctr2best.sd = sd(cell.values["c2b.dist", ], na.rm = TRUE),
-    dist.ctr2worst.mean = mean(cell.values["c2w.dist", ], na.rm = TRUE),
-    dist.ctr2worst.sd = sd(cell.values["c2w.dist", ], na.rm = TRUE),
-    angle.mean = mean(cell.values["angle", ], na.rm = TRUE),
-    angle.sd = sd(cell.values["angle", ], na.rm = TRUE),
-    y_ratio.best2worst.mean = mean(cell.values["b2w.ratio", ], na.rm = TRUE),
-    y_ratio.best2worst.sd = sd(cell.values["b2w.ratio", ], na.rm = TRUE)))
+    return(list(cm_angle.dist_ctr2best.mean = mean(cell.values["c2b.dist", ], na.rm = TRUE),
+      cm_angle.dist_ctr2best.sd = sd(cell.values["c2b.dist", ], na.rm = TRUE),
+      cm_angle.dist_ctr2worst.mean = mean(cell.values["c2w.dist", ], na.rm = TRUE),
+      cm_angle.dist_ctr2worst.sd = sd(cell.values["c2w.dist", ], na.rm = TRUE),
+      cm_angle.angle.mean = mean(cell.values["angle", ], na.rm = TRUE),
+      cm_angle.angle.sd = sd(cell.values["angle", ], na.rm = TRUE),
+      cm_angle.y_ratio_best2worst.mean = mean(cell.values["b2w.ratio", ], na.rm = TRUE),
+      cm_angle.y_ratio_best2worst.sd = sd(cell.values["b2w.ratio", ], na.rm = TRUE)))
+  }), "cm_angle")
 }

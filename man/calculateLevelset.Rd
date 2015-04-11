@@ -26,7 +26,7 @@ should be printed to the console (\code{levelset.show_info}). The default is
 \code{FALSE}.}
 }
 \value{
-[\code{\link{list}} of \code{\link{numeric}(1)}].\cr
+[\code{\link{list}(20)} of \code{\link{numeric}(1)}].\cr
 List of features.\cr
 For further information, see details.
 }
@@ -38,7 +38,11 @@ space to be precise).
 For each pair of classification method and quantile, the mean
 misclassfication error (mmce) is returned. In addition, for each quantile
 and pair of classification methods the ratio of the mmces of the latter is
-returned.
+returned.\cr
+
+The final two features show the amount of (additional) function
+evaluations and running time (in seconds) that were needed for the
+computation of these features.
 }
 \examples{
 # (1) create a feature object:

@@ -29,15 +29,10 @@
 #' (6) maximum\cr
 #' (7) standard deviation\cr
 #'   
-#' As these feature computations require additional function evaluations, the
-#' exact number of executed function calls is being returned as well
-#' (\code{curv.fun_evals}).
-#'   
-#' \bold{Note:}\cr
-#' These calculations need additional function evaluations. The number of them
-#' heavily depends on the number of iterations needed for estimating the
-#' gradient and hessian of the function.
-#' @return [\code{\link{list}(22)} of \code{\link{numeric}(1)}].\cr
+#' The final two features show the amount of (additional) function
+#' evaluations and running time (in seconds) that were needed for the
+#' computation of these features.
+#' @return [\code{\link{list}(23)} of \code{\link{numeric}(1)}].\cr
 #' List of features.\cr
 #' For further information, see details.
 #' @references
@@ -59,27 +54,29 @@ calculateCurvature = function(feat.object, control) {
   if (missing(control))
     control = list()
   assertList(control)
-  X = extractFeatures(feat.object)
-  d = feat.object$dim
-  N = control_parameter(control, "curv.sample_size", 100L * d)
-  calcNumDeriv = function(par) {
-    gr = numDeriv::grad(f, par)
-    hess = numDeriv::hessian(f, par)
-    eig = abs(eigen(hess)$values)
-    c(curv.grad_norm = sqrt(sum(gr^2)),
-      curv.grad_scale = max(abs(gr)) / min(abs(gr)),
-      curv.hessian_cond = max(eig) / min(eig))
-  }
-  ids = sample(feat.object$n.obs, N, replace = FALSE)
-  res = apply(X[ids, ], 1, calcNumDeriv)
-  fn = apply(res, 1, function(x) {
-    z = fivenum(x)
-    return(c(z[1:2], mean(x), z[3:5], sd(x)))
-  })
-  fn = as.vector(fn, mode = "list")
-  nn = c("min", "lq", "mean", "med", "uq", "max", "sd")
-  names(fn) = paste(rep(rownames(res), each = length(nn)), nn, sep = ".")
-  fn
-  return(c(fn, curv.fun_evals = showEvals(f)))
+  measureTime(expression({
+    X = extractFeatures(feat.object)
+    d = feat.object$dim
+    N = control_parameter(control, "curv.sample_size", 100L * d)
+    calcNumDeriv = function(par) {
+      gr = numDeriv::grad(f, par)
+      hess = numDeriv::hessian(f, par)
+      eig = abs(eigen(hess)$values)
+      c(curv.grad_norm = sqrt(sum(gr^2)),
+        curv.grad_scale = max(abs(gr)) / min(abs(gr)),
+        curv.hessian_cond = max(eig) / min(eig))
+    }
+    ids = sample(feat.object$n.obs, N, replace = FALSE)
+    res = apply(X[ids, ], 1, calcNumDeriv)
+    fn = apply(res, 1, function(x) {
+      z = fivenum(x)
+      return(c(z[1:2], mean(x), z[3:5], sd(x)))
+    })
+    fn = as.vector(fn, mode = "list")
+    nn = c("min", "lq", "mean", "med", "uq", "max", "sd")
+    names(fn) = paste(rep(rownames(res), each = length(nn)), nn, sep = ".")
+    fn
+    return(c(fn, curv.costs_fun_evals = showEvals(f)))
+  }), "curv")
 }
 

@@ -24,7 +24,10 @@ test_that("Calculation of Local Search is possible", {
   features = calculateCurvature(feat.object)
   
   # test return values
-  expect_is(features, "list")
+  expect_equal(length(features), 23L)
+  expect_is(features, class = "list")
+  expect_equal(as.character(sapply(features, class)), c(rep("numeric", 21L), "integer", "numeric"))
+  
   expect_true( testNumber(features$curv.grad_norm.min, lower = 0) )
   expect_true( testNumber(features$curv.grad_norm.lq, lower = 0) )
   expect_true( testNumber(features$curv.grad_norm.mean, lower = 0) )
@@ -46,6 +49,8 @@ test_that("Calculation of Local Search is possible", {
   expect_true( testNumber(features$curv.hessian_cond.uq, lower = 1) )
   expect_true( testNumber(features$curv.hessian_cond.max, lower = 1) )
   expect_true( testNumber(features$curv.hessian_cond.sd, lower = 0) )  
+  expect_true( testNumber(features$curv.costs_fun_evals, lower = 0L) )
+  expect_true( testNumber(features$curv.costs_runtime, lower = 0) )
   
   # test order of features
   grad_norm_features = features[grep("grad_norm", names(features))]

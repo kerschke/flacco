@@ -18,7 +18,7 @@ Analoguous, pca.cov_init and pca.cor_init do the same - based on the
 initial design, i.e., the combination of the feature and objective space.}
 }
 \value{
-[\code{list(8)} of \code{numeric(1)}].\cr
+[\code{list(10)} of \code{numeric(1)}].\cr
   List of features.\cr
   The first four features return the proportion of PCs that are needed to
   explain the required proportion of the variance. The first one corresponds
@@ -26,8 +26,11 @@ initial design, i.e., the combination of the feature and objective space.}
   does the same, but is based on the correlation matrix. The third and
   fourth feature are computed analoguous - but are based on the entire
   initial design, i.e., the combination of feature and objective space.
-  The remaining four features are based on the same categories and indicate
+  The next four features are based on the same categories and indicate
   which proportion of the variance is explained by the first PC.
+  The final two features show the amount of (additional) function
+  evaluations and running time (in seconds) that were needed for the
+  computation of these features.
 }
 \description{
 Computes 2 features based on the gradient homogeneity, i.e. within a cell

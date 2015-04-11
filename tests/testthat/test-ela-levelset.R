@@ -11,7 +11,10 @@ test_that("Calculation of Levelset is possible", {
   features = calculateLevelset(feat.object)
   
   # test return values
-  expect_is(features, "list")
+  expect_equal(length(features), 20L)
+  expect_is(features, class = "list")
+  expect_equal(as.character(sapply(features, class)), c(rep("numeric", 18L), "integer", "numeric"))
+  
   expect_true( testNumber(features$lvlset.mmce_lda_10, lower = 0, upper = 1) )
   expect_true( testNumber(features$lvlset.mmce_qda_10, lower = 0, upper = 1) )
   expect_true( testNumber(features$lvlset.mmce_mda_10, lower = 0, upper = 1) )
@@ -30,4 +33,7 @@ test_that("Calculation of Levelset is possible", {
   expect_true( testNumber(features$lvlset.lda_qda_50, lower = 0) )
   expect_true( testNumber(features$lvlset.lda_mda_50, lower = 0) )
   expect_true( testNumber(features$lvlset.qda_mda_50, lower = 0) )
+  expect_identical(features$lvlset.costs_fun_evals, 0L)
+  expect_true( testNumber(features$lvlset.costs_runtime, lower = 0) )
+  
 })

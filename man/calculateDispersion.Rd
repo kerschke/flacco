@@ -17,7 +17,11 @@ A list object that stores additional configuration parameters.}
 [\code{list} of \code{numeric(1)}].\cr
   List of features.\cr
   The ratios and differences between the mean (and median) distances among
-  the distances of the 'best' and all elements.
+  the distances of the 'best' and all elements.\cr
+
+  The final two features show the amount of (additional) function
+  evaluations and running time (in seconds) that were needed for the
+  computation of these features.
 }
 \description{
 Computes features based on the comparison of the dispersion of distances

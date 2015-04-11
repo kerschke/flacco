@@ -19,13 +19,18 @@
 #' (3) the smallest (absolute) value of the models coefficients\cr
 #' (4) the biggest (absolute) value of the models coefficients\cr
 #' (5) the ratio of the biggest and smallest coefficients, i.e. (4) / (5)\cr
+#' 
 #' The 6th feature shows the model fit (i.e., adj. R^2) for the 
 #' \emph{linear model with interactions} and the 7th feature does the same
 #' for a \emph{simple quadratic model}.\cr
 #' Apart from that, the condition of the latter - i.e. the ratio of
 #' its biggest and smallest (absolute) coefficients - is computed.\cr
 #' At last, the model fit of a \emph{quadratic model with interactions} is
-#' being computed.
+#' being computed.\cr
+#' 
+#' The final two features show the amount of (additional) function
+#' evaluations and running time (in seconds) that were needed for the
+#' computation of these features.
 #' @references
 #' See Mersmann et al. (2011), \dQuote{Exploratory Landscape Analysis} 
 #' (\url{http://dx.doi.org/10.1145/2001576.2001690}).
@@ -39,40 +44,42 @@
 
 calculateMetaModel = function(feat.object) {
   assertClass(feat.object, "FeatureObject")
-  X = extractFeatures(feat.object)
-  y = extractObjective(feat.object)
-  df = as.data.frame(X)
-  
-  ## Simple linear model:
-  lin.model = lm(y ~ ., data = df)
-  model.coeff = coef(lin.model)
-  res = list(appr.lin.simple.adj_r2 = calculateAdjustedR2(lin.model),
-    appr.lin.simple.intercept = as.numeric(model.coeff[1L]),
-    appr.lin.simple.coef.min = min(abs(model.coeff[-1L])),
-    appr.lin.simple.coef.max = max(abs(model.coeff[-1L])),
-    appr.lin.simple.coef.max_by_min = max(abs(model.coeff[-1L])) / min(abs(model.coeff[-1L]))
-  )
-  
-  ## Linear interactions:
-  lin.model = lm(y ~ .^2, data = df) ## Include interactions
-  res$appr.lin.w_interact.adj_r2 = calculateAdjustedR2(lin.model)
-      
-  ## Simple quadratic model:
-  cns = names(df)
-  df = cbind(df, df^2)
-  cns.squared = sprintf("%s_squared", cns)
-  names(df) = c(cns, cns.squared)
-  quad.model = lm(y ~ ., data = df)
-  quad.model_cond = range(abs(coef(quad.model)[cns.squared]))
-      
-  res$appr.quad.simple.adj_r2 = calculateAdjustedR2(quad.model)
-  res$appr.quad.simple.cond = quad.model_cond[2L] / quad.model_cond[1L]
-  
-  ## Quadratic interactions:
-  quad.model_matrix = model.matrix(~ .^2, data = df)
-  quad.model = lm.fit(quad.model_matrix, y)
-  res$appr.quad.w_interact.adj_r2 = calculateAdjustedR2(quad.model)
-  res
+  measureTime(expression({
+    X = extractFeatures(feat.object)
+    y = extractObjective(feat.object)
+    df = as.data.frame(X)
+    
+    ## Simple linear model:
+    lin.model = lm(y ~ ., data = df)
+    model.coeff = coef(lin.model)
+    res = list(meta.lin.simple.adj_r2 = calculateAdjustedR2(lin.model),
+      meta.lin.simple.intercept = as.numeric(model.coeff[1L]),
+      meta.lin.simple.coef.min = min(abs(model.coeff[-1L])),
+      meta.lin.simple.coef.max = max(abs(model.coeff[-1L])),
+      meta.lin.simple.coef.max_by_min = max(abs(model.coeff[-1L])) / min(abs(model.coeff[-1L]))
+    )
+    
+    ## Linear interactions:
+    lin.model = lm(y ~ .^2, data = df) ## Include interactions
+    res$meta.lin.w_interact.adj_r2 = calculateAdjustedR2(lin.model)
+        
+    ## Simple quadratic model:
+    cns = names(df)
+    df = cbind(df, df^2)
+    cns.squared = sprintf("%s_squared", cns)
+    names(df) = c(cns, cns.squared)
+    quad.model = lm(y ~ ., data = df)
+    quad.model_cond = range(abs(coef(quad.model)[cns.squared]))
+        
+    res$meta.quad.simple.adj_r2 = calculateAdjustedR2(quad.model)
+    res$meta.quad.simple.cond = quad.model_cond[2L] / quad.model_cond[1L]
+    
+    ## Quadratic interactions:
+    quad.model_matrix = model.matrix(~ .^2, data = df)
+    quad.model = lm.fit(quad.model_matrix, y)
+    res$meta.quad.w_interact.adj_r2 = calculateAdjustedR2(quad.model)
+    res
+  }), "meta")
 }
 
 

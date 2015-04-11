@@ -12,9 +12,9 @@ test_that("calculateDispersion -- first use case", {
   features = calculateDispersion(feat.object)
   
   # test return value types and ranges
-  expect_equal(length(features), 16)
+  expect_equal(length(features), 18L)
   expect_is(features, class = "list")
-  expect_equal(as.character(sapply(features, class)), rep("numeric", 16))
+  expect_equal(as.character(sapply(features, class)), c(rep("numeric", 16L), "integer", "numeric"))
   expect_true( testNumber(features$disp.ratio_mean_02) )
   expect_true( testNumber(features$disp.ratio_mean_05) )
   expect_true( testNumber(features$disp.ratio_mean_10) )
@@ -31,6 +31,8 @@ test_that("calculateDispersion -- first use case", {
   expect_true( testNumber(features$disp.diff_median_05) )
   expect_true( testNumber(features$disp.diff_median_10) )
   expect_true( testNumber(features$disp.diff_median_25) )
+  expect_identical(features$disp.costs_fun_evals, 0L)
+  expect_true( testNumber(features$disp.costs_runtime, lower = 0) )
 })
 
 
@@ -54,7 +56,7 @@ test_that("Calculation Dispersion based on Different Metrics", {
   expect_is(features1, "list")
   expect_is(features2, "list")
   
-  expect_equal(features, features2)
-  expect_false(identical(features, features1))
-  expect_false(identical(features2, features1))
+  expect_equal(features[-18], features2[-18])
+  expect_false(identical(features[-18], features1[-18]))
+  expect_false(identical(features2[-18], features1[-18]))
 })

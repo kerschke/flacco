@@ -37,7 +37,7 @@ the clusters.}
 Further arguments handled by \code{optim}.}
 }
 \value{
-[\code{\link{list}(14)} of \code{\link{numeric}(1)}].\cr
+[\code{\link{list}(15)} of \code{\link{numeric}(1)}].\cr
 List of features.\cr
 For further information, see details.
 }
@@ -63,12 +63,10 @@ basins (w.r.t. the objective value).\cr
 The next six features (\code{ls.f_evals}) aggregate the number of
 function evaluations, which were needed for the local searches (aggregated
 using minimum, 1st quartile, mean, median, 3rd quartile and maximum).\cr
-At last, the number of executed function evaluations (\code{ls.fun_evals})
-is being computed.
 
-\bold{Note}:\cr
-These calculations cause additional function evaluations, caused by the
-local search optimization algorithms.
+The final two features show the amount of (additional) function
+evaluations and running time (in seconds) that were needed for the
+computation of these features.
 }
 \examples{
 # (1) create a feature object:

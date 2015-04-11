@@ -11,7 +11,7 @@ calculateBasics(feat.object)
 A feature object as created by \link{createFeatureObject}.\cr}
 }
 \value{
-[\code{\link{list}(14)} of \code{\link{numeric}(1)}].\cr
+[\code{\link{list}(16)} of \code{\link{numeric}(1)}].\cr
 List of features.\cr
 For further information, see details.
 }
@@ -36,7 +36,11 @@ design)\cr
 (11) \code{cells.total}: total number of cells\cr
 (12) \code{cells.filled}: number of non-empty cells\cr
 (13) \code{allows_cm}: does the feature object support cell mapping?\cr
-(14) \code{minimize_fun}: should the objective be minimized?
+(14) \code{minimize_fun}: should the objective be minimized?\cr
+
+The final two features show the amount of (additional) function
+evaluations and running time (in seconds) that were needed for the
+computation of these features.
 }
 \examples{
 # (1) create the initial design:

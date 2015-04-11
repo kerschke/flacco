@@ -14,16 +14,19 @@ A feature object as created by createFeatureObject.}
 A list object that stores additional configuration parameters.}
 }
 \value{
-[\code{list(5)} of \code{numeric(1)}].\cr
+[\code{list(7)} of \code{numeric(1)}].\cr
   List of features.\cr
   The first feature is the ratio of the standard deviations between the
   distances of the nearest neighbors and the nearest better neighbors. The
   second feature works analoguous to the first one, but uses the mean
   instead of the standard deviation. The correlation between the two
   distance types is the third feature. The fourth feature gives the
-  coefficient of variation of the ratio of the distances and the final
+  coefficient of variation of the ratio of the distances and the fifth
   feature computes the correlation between the fitness values and the
   count of observations, to which an observation is the nearest better.
+  The final two features show the amount of (additional) function
+  evaluations and running time (in seconds) that were needed for the
+  computation of these features.
 }
 \description{
 Computes 5 features based on the comparison of nearest neighbor and nearest

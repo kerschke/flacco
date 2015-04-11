@@ -20,7 +20,7 @@ Further arguments, which are used for the computation of the nearest
 prototypes (\link{findNearestPrototype}).}
 }
 \value{
-[\code{\link{list}(4)} of \code{\link{numeric}(1)}].\cr
+[\code{\link{list}(6)} of \code{\link{numeric}(1)}].\cr
 List of features.\cr
 For further information, see details.
 }
@@ -43,7 +43,11 @@ two, there is at least light support for convexity.\cr
 of the outer two, one assumes light support for concavity.\cr
 
 In the end, all combinations of neighbouring cells are analyzed w.r.t. those
-four cases and averaged over all combinations.
+four cases and averaged over all combinations.\cr
+
+The final two features show the amount of (additional) function
+evaluations and running time (in seconds) that were needed for the
+computation of these features.
 }
 \examples{
 # (1) create a feature object:

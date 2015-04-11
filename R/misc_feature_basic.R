@@ -4,7 +4,7 @@
 #' Lists features based on the initial design and objective values.
 #' @param feat.object [\code{\link{FeatureObject}}]\cr
 #' A feature object as created by \link{createFeatureObject}.\cr
-#' @return [\code{\link{list}(14)} of \code{\link{numeric}(1)}].\cr
+#' @return [\code{\link{list}(16)} of \code{\link{numeric}(1)}].\cr
 #' List of features.\cr
 #' For further information, see details.
 #' @details
@@ -25,7 +25,11 @@
 #' (11) \code{cells.total}: total number of cells\cr
 #' (12) \code{cells.filled}: number of non-empty cells\cr
 #' (13) \code{allows_cm}: does the feature object support cell mapping?\cr
-#' (14) \code{minimize_fun}: should the objective be minimized?
+#' (14) \code{minimize_fun}: should the objective be minimized?\cr
+#' 
+#' The final two features show the amount of (additional) function
+#' evaluations and running time (in seconds) that were needed for the
+#' computation of these features.
 #' @examples
 #' # (1) create the initial design:
 #' X = t(replicate(1000, runif(2, -10, 10)))
@@ -37,30 +41,32 @@
 #' @export 
 calculateBasics = function(feat.object) {
   assertClass(feat.object, "FeatureObject")
-  X = extractFeatures(feat.object)
-  y = extractObjective(feat.object)
-  blocks = unique(feat.object$blocks)
-  if (any(is.na(blocks))) {
-    min.blocks = max.blocks = no.cells = NA_integer_
-  } else {
-    no.cells = as.integer(prod(feat.object$blocks))
-    min.blocks = as.integer(min(blocks))
-    max.blocks = as.integer(max(blocks))
-  }
-  filled.cells = ifelse(feat.object$allows.cellmapping, 
-    length(unique(feat.object$init.grid$cell.ID)), NA_integer_)
-  return(list(basic.dim = feat.object$dim,
-    basic.observations = feat.object$n.obs,
-    basic.lower.min = min(feat.object$lower),
-    basic.lower.max = max(feat.object$lower),
-    basic.upper.min = min(feat.object$upper),
-    basic.upper.max = max(feat.object$upper),
-    basic.objective.min = min(y),
-    basic.objective.max = max(y),
-    basic.blocks.min = min.blocks,
-    basic.blocks.max = max.blocks,
-    basic.cells.total = no.cells,
-    basic.cells.filled = filled.cells,
-    basic.allows_cm = feat.object$allows.cellmapping,
-    basic.minimize_fun = feat.object$minimize))
+  measureTime(expression({
+    X = extractFeatures(feat.object)
+    y = extractObjective(feat.object)
+    blocks = unique(feat.object$blocks)
+    if (any(is.na(blocks))) {
+      min.blocks = max.blocks = no.cells = NA_integer_
+    } else {
+      no.cells = as.integer(prod(feat.object$blocks))
+      min.blocks = as.integer(min(blocks))
+      max.blocks = as.integer(max(blocks))
+    }
+    filled.cells = ifelse(feat.object$allows.cellmapping, 
+      length(unique(feat.object$init.grid$cell.ID)), NA_integer_)
+    return(list(basic.dim = feat.object$dim,
+      basic.observations = feat.object$n.obs,
+      basic.lower.min = min(feat.object$lower),
+      basic.lower.max = max(feat.object$lower),
+      basic.upper.min = min(feat.object$upper),
+      basic.upper.max = max(feat.object$upper),
+      basic.objective.min = min(y),
+      basic.objective.max = max(y),
+      basic.blocks.min = min.blocks,
+      basic.blocks.max = max.blocks,
+      basic.cells.total = no.cells,
+      basic.cells.filled = filled.cells,
+      basic.allows_cm = feat.object$allows.cellmapping,
+      basic.minimize_fun = feat.object$minimize))
+  }), "basic")
 }

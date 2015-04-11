@@ -26,14 +26,18 @@ The default of both methods is 3, which is also the default in R.}
 Further arguments for the computation within \code{density}.}
 }
 \value{
-[\code{list(3)} of \code{numeric(1)}].\cr
+[\code{list(5)} of \code{numeric(1)}].\cr
   List of features.\cr
   The first two features return the skewness and kurtosis of the objective
-  values. The remaining feature estimates the density of the objective
-  values and analyzes them w.r.t. a certain threshold.
+  values. The next feature estimates the density of the objective
+  values and analyzes them w.r.t. a certain threshold.\cr
+
+  The final two features show the amount of (additional) function
+  evaluations and running time (in seconds) that were needed for the
+  computation of these features.
 }
 \description{
-Computes 3 features based on the objective space of a function.
+Computes features based on the objective space of a function.
 }
 \examples{
 # (1) draw a random sample; here it consists of 2000 observations with

@@ -8,9 +8,9 @@ test_that("A cell mapping-enabled FeatureObject is required", {
 test_that("calculateLinModCoefficients -- first use case", {
   feat.object = createFeatureObject(init = iris[, -5], objective = "Sepal.Length", blocks = 3)
   features = calculateLinModCoefficients(feat.object)
-  expect_equal(length(features), 12)
+  expect_equal(length(features), 14L)
   expect_is(features, class = "list")
-  expect_equal(as.character(sapply(features, class)), rep("numeric", 12))
+  expect_equal(as.character(sapply(features, class)), c(rep("numeric", 12L), "integer", "numeric"))
   expect_true( testNumber(features$lmcoeff.avg.length, lower = 0) )
   expect_true( testNumber(features$lmcoeff.avg.length.scaled, lower = 0, upper = 1) )
   expect_true( testNumber(features$lmcoeff.length.mean, lower = 0) )
@@ -23,6 +23,8 @@ test_that("calculateLinModCoefficients -- first use case", {
   expect_true( testNumber(features$lmcoeff.sd.max_min_ratio.scaled, lower = 1) )
   expect_true( testNumber(features$lmcoeff.sd.mean, lower = 0) )
   expect_true( testNumber(features$lmcoeff.sd.mean.scaled, lower = 0) )
+  expect_identical(features$lmcoeff.costs_fun_evals, 0L)
+  expect_true( testNumber(features$lmcoeff.costs_runtime, lower = 0) )
 })
 
 test_that("calculateLinModCoefficients -- second use case", {

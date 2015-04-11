@@ -1,7 +1,7 @@
 #' @title Calculates features of the distribution of a function's objective space
 #'
 #' @description
-#' Computes 3 features based on the objective space of a function.
+#' Computes features based on the objective space of a function.
 #'
 #' @param feat.object [\code{FeatureObject}]\cr
 #'   A feature object as created by createFeatureObject.
@@ -18,11 +18,15 @@
 #'   The default of both methods is 3, which is also the default in R.
 #' @param ... [any]\cr
 #'   Further arguments for the computation within \code{density}.
-#' @return [\code{list(3)} of \code{numeric(1)}].\cr
+#' @return [\code{list(5)} of \code{numeric(1)}].\cr
 #'   List of features.\cr
 #'   The first two features return the skewness and kurtosis of the objective
-#'   values. The remaining feature estimates the density of the objective
-#'   values and analyzes them w.r.t. a certain threshold.
+#'   values. The next feature estimates the density of the objective
+#'   values and analyzes them w.r.t. a certain threshold.\cr
+#'   
+#'   The final two features show the amount of (additional) function
+#'   evaluations and running time (in seconds) that were needed for the
+#'   computation of these features.
 #' @examples
 #'   # (1) draw a random sample; here it consists of 2000 observations with
 #'   # each one of them being 5-dimensional within -10 and 10:
@@ -37,17 +41,19 @@ calculateDistribution = function(feat.object, control, ...) {
   if (missing(control))
     control = list()
   assertList(control)
-  y = extractObjective(feat.object)
-  smoothing.bw = control_parameter(control, "distr.smoothing_bandwidth", "SJ")
-  smoothing.modemass_threshold = control_parameter(control, 
-    "distr.modemass_threshold", 0.01)
-  skewness.type = control_parameter(control, "distr.skewness_type", 3L)
-  kurtosis.type = control_parameter(control, "distr.kurtosis_type", 3L)
-  list(y_dist.skewness = e1071::skewness(y, type = skewness.type),
-    y_dist.kurtosis = e1071::kurtosis(y, type = kurtosis.type),
-    y_dist.number_of_peaks = number_of_peaks(y, 
-      smoothing.bandwidth = smoothing.bw, 
-      modemass.threshold = smoothing.modemass_threshold, ...))
+  measureTime(expression({
+    y = extractObjective(feat.object)
+    smoothing.bw = control_parameter(control, "distr.smoothing_bandwidth", "SJ")
+    smoothing.modemass_threshold = control_parameter(control, 
+      "distr.modemass_threshold", 0.01)
+    skewness.type = control_parameter(control, "distr.skewness_type", 3L)
+    kurtosis.type = control_parameter(control, "distr.kurtosis_type", 3L)
+    list(y_dist.skewness = e1071::skewness(y, type = skewness.type),
+      y_dist.kurtosis = e1071::kurtosis(y, type = kurtosis.type),
+      y_dist.number_of_peaks = number_of_peaks(y, 
+        smoothing.bandwidth = smoothing.bw, 
+        modemass.threshold = smoothing.modemass_threshold, ...))
+  }), "y_dist")
 }
 
 # Estimate the number of peaks

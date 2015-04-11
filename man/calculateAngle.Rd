@@ -15,7 +15,7 @@ Should possible warnings about \code{NAs} in the feature computation be
 shown? The default is \code{show.warnings = TRUE}.}
 }
 \value{
-[\code{\link{list}(8)} of \code{\link{numeric}(1)}].\cr
+[\code{\link{list}(10)} of \code{\link{numeric}(1)}].\cr
 List of features.\cr
 For further information, see details.
 }
@@ -41,7 +41,11 @@ and best element of a cell.\cr
 (7) Arithmetic mean of the ratios between the distance of the worst and
 best element within a cell and the worst and best element in the entire
 initial design. The distances are only based on the objective space.\cr
-(8) Standard deviation of the ratios from (7).
+(8) Standard deviation of the ratios from (7).\cr
+
+The final two features show the amount of (additional) function
+evaluations and running time (in seconds) that were needed for the
+computation of these features.
 }
 \examples{
 # (1) create a feature object:

@@ -24,12 +24,18 @@ test_that("Calculation of Convexity is possible", {
   features = calculateConvexity(feat.object)
   
   # test return value types
-  expect_is(features, "list")
-  expect_true( testNumber(features$conv.conv_prob) )
-  expect_true( testNumber(features$conv.lin_prob) )
-  expect_true( testNumber(features$conv.lin_dev) )
+  expect_equal(length(features), 6L)
+  expect_is(features, class = "list")
+  expect_equal(as.character(sapply(features, class)), c(rep("numeric", 4), "integer", "numeric"))
   
   # test return values and ranges
-  expect_true( testNumber(features$conv.conv_prob, lower=0, upper=1) )
-  expect_true( testNumber(features$conv.lin_prob, lower=0, upper=1) )
+  expect_true( testNumber(features$conv.conv_prob, lower = 0, upper = 1) )
+  expect_true( testNumber(features$conv.lin_prob, lower = 0, upper = 1) )
+  expect_true( testNumber(features$conv.lin_dev.orig) )
+  expect_true( testNumber(features$conv.lin_dev.abs, lower = 0) )
+  expect_true( features$conv.lin_dev.abs >= abs(features$conv.lin_dev.orig) )
+  
+  expect_true( testNumber(features$conv.costs_fun_evals, lower = 0L) )
+  expect_true( testNumber(features$conv.costs_runtime, lower = 0) )
+  
 })

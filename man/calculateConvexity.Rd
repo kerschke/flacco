@@ -21,7 +21,7 @@ the tolerance (or deviation) from perfect linearity is allowed in order
 to still be considered as linear. Here, the default is \code{1e-10}.}
 }
 \value{
-[\code{\link{list}(4)} of \code{\link{numeric}(1)}].\cr
+[\code{\link{list}(6)} of \code{\link{numeric}(1)}].\cr
 List of features.\cr
 For further information, see details.
 }
@@ -39,17 +39,16 @@ default \code{1000}) times and will then be aggregated.\cr
 The resulting features are:\cr
 (1) \code{convex.convex_p} shows the percentage of convexity\cr
 (2) \code{convex.linear_p} shows the percentage of linearity\cr
-(3) \code{convex.linear_dev} returns the average deviation between the
+(3) \code{convex.linear_dev.orig} returns the average deviation between the
 linear combination of objectives and the objective of the linear combination
 of the observations.\cr
+(4) \code{convex.linear_dev.abs} returns the average absolute deviation
+between the linear combination of objectives and the objective of the
+linear combination of the observations.\cr
 
-As those calculations cause additional function evaluations, the number of
-executed function evaluations is also counted and returned
-(\code{convex.fun_evals}).
-
-\bold{Note}:\cr
-These calculations cause \code{convex.nsample} additional function
-evaluations.
+The final two features show the amount of (additional) function
+evaluations and running time (in seconds) that were needed for the
+computation of these features.
 }
 \examples{
 # (1) create a feature object:
