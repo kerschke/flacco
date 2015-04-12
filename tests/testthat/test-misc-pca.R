@@ -1,4 +1,4 @@
-context("calculatePCA")
+context("Features: Principal Component")
 
 
 test_that("Calculation of PCA is possible", {
@@ -10,7 +10,7 @@ test_that("Calculation of PCA is possible", {
   feat.object = createFeatureObject(X = X, y = y)
   
   # (2) compute the PCA features
-  features = calculatePCA(feat.object)
+  features = calculatePrincipalComponentFeatures(feat.object)
   
   # test return value types and ranges
   expect_equal(length(features), 10L)

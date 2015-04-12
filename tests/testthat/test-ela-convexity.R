@@ -1,4 +1,4 @@
-context("calculateConvexity")
+context("Features: Convexity")
 
 test_that("Calculation of Convexity requires the original function", {
   set.seed(2015*03*26)
@@ -9,7 +9,7 @@ test_that("Calculation of Convexity requires the original function", {
   feat.object = createFeatureObject(X = X, y = y)
   
   # (2) compute the convexity features
-  expect_error( calculateConvexity(feat.object) )
+  expect_error( calculateConvexityFeatures(feat.object) )
   
 })
 
@@ -21,7 +21,7 @@ test_that("Calculation of Convexity is possible", {
   feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
   
   # (2) compute the meta model features
-  features = calculateConvexity(feat.object)
+  features = calculateConvexityFeatures(feat.object)
   
   # test return value types
   expect_equal(length(features), 6L)

@@ -1,6 +1,6 @@
-context("calculateDispersion")
+context("Features: Dispersion")
 
-test_that("calculateDispersion -- first use case", {
+test_that("calculateDispersionFeatures -- first use case", {
   set.seed(2015*03*26)
   
   # (1) create a feature object:
@@ -9,7 +9,7 @@ test_that("calculateDispersion -- first use case", {
   feat.object = createFeatureObject(X = X, y = y)
   
   # (2) compute the dispersion features
-  features = calculateDispersion(feat.object)
+  features = calculateDispersionFeatures(feat.object)
   
   # test return value types and ranges
   expect_equal(length(features), 18L)
@@ -45,11 +45,11 @@ test_that("Calculation Dispersion based on Different Metrics", {
   feat.object = createFeatureObject(X = X, y = y)
   
   # (2) compute the dispersion features
-  features = calculateDispersion(feat.object,
+  features = calculateDispersionFeatures(feat.object,
     control = list(disp.dist_method = "minkowski"))
-  features1 = calculateDispersion(feat.object, 
+  features1 = calculateDispersionFeatures(feat.object, 
     control = list(disp.dist_method = "manhattan"))
-  features2 = calculateDispersion(feat.object)
+  features2 = calculateDispersionFeatures(feat.object)
   
   # test return value types and ranges
   expect_is(features, "list")

@@ -1,4 +1,4 @@
-context("calculateCurvature")
+context("Features: Curvature")
 
 test_that("Calculation of Curvature requires the original function", {
   set.seed(2015*03*26)
@@ -9,7 +9,7 @@ test_that("Calculation of Curvature requires the original function", {
   feat.object = createFeatureObject(X = X, y = y)
   
   # (2) compute the curvature features
-  expect_error( calculateCurvature(feat.object) )
+  expect_error( calculateCurvatureFeatures(feat.object) )
   
 })
 
@@ -21,7 +21,7 @@ test_that("Calculation of Local Search is possible", {
   feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
   
   # (2) compute the meta model features
-  features = calculateCurvature(feat.object)
+  features = calculateCurvatureFeatures(feat.object)
   
   # test return values
   expect_equal(length(features), 23L)

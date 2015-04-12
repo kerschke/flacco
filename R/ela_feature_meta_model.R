@@ -39,10 +39,10 @@
 #' X = t(replicate(n = 2000, expr = runif(n = 5, min = -10, max = 10)))
 #' feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
 #' # (2) compute the meta model features
-#' calculateMetaModel(feat.object)
+#' calculateMetaModelFeatures(feat.object)
 #' @export 
 
-calculateMetaModel = function(feat.object) {
+calculateMetaModelFeatures = function(feat.object) {
   assertClass(feat.object, "FeatureObject")
   measureTime(expression({
     X = extractFeatures(feat.object)

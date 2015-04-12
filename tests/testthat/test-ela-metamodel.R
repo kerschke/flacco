@@ -1,4 +1,4 @@
-context("calculateMetaModel")
+context("Features: Meta Model")
 
 test_that("Calculation of MetaModel is possible", {
   set.seed(2015*03*26)
@@ -9,7 +9,7 @@ test_that("Calculation of MetaModel is possible", {
   feat.object = createFeatureObject(X = X, y = y)
   
   # (2) compute the meta model features
-  features = calculateMetaModel(feat.object)
+  features = calculateMetaModelFeatures(feat.object)
   
   # test return value types and ranges
   expect_equal(length(features), 11L)

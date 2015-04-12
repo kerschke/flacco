@@ -51,9 +51,9 @@
 #'   fun = function(x) sum(x^2), blocks = c(5, 10, 4))
 #'   
 #' # (2) compute the linear modell coefficient features:
-#' calculateLinModCoefficients(feat.object = feat.object)
+#' calculateLinearModelFeatures(feat.object = feat.object)
 #' @export 
-calculateLinModCoefficients = function(feat.object) {
+calculateLinearModelFeatures = function(feat.object) {
   assertClass(feat.object, "FeatureObject")
   if (!feat.object$allows.cellmapping)
     stop ("This feature object does not support cell mapping. You first need to define the number of cells per dimension before computing these features.")
@@ -93,19 +93,19 @@ calculateLinModCoefficients = function(feat.object) {
     ## correlation between coefficients
     cor.scaled = cor(t(norm.coeff.vect), use = "pairwise.complete.obs")
     diag(cor.scaled) = NA_real_
-    return(list(lmcoeff.avg.length = 
+    return(list(limo.avg.length = 
         sqrt(sum((rowMeans(coeff.vect, na.rm = TRUE))^2)),
-      lmcoeff.avg.length.scaled = 
+      limo.avg.length.scaled = 
         sqrt(sum((rowMeans(norm.coeff.vect, na.rm = TRUE))^2)),
-      lmcoeff.length.mean = mean(length.coeff.vects, na.rm = TRUE),
-      lmcoeff.length.sd = sd(length.coeff.vects, na.rm = TRUE),
-      lmcoeff.cor = mean(cor.unscaled, na.rm = TRUE),
-      lmcoeff.cor.scaled = mean(cor.scaled, na.rm = TRUE),
-      lmcoeff.ratio.mean = mean(coeff.ratio, na.rm = TRUE),
-      lmcoeff.ratio.sd = sd(coeff.ratio, na.rm = TRUE),
-      lmcoeff.sd.max_min_ratio = max(sds.unscaled) / min(sds.unscaled),
-      lmcoeff.sd.max_min_ratio.scaled = max(sds.scaled) / min(sds.scaled),
-      lmcoeff.sd.mean = mean(sds.unscaled),
-      lmcoeff.sd.mean.scaled = mean(sds.scaled)))
-  }), "lmcoeff")
+      limo.length.mean = mean(length.coeff.vects, na.rm = TRUE),
+      limo.length.sd = sd(length.coeff.vects, na.rm = TRUE),
+      limo.cor = mean(cor.unscaled, na.rm = TRUE),
+      limo.cor.scaled = mean(cor.scaled, na.rm = TRUE),
+      limo.ratio.mean = mean(coeff.ratio, na.rm = TRUE),
+      limo.ratio.sd = sd(coeff.ratio, na.rm = TRUE),
+      limo.sd.max_min_ratio = max(sds.unscaled) / min(sds.unscaled),
+      limo.sd.max_min_ratio.scaled = max(sds.scaled) / min(sds.scaled),
+      limo.sd.mean = mean(sds.unscaled),
+      limo.sd.mean.scaled = mean(sds.scaled)))
+  }), "limo")
 }

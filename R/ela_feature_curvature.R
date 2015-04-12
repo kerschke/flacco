@@ -44,9 +44,9 @@
 #' feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
 #' 
 #' # (2) compute the curvature features:
-#' calculateCurvature(feat.object)
+#' calculateCurvatureFeatures(feat.object)
 #' @export 
-calculateCurvature = function(feat.object, control) {
+calculateCurvatureFeatures = function(feat.object, control) {
   assertClass(feat.object, "FeatureObject")
   f = initializeCounter(feat.object$fun)
   if (is.null(f))

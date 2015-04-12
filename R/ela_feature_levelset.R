@@ -37,9 +37,9 @@
 #' 
 #' # (2) compute the levelset features
 #' library(mlr)
-#' calculateLevelset(feat.object)
+#' calculateLevelsetFeatures(feat.object)
 #' @export 
-calculateLevelset = function(feat.object, control) {
+calculateLevelsetFeatures = function(feat.object, control) {
   assertClass(feat.object, "FeatureObject")
   X = extractFeatures(feat.object)
   y = extractObjective(feat.object)

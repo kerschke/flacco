@@ -35,9 +35,9 @@
 #'   # (2) create a feature object
 #'   feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
 #'   # (3) compute the gradient homogeneity features:
-#'   calculatePCA(feat.object = feat.object)
+#'   calculatePrincipalComponentFeatures(feat.object = feat.object)
 #' @export 
-calculatePCA = function(feat.object, control = list()) {
+calculatePrincipalComponentFeatures = function(feat.object, control = list()) {
   assertClass(feat.object, "FeatureObject")
   assertList(control)
   measureTime(expression({

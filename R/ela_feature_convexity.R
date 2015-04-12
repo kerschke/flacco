@@ -45,9 +45,9 @@
 #' feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
 #' 
 #' # (2) compute the convexity features:
-#' calculateConvexity(feat.object)
+#' calculateConvexityFeatures(feat.object)
 #' @export 
-calculateConvexity = function(feat.object, control) {
+calculateConvexityFeatures = function(feat.object, control) {
   assertClass(feat.object, "FeatureObject")
   if (missing(control))
     control = list()

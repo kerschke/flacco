@@ -26,9 +26,9 @@
 #'   y = apply(X, 1, function(x) sum(x^2))
 #'   feat.object = createFeatureObject(X = X, y = y)
 #'   # (2) compute the gradient homogeneity features:
-#'   calculateNearestBetter(feat.object = feat.object)
+#'   calculateNearestBetterFeatures(feat.object = feat.object)
 #' @export 
-calculateNearestBetter = function(feat.object, control) {
+calculateNearestBetterFeatures = function(feat.object, control) {
   assertClass(feat.object, "FeatureObject")
   if (missing(control))
     control = list()

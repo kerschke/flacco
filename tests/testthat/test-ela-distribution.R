@@ -1,4 +1,4 @@
-context("calculateDistribution")
+context("Features: Distribution")
 
 test_that("Calculation of y-Distribution is possible", {
   set.seed(2015*03*26)
@@ -8,7 +8,7 @@ test_that("Calculation of y-Distribution is possible", {
   feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
   
   # (2) compute the levelset features
-  features = calculateDistribution(feat.object)
+  features = calculateDistributionFeatures(feat.object)
   
   # test return values
   expect_equal(length(features), 5L)

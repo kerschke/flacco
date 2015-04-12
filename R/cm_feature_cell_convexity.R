@@ -47,12 +47,12 @@
 #'   
 #' # calculate the convexity ...
 #' # ... (2a) without considering diagonal neighbours:
-#' calculateCellConvexity(feat.object)
+#' calculateCellConvexityFeatures(feat.object)
 #' 
 #' # ... (2b) considering diagonal neighbours:
-#' calculateCellConvexity(feat.object, diag = TRUE)
+#' calculateCellConvexityFeatures(feat.object, diag = TRUE)
 #' @export 
-calculateCellConvexity = function(feat.object, diag = FALSE, ...) {
+calculateCellConvexityFeatures = function(feat.object, diag = FALSE, ...) {
   assertClass(feat.object, "FeatureObject")
   assertLogical(diag)
   if (!feat.object$allows.cellmapping)

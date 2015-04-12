@@ -62,16 +62,16 @@
 #' feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
 #' 
 #' # (2a) compute the convexity features (simple)
-#' calculateLocalSearch(feat.object)
+#' calculateLocalSearchFeatures(feat.object)
 #' # (2b) compute the convexity features (with some control settings)
 #' cluster_function = function(cl) as.numeric(quantile(cl$height, 0.25))
-#' calculateLocalSearch(feat.object, control = list(
+#' calculateLocalSearchFeatures(feat.object, control = list(
 #'   local.optim_method = "L-BFGS-B", 
 #'   local.clust_cut_function = cluster_function, 
 #'   lower = -10, upper = 10
 #' ))
 #' @export 
-calculateLocalSearch = function(feat.object, control, ...) {
+calculateLocalSearchFeatures = function(feat.object, control, ...) {
   assertClass(feat.object, "FeatureObject")
   f = initializeCounter(feat.object$fun)
   if (is.null(f))

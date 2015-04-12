@@ -37,9 +37,9 @@
 #' feat.object = createFeatureObject(X = X, y = y)
 #'
 #' # (2) compute the basic features:
-#' calculateBasics(feat.object)
+#' calculateBasicFeatures(feat.object)
 #' @export 
-calculateBasics = function(feat.object) {
+calculateBasicFeatures = function(feat.object) {
   assertClass(feat.object, "FeatureObject")
   measureTime(expression({
     X = extractFeatures(feat.object)

@@ -34,9 +34,9 @@
 #'   # (2) create a feature object
 #'   feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
 #'   # (3) compute the y-distribution-features
-#'   calculateDistribution(feat.object)
+#'   calculateDistributionFeatures(feat.object)
 #' @export 
-calculateDistribution = function(feat.object, control, ...) {
+calculateDistributionFeatures = function(feat.object, control, ...) {
   assertClass(feat.object, "FeatureObject")
   if (missing(control))
     control = list()

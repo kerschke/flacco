@@ -1,9 +1,9 @@
 context("print.FeatureObject")
 
 test_that("FeatureObject Output", {
-  featobj = createFeatureObject(iris, objective = "Species")
+  feat.object = createFeatureObject(iris, objective = "Species")
   
-  expect_output(print(featobj), regexp=paste(
+  expect_output(print(feat.object), regexp=paste(
     "^Feature Object:",
     "- Number of Observations:\\s\\d+",
     "- Number of Features:\\s\\d+",
@@ -19,9 +19,9 @@ test_that("FeatureObject Output", {
 test_that("FeatureObject Output with more than 5 feature dims", {
   init = matrix(1, ncol=6, nrow=2)
   colnames(init) = c("a1", "a2", "a3", "a4", "a5", "a6")
-  featobj = createFeatureObject(init, objective = "a6")
+  feat.object = createFeatureObject(init, objective = "a6")
   
-  expect_output(print(featobj), regexp=paste(
+  expect_output(print(feat.object), regexp=paste(
     "- Lower Boundaries: [0-9e+.-]+(, [0-9e+-.]+)*, ...",
     "- Upper Boundaries: [0-9e+.-]+(, [0-9e+-.]+)*, ...",
     "- Name of Features: [^,\\s]*(, [^,\\s]*)*, ...",
@@ -33,9 +33,9 @@ test_that("FeatureObject Output with more than 5 feature dims", {
 test_that("FeatureObject Output with a function", {
   init = matrix(1, ncol=6, nrow=2)
   colnames(init) = c("a1", "a2", "a3", "a4", "a5", "a6")
-  featobj = createFeatureObject(init, objective = "a6", fun=function (x) sum(x^2))
+  feat.object = createFeatureObject(init, objective = "a6", fun=function (x) sum(x^2))
   
-  expect_output(print(featobj), regexp=
+  expect_output(print(feat.object), regexp=
     "- Function to be optimized: function \\(x\\) sum\\(x\\^2\\)"
   )
   
@@ -44,9 +44,9 @@ test_that("FeatureObject Output with a function", {
 test_that("FeatureObject Output with cellmapping and dim < 5", {
   init = matrix(1:10, ncol=5, nrow=10)
   colnames(init) = c("a1", "a2", "a3", "a4", "a5")
-  featobj = createFeatureObject(init, objective = "a5", blocks=4)
+  feat.object = createFeatureObject(init, objective = "a5", blocks=4)
   
-  expect_output(print(featobj), regexp=paste(
+  expect_output(print(feat.object), regexp=paste(
     "- Number of Cells per Dimension: \\d+(, \\d+)*",
     "- Size of Cells per Dimension: [0-9e+.-]+(, [0-9e+-.]+)*",
     "- Number of Cells:",
@@ -64,9 +64,9 @@ test_that("FeatureObject Output with cellmapping and dim < 5", {
 test_that("FeatureObject Output with cellmapping and dim >= 5", {
   init = matrix(1:10, ncol=6, nrow=10)
   colnames(init) = c("a1", "a2", "a3", "a4", "a5", "a6")
-  featobj = createFeatureObject(init, objective = "a6", blocks=4)
+  feat.object = createFeatureObject(init, objective = "a6", blocks=4)
   
-  expect_output(print(featobj), regexp=paste(
+  expect_output(print(feat.object), regexp=paste(
       "- Number of Cells per Dimension: \\d+(, \\d+)*, ...",
       "- Size of Cells per Dimension: [0-9e+.-]+(, [0-9e+-.]+)*, ...",
       sep="\\r?\\n")

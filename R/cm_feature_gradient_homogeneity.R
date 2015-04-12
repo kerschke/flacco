@@ -43,9 +43,9 @@
 #'   fun = function(x) sum(x^2), blocks = c(5, 10, 4))
 #'   
 #' # (2) compute the gradient homogeneity features:
-#' calculateGradientHomogeneity(feat.object = feat.object)
+#' calculateGradientHomogeneityFeatures(feat.object = feat.object)
 #' @export 
-calculateGradientHomogeneity = function(feat.object, control, show.warnings) {
+calculateGradientHomogeneityFeatures = function(feat.object, control, show.warnings) {
   assertClass(feat.object, "FeatureObject")
   if (!feat.object$allows.cellmapping)
     stop ("This feature object does not support cell mapping. You first need to define the number of cells per dimension before computing these features.")

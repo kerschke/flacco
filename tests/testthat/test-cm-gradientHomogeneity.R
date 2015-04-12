@@ -1,8 +1,8 @@
-context("calculateGradientHomogeneity")
+context("Features: Gradient Homogeneity")
 
 test_that("A cell mapping-enabled FeatureObject is required", {
   feat.object = createFeatureObject(init = iris[, -5], objective = "Sepal.Length")
-  expect_error(calculateGradientHomogeneity(feat.object))
+  expect_error(calculateGradientHomogeneityFeatures(feat.object))
 })
   
 test_that("GradientHomogeneity Features are calculated (differing blocks)", {
@@ -11,7 +11,7 @@ test_that("GradientHomogeneity Features are calculated (differing blocks)", {
   y = apply(X, 1, function(x) { sum(x^2) })
   feat.object = createFeatureObject(X = X, y = y, blocks = c(10, 5, 5, 8, 4))
   
-  features = calculateGradientHomogeneity(feat.object, show.warnings = FALSE)
+  features = calculateGradientHomogeneityFeatures(feat.object, show.warnings = FALSE)
   
   expect_is(features, "list")
   expect_true( testNumber(features$gradhomo.mean, lower = -1, upper = 1) )
@@ -24,7 +24,7 @@ test_that("GradientHomogeneity Features are calculated (identical blocks)", {
   y = apply(X, 1, function(x) { sum(x^2) })
   feat.object = createFeatureObject(X = X, y = y, blocks = 5)
   
-  features = calculateGradientHomogeneity(feat.object, show.warnings = FALSE)
+  features = calculateGradientHomogeneityFeatures(feat.object, show.warnings = FALSE)
   
   expect_equal(length(features), 4L)
   expect_is(features, class = "list")
@@ -43,6 +43,6 @@ test_that("A warning is issued if cells are populated sparsely", {
   y = apply(X, 1, function(x) { sum(x^2) })
   feat.object = createFeatureObject(X = X, y = y, blocks = c(10, 5, 5, 8, 4))
 
-  expect_warning(calculateGradientHomogeneity(feat.object), 
+  expect_warning(calculateGradientHomogeneityFeatures(feat.object), 
     "% of the cells contain less than two observations.")
 })

@@ -47,9 +47,9 @@
 #'     
 #' # (2) compute the angle and distance features:
 #' library(plyr)
-#' calculateAngle(feat.object)
+#' calculateAngleFeatures(feat.object)
 #' @export 
-calculateAngle = function(feat.object, show.warnings) {
+calculateAngleFeatures = function(feat.object, show.warnings) {
   assertClass(feat.object, "FeatureObject")
   if (!feat.object$allows.cellmapping)
     stop ("This feature object does not support cell mapping. You first need to define the number of cells per dimension before computing these features.")

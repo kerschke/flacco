@@ -1,4 +1,4 @@
-context("calculateLocalSearch")
+context("Features: Local Search")
 
 test_that("Calculation of Local Search requires the original function", {
   set.seed(2015*03*26)
@@ -9,7 +9,7 @@ test_that("Calculation of Local Search requires the original function", {
   feat.object = createFeatureObject(X = X, y = y)
   
   # (2) compute the local search features
-  expect_error( calculateLocalSearch(feat.object) )
+  expect_error( calculateLocalSearchFeatures(feat.object) )
   
 })
 
@@ -21,7 +21,7 @@ test_that("Calculation of Local Search is possible", {
   feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
   
   # (2) compute the meta model features
-  features = calculateLocalSearch(feat.object)
+  features = calculateLocalSearchFeatures(feat.object)
   
   # test return values
   expect_equal(length(features), 15L)

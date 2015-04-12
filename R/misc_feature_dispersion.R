@@ -21,9 +21,9 @@
 #'   y = apply(X, 1, function(x) sum(x^2))
 #'   feat.object = createFeatureObject(X = X, y = y)
 #'   # (2) compute the dispersion features:
-#'   calculateDispersion(feat.object)
+#'   calculateDispersionFeatures(feat.object)
 #' @export 
-calculateDispersion = function(feat.object, control) {
+calculateDispersionFeatures = function(feat.object, control) {
   assertClass(feat.object, "FeatureObject")
   if (missing(control))
     control = list()
