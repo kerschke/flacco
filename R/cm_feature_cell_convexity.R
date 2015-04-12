@@ -67,7 +67,7 @@ calculateCellConvexity = function(feat.object, diag = FALSE, ...) {
     }
     near = findNearestPrototype(feat.object, ...)
     nb.blocks = findLinearNeighbours(near$represented.cell, blocks, diag = diag)
-    convexity.counter = sapply(nb.blocks, function(cell.pairs) {
+    convexity.counter = vapply(nb.blocks, function(cell.pairs) {
       X = near[near$represented.cell %in% cell.pairs, ]
       yvals = X[order(X$represented.cell), obj]
       counter = c(cm_conv.convex.hard = FALSE, cm_conv.concave.hard = FALSE,
@@ -82,7 +82,7 @@ calculateCellConvexity = function(feat.object, diag = FALSE, ...) {
           counter["cm_conv.convex.hard"] = TRUE
       }
       return(counter)
-    })
+    }, logical(4))
     return(as.list(rowMeans(convexity.counter)))
   }), "cm_conv")
 }

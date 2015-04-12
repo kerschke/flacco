@@ -64,17 +64,17 @@ calculateLinModCoefficients = function(feat.object) {
     dep = paste(feat.object$feature.names, collapse = " + ")
     form = as.formula(paste(feat.object$objective.name, dep, sep = " ~ "))
     ## vectors of coefficients (except for intercept)
-    coeff.vect = sapply(cells, function(cell) {
+    coeff.vect = vapply(cells, function(cell) {
       if (nrow(cell) > dims) {
         as.numeric(lm(form, data = cell)$coeff[-1])
       } else {
-        rep(NA, dims)
+        rep(NA_real_, dims)
       }
-    })
+    }, double(dims))
     ## ratio of biggest to smallest absolute coefficient (per cell)
     coeff.ratio = apply(coeff.vect, 2, function(x) {
       if (all(is.na(x))) {
-        return(NA)
+        return(NA_real_)
       } else {
         max(abs(x), na.rm = TRUE) / min(abs(x), na.rm = TRUE)
       }
@@ -89,10 +89,10 @@ calculateLinModCoefficients = function(feat.object) {
     sds.scaled = apply(norm.coeff.vect, 1, sd, na.rm = TRUE)
     ## correlation between coefficients
     cor.unscaled = cor(t(coeff.vect), use = "pairwise.complete.obs")
-    diag(cor.unscaled) = NA
+    diag(cor.unscaled) = NA_real_
     ## correlation between coefficients
     cor.scaled = cor(t(norm.coeff.vect), use = "pairwise.complete.obs")
-    diag(cor.scaled) = NA
+    diag(cor.scaled) = NA_real_
     return(list(lmcoeff.avg.length = 
         sqrt(sum((rowMeans(coeff.vect, na.rm = TRUE))^2)),
       lmcoeff.avg.length.scaled = 

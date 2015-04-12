@@ -108,8 +108,8 @@ calculateLocalSearch = function(feat.object, control, ...) {
     
     fn = initializeCounter(f)
     result = lapply(ids, function(i) calcOptim(drop(X[i,])))
-    pars = t(sapply(result, function(i) i$par))
-    fun.evals = sapply(result, function(i) i$counts)
+    pars = t(vapply(result, function(i) i$par, double(d)))
+    fun.evals = vapply(result, function(i) i$counts, integer(1))
     
     cl = hclust(dist(pars), clust.method)
     clust = cutree(cl, h = clust.cutfun(cl))
@@ -117,8 +117,8 @@ calculateLocalSearch = function(feat.object, control, ...) {
     clust.size = tapply(clust, clust, length)
     clust.size = clust.size / sum(clust.size) ## Normalize!
     
-    centers = t(sapply(seq_along(clust.size),
-      function(i) colMeans(pars[clust == i, , drop = FALSE])))
+    centers = t(vapply(seq_along(clust.size),
+      function(i) colMeans(pars[clust == i, , drop = FALSE]), double(d)))
     centers.funvals = apply(centers, 1, f)
     centers.best = which(centers.funvals == min(centers.funvals))
     centers.worst = which(centers.funvals == max(centers.funvals))

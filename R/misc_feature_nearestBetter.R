@@ -69,7 +69,7 @@ calculateNearestBetter = function(feat.object, control) {
 # better elements:
 computeNearestBetterStats = function(distmat, objectives) {
   result = data.frame(ownID = 1:nrow(distmat))
-  result = cbind(result, t(sapply(result$ownID, function(row) {
+  result = cbind(result, t(vapply(result$ownID, function(row) {
     rowDists = as.numeric(distmat[row, ])
     # first look for elements with better fitness
     better = which(objectives < objectives[row])
@@ -83,13 +83,13 @@ computeNearestBetterStats = function(distmat, objectives) {
       nb = better[selectMin(rowDists[better])]
       return(c(nbID = nb, nbDist = rowDists[nb], nearDist = min(rowDists[-row])))
     } else {
-      return(c(nbID = NA, nbDist = NA, nearDist = min(rowDists[-row])))
+      return(c(nbID = NA_real_, nbDist = NA_real_, nearDist = min(rowDists[-row])))
     }
-  })))
+  }, double(3))))
   # compute ratio of nearestBetter and nearest
   result$nb_near_ratio = result$nbDist / result$nearDist
   result$fitness = objectives
-  result = cbind(result, t(sapply(result$ownID, function(row) {
+  result = cbind(result, t(vapply(result$ownID, function(row) {
     x = which(result$nbID == result$ownID[row])
     # number of elements, which have ownID[row] as nearest better
     count = length(x)
@@ -99,9 +99,9 @@ computeNearestBetterStats = function(distmat, objectives) {
       return(c(toMe_count = count, toMe_dist_median = toMe_dist,
         nb_median_toMe_ratio = result$nbDist[row] / toMe_dist))
     } else {
-      return(c(toMe_count = 0, toMe_dist_median = NA, 
-        nb_median_toMe_ratio = NA))
+      return(c(toMe_count = 0, toMe_dist_median = NA_real_, 
+        nb_median_toMe_ratio = NA_real_))
     }
-  })))
+  }, double(3))))
   return(result)
 }

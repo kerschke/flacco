@@ -33,7 +33,7 @@ ztocell = function (z, divisions) {
     return(NULL)
   z = z - 1L
   dim.prod = c(1, cumprod(divisions[-length(divisions)]))
-  sum(dim.prod * z) + 1L
+  as.integer(sum(dim.prod * z) + 1L)
 }
 
 ## converts a single cell ID into the blocks per dimension
@@ -45,7 +45,7 @@ celltoz = function (cell, divisions) {
     coord = c(coord,  cell %% divisions[i])
     cell = cell %/% divisions[i]
   }
-  return(coord + 1L)
+  return(as.integer(coord + 1L))
 }
 
 ## computes the center point of a given cell coordinate z

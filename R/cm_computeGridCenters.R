@@ -37,7 +37,7 @@ computeGridCenters = function(lower, upper, blocks) {
   grid = expand.grid(centers)
   names(grid) = sprintf("x%i", 1:ncol(grid))
   grid = convertInitDesignToGrid(lower = lower, upper = upper, blocks = blocks,
-    init = cbind(grid, y = NA))
+    init = cbind(grid, y = NA_integer_))
   grid$y = NULL
   return (grid)
 }

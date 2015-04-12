@@ -5,6 +5,12 @@
 #' directed and normalized gradients within a cell.
 #' @param feat.object [\code{\link{FeatureObject}}]\cr
 #' A feature object as created by \link{createFeatureObject}.
+#' @param control [\code{\link{list}}]\cr
+#' A list object that stores additional configuration parameters:\cr
+#' The element \code{gradhomo.dist_tie_breaker} defines how ties will be broken
+#' (using \code{selectMin}) when different observations have the same distance
+#' to an observation. Possible values are \code{sample}, \code{first} and
+#' \code{last}. The default is \code{sample}.
 #' @param show.warnings [\code{\link{logical}(1)}]\cr
 #' Should possible warnings about (almost) empty cells be shown? The default is
 #' \code{show.warnings = TRUE}.
@@ -39,35 +45,39 @@
 #' # (2) compute the gradient homogeneity features:
 #' calculateGradientHomogeneity(feat.object = feat.object)
 #' @export 
-calculateGradientHomogeneity = function(feat.object, show.warnings) {
+calculateGradientHomogeneity = function(feat.object, control, show.warnings) {
   assertClass(feat.object, "FeatureObject")
   if (!feat.object$allows.cellmapping)
     stop ("This feature object does not support cell mapping. You first need to define the number of cells per dimension before computing these features.")
+  if (missing(control))
+    control = list()
+  assertClass(control, "list")
+  tie = control_parameter(control, "gradhomo.dist_tie_breaker", "sample")
   measureTime(expression({
     init.grid = feat.object$init.grid
     dims = feat.object$dim
     cells = split(init.grid, init.grid$cell.ID)
-    gradhomo = sapply(cells, function(cell) {
+    gradhomo = vapply(cells, function(cell) {
       n.obs = nrow(cell)
       funvals = cell[, dims + 1L]
       # 2 or less points are not helpful
-      if(n.obs > 2L) { 
+      if (n.obs > 2L) { 
         dists = as.matrix(dist(cell[, 1L:dims], diag = TRUE, upper = TRUE))
         # set diagonal to large (infinite) value
         diag(dists) = Inf
-        norm.vectors = sapply(1:n.obs, function(row) {
-          nearest = as.integer(which.min(dists[row, ]))
+        norm.vectors = vapply(1:n.obs, function(row) {
+          nearest = as.integer(selectMin(dists[row, ], tie.breaker = tie))
           x = cell[c(row, nearest), 1L:dims]
           # compute normalized vector
           ifelse(funvals[row] > funvals[nearest], -1, 1) * apply(x, 2, diff) /
             as.numeric(dist(x))
-        })
+        }, double(dims))
         # calculate distance of sum of normalized vectors
         sqrt(sum(rowSums(norm.vectors)^2)) / n.obs
       } else {
-        NA
+        NA_real_
       }                    
-    })
+    }, double(1))
     if (missing(show.warnings))
       show.warnings = TRUE
     if (show.warnings && (mean(is.na(gradhomo)) > 0)) {

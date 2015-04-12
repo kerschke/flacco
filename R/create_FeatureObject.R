@@ -105,12 +105,13 @@ createFeatureObject = function(init, X, y, fun, minimize,
     if (missing(minimize)) {
       minimize = TRUE
     } 
-    if (missing(lower)) {
-      lower = sapply(X, min)
-    }
-    if (missing(upper))
-      upper = sapply(X, max)
     d = ncol(X)
+    if (missing(lower)) {
+      lower = vapply(X, min, double(1))
+    }
+    if (missing(upper)) {
+      upper = vapply(X, max, double(1))
+    }
     if (length(lower) != d) {
       if (length(lower) == 1L) {
         lower = rep(lower, d)
@@ -125,16 +126,18 @@ createFeatureObject = function(init, X, y, fun, minimize,
         stop("The size of 'upper' does not fit to the dimension of the initial design.")
       }
     }
-    if (any(lower > sapply(X, min))) {
+    if (any(lower > vapply(X, min, double(1)))) {
       stop("The initial data set contains values that are lower than the given lower limits.")
     }
-    if (any(upper < sapply(X, max))) {
+    if (any(upper < vapply(X, max, double(1)))) {
       stop("The initial data set contains values that are bigger than the given upper limits.")
     }
     allows.cellmapping = TRUE
     if (missing(blocks)) {
-      blocks=rep(NA, d)
+      blocks = rep(NA, d)
       allows.cellmapping = FALSE
+    } else {
+      blocks = as.integer(blocks)
     }
     if (length(blocks) != d) {
       if (length(blocks) == 1L) {
@@ -151,8 +154,10 @@ createFeatureObject = function(init, X, y, fun, minimize,
       minimize = minimize, fun = fun,
       lower = lower, upper = upper, 
       dim = length(lower), n.obs = length(y),
-      feature.names = feat.names, objective.name = objective,
-      blocks = blocks, allows.cellmapping = allows.cellmapping)
+      feature.names = feat.names, 
+      objective.name = objective,
+      blocks = blocks,
+      allows.cellmapping = allows.cellmapping)
     if (allows.cellmapping) {
       res$init.grid = convertInitDesignToGrid(init = init, 
         lower = lower, upper = upper, blocks = blocks)
@@ -160,8 +165,8 @@ createFeatureObject = function(init, X, y, fun, minimize,
       colnames(centers)[1:d] = feat.names
       res$cell.centers = centers
       res$cell.size = (upper - lower) / blocks
-      env$gcm.representatives = list() # to be filled on first call to gcm_init()
-      env$gcm.canonicalForm = list()   # to be filled on first call to gcm_init()
+      res$env$gcm.representatives = list() # to be filled on first call to gcm_init()
+      res$env$gcm.canonicalForm = list()   # to be filled on first call to gcm_init()
     }
     return(res)
 }

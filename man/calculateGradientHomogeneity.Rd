@@ -4,11 +4,18 @@
 \alias{calculateGradientHomogeneity}
 \title{Calculate Gradient Homogeneity Features}
 \usage{
-calculateGradientHomogeneity(feat.object, show.warnings)
+calculateGradientHomogeneity(feat.object, control, show.warnings)
 }
 \arguments{
 \item{feat.object}{[\code{\link{FeatureObject}}]\cr
 A feature object as created by \link{createFeatureObject}.}
+
+\item{control}{[\code{\link{list}}]\cr
+A list object that stores additional configuration parameters:\cr
+The element \code{gradhomo.dist_tie_breaker} defines how ties will be broken
+(using \code{selectMin}) when different observations have the same distance
+to an observation. Possible values are \code{sample}, \code{first} and
+\code{last}. The default is \code{sample}.}
 
 \item{show.warnings}{[\code{\link{logical}(1)}]\cr
 Should possible warnings about (almost) empty cells be shown? The default is

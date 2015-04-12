@@ -69,7 +69,7 @@ number_of_peaks = function(x, smoothing.bandwidth = "SJ",
   n = length(y)
   index = 2L : (n - 1L)
   min.index = c(1L, which((y[index] < y[index - 1L]) & y[index] < y[index + 1L]), n + 1L)
-  modemass = sapply(1L : (length(min.index) - 1L), function(i) 
-    intdens(min.index[i], min.index[i + 1L] - 1L))
+  modemass = vapply(1L : (length(min.index) - 1L), function(i) 
+    intdens(min.index[i], min.index[i + 1L] - 1L), double(1))
   sum(modemass > modemass.threshold)
 }

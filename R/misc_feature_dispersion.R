@@ -48,8 +48,8 @@ calculateDispersion = function(feat.object, control) {
         function(i) as.numeric(dist(X[index[[i]], ], method = meth, p = mink)))
       dists.full_sample = as.numeric(dist(X, method = meth, p = mink))
     }
-    means = sapply(dists, mean)
-    medians = sapply(dists, median)
+    means = vapply(dists, mean, double(1))
+    medians = vapply(dists, median, double(1))
     res = c(means / mean(dists.full_sample), medians / median(dists.full_sample),
       means - mean(dists.full_sample), medians - median(dists.full_sample))
     res = as.vector(res, mode = "list")

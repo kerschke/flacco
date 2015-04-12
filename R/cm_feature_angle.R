@@ -64,7 +64,7 @@ calculateAngle = function(feat.object, show.warnings) {
     grid.worst = plyr::ddply(init.grid, "cell.ID", function(x) x[selectMax(x[, obj]), ])
     y.global.worst = max(grid.worst[, obj], na.rm = TRUE)
     y.global.best = min(grid.best[, obj], na.rm = TRUE)
-    cell.values = sapply(1:nrow(cell.centers), function(i) {
+    cell.values = vapply(1:nrow(cell.centers), function(i) {
       x.center = cell.centers[i, ft.names]
       x.worst = grid.worst[i, ft.names]
       x.best = grid.best[i, ft.names]
@@ -86,11 +86,11 @@ calculateAngle = function(feat.object, show.warnings) {
           angle = acos(x) * 180 / pi
         }      
       } else {
-        c2w.dist = c2b.dist = angle = NA
+        c2w.dist = c2b.dist = angle = NA_real_
       }
       return(c(c2b.dist = c2b.dist, c2w.dist = c2w.dist, 
         angle = angle, b2w.ratio = b2w.ratio))
-    })
+    }, double(4))
     prob.cells = mean(apply(cell.values, 2, function(x) any(is.na(x))))
     if (missing(show.warnings))
       show.warnings = TRUE

@@ -104,7 +104,7 @@ plotFeatureImportance = function(featureList, control = list(), ...) {
   abline(v = x, col = col.inactive)
   for(i in x) {
     points(rep(i, length(iters)), iters, pch = pch.inactive, col = col.inactive)
-    y = sapply(featureList, function(feats) ft.names[i] %in% feats)
+    y = vapply(featureList, function(feats) ft.names[i] %in% feats, logical(1))
     points(rep(i, sum(y)), iters[y], pch = pch.active, col = colors[i])
   }
 }

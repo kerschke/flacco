@@ -33,7 +33,7 @@ all combinations of (linearly) neighbouring cells around each element of
 \code{cell.ids} is returned.
 }
 \examples{
-cell.ids = c(5, 84, 17)
+cell.ids = c(5, 84, 17, 23)
 blocks = c(5, 4, 7)
 # (1) Considering diagonal neighbours as well:
 findLinearNeighbours(cell.ids = cell.ids, blocks = blocks, diag = TRUE)

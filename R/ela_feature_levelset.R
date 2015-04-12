@@ -56,17 +56,17 @@ calculateLevelset = function(feat.object, control) {
     res.iters = control_parameter(control, "levelset.resample_iterations", 10L)
     res.meth = control_parameter(control, "levelset.resample_method", "CV")
     colnames(X) = paste0("x", 1:ncol(X))
-    result = sapply(probs, function(prob) {
+    desc = mlr::makeResampleDesc(res.meth, iters = res.iters)
+    inst = mlr::makeResampleInstance(desc, size = nrow(X))
+    result = vapply(probs, function(prob) {
       y_quant = quantile(y, prob)
       data = data.frame(class = as.factor(y < y_quant), X)
       task = mlr::makeClassifTask(id = "prob", data = data, target = "class")
-      desc = mlr::makeResampleDesc(res.meth, iters = res.iters)
-      inst = mlr::makeResampleInstance(desc, task = task)
-      mmces = sapply(methods, function(method) {
+      mmces = vapply(methods, function(method) {
         lrn = mlr::makeLearner(paste("classif.", method, sep = ""))
         mlr::resample(learner = lrn, task = task, 
           resampling = inst, show.info = show.info)$aggr["mmce.test.mean"]
-      })
+      }, double(1))
       names(mmces) = paste("mmce", methods, sep = "_")
       if (length(methods) > 1) {
         combis = combn(paste("mmce", methods, sep = "_"), 2)
@@ -76,7 +76,7 @@ calculateLevelset = function(feat.object, control) {
         mmces = c(mmces, ratios)
       }    
       return(mmces)
-    })
+    }, double(choose(length(methods), 2) + length(methods)))
     meth.names = rownames(result)
     result = as.vector(result, mode = "list")
     names(result) = sprintf("lvlset.%s_%02i", rep(meth.names, length(probs)), 

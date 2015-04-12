@@ -20,7 +20,7 @@
 #' Each list element stands for a combination of predecessing, current
 #' and succeeding cell.
 #' @examples
-#' cell.ids = c(5, 84, 17)
+#' cell.ids = c(5, 84, 17, 23)
 #' blocks = c(5, 4, 7)
 #' # (1) Considering diagonal neighbours as well:
 #' findLinearNeighbours(cell.ids = cell.ids, blocks = blocks, diag = TRUE)
@@ -28,9 +28,11 @@
 #' findLinearNeighbours(cell.ids = cell.ids, blocks = blocks)
 #' @export 
 findLinearNeighbours = function(cell.ids, blocks, diag = FALSE) {
+  assertIntegerish(cell.ids)
+  cell.ids = as.integer(cell.ids)
   dims = seq_along(blocks)
   max.cell = prod(blocks)
-  cell.z = t(sapply(cell.ids, celltoz, blocks))
+  cell.z = t(vapply(cell.ids, celltoz, divisions = blocks, integer(max(dims))))
   if (diag) {
     combs = expand.grid(lapply(dims, function(d) -1:1))
     combs = combs[!apply(combs, 1, function(z) all(z %in% c(-1, 0))), ]
@@ -44,17 +46,19 @@ findLinearNeighbours = function(cell.ids, blocks, diag = FALSE) {
     }
     lapply(1:nrow(combs), function(k) {
       succ = ztocell(x + combs[k, ], blocks)
-      nb = c(2 * cell.ids[i] - succ, cell.ids[i], succ)
+      if (is.null(succ))
+        return(NULL)
+      nb = c(2L * cell.ids[i] - succ, cell.ids[i], succ)
       if (all(nb >= 1) & all(nb <= max.cell)) 
         return(nb)
     })
   })
   nbs = do.call(c, nbs)
-  nbs = lapply(nbs[sapply(nbs, length) == 3L], as.integer)
+  nbs = nbs[!vapply(nbs, is.null, logical(1))]
   if (diag & (length(nbs) != 0)) {
     nbs = lapply(nbs, sort)
     nbs = nbs[!duplicated(nbs)]
-    ind = sapply(nbs, function(h) h[1:2])
+    ind = vapply(nbs, function(h) h[1:2], integer(2))
     return(nbs[order(ind[2,], ind[1,])])
   } else {
     return(nbs)
