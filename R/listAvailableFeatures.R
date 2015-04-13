@@ -42,7 +42,7 @@ listAllFeatureSets = function() {
   list(cm.feats = c("angle", "cell_convexity", "gradient_homogeneity"),
     ela.feats = c("convexity", "curvature", "distribution", "levelset", "local_search", "meta_model"),
     misc.feats = c("basic", "dispersion", "linear_model", "nearest_better", "principal_component"),
-    gcm.feats = NULL, ## FIXME: needs to be completed
-    ic.feats = NULL ## FIXME: needs to be completed
+    gcm.feats = c("barrier_tree", "gcm"),
+    ic.feats = "info_content"
   )
 }

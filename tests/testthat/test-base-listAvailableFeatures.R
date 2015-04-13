@@ -5,7 +5,7 @@ test_that("listAvailableFeatures", {
   expect_equal(x, c("angle", "cell_convexity", "gradient_homogeneity",
     "convexity", "curvature", "distribution", "levelset", "local_search",
     "meta_model", "basic", "dispersion", "linear_model", "nearest_better", 
-    "principal_component"))
+    "principal_component", "barrier_tree", "gcm", "info_content"))
   
   expect_error(listAvailableFeatureSets(subset = c("cell angle")))
   

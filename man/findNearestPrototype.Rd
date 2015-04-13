@@ -2,7 +2,7 @@
 % Please edit documentation in R/cm_findNearestPrototype.R
 \name{findNearestPrototype}
 \alias{findNearestPrototype}
-\title{Find the Nearest Prototype}
+\title{Find Nearest Prototype}
 \usage{
 findNearestPrototype(feat.object, ...)
 }

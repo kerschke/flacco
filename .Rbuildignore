@@ -1,0 +1,14 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^makeR
+^.*tar.gz$
+.gitignore
+.gitmodules
+Makefile
+README.md
+test_all.R
+test_specific.R
+.travis.yml
+appveyor.yml
+bin
+solvers

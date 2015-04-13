@@ -1,44 +1,44 @@
-#' @title Calculate Levelset Features
-#' @description
-#' Computes features quantifying the levelset of a function (its objective
-#' space to be precise).
-#' @param feat.object [\code{\link{FeatureObject}}]\cr
-#' A feature object as created by \link{createFeatureObject}.\cr
-#' @param control [\code{\link{list}}]\cr
-#' A list object that stores additional configuration parameters:\cr
-#' The element \code{levelset.quantiles} defines the quantiles, which are used
-#' for splitting the objective space. The default is \code{c(10, 20, 50)}.\cr
-#' Also, the classification methods can be defined using
-#' \code{levelset.classif_methods}. The corresponding default is
-#' \code{c("lda", "qda", "mda")}.\cr
-#' In addition, the resampling technique and the corresponding number of
-#' iterations can be defined using \code{levelset.resample_method} (default is 
-#' \code{"CV"}) and \code{levelset.resample_iterations} (default is 
-#' \code{10L}).\cr
-#' Finally, one can define whether information regarding the resampling process
-#' should be printed to the console (\code{levelset.show_info}). The default is
-#' \code{FALSE}.
-#' @return [\code{\link{list}(20)} of \code{\link{numeric}(1)}].\cr
-#' List of features.\cr
-#' For further information, see details.
-#' @details
-#' For each pair of classification method and quantile, the mean
-#' misclassfication error (mmce) is returned. In addition, for each quantile
-#' and pair of classification methods the ratio of the mmces of the latter is
-#' returned.\cr
-#' 
-#' The final two features show the amount of (additional) function
-#' evaluations and running time (in seconds) that were needed for the
-#' computation of these features.
-#' @examples
-#' # (1) create a feature object:
-#' X = t(replicate(n = 2000, expr = runif(n = 5, min = -10, max = 10)))
-#' feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
-#' 
-#' # (2) compute the levelset features
-#' library(mlr)
-#' calculateLevelsetFeatures(feat.object)
-#' @export 
+# @title Calculate Levelset Features
+# @description
+# Computes features quantifying the levelset of a function (its objective
+# space to be precise).
+# @param feat.object [\code{\link{FeatureObject}}]\cr
+# A feature object as created by \link{createFeatureObject}.\cr
+# @param control [\code{\link{list}}]\cr
+# A list object that stores additional configuration parameters:\cr
+# The element \code{levelset.quantiles} defines the quantiles, which are used
+# for splitting the objective space. The default is \code{c(10, 20, 50)}.\cr
+# Also, the classification methods can be defined using
+# \code{levelset.classif_methods}. The corresponding default is
+# \code{c("lda", "qda", "mda")}.\cr
+# In addition, the resampling technique and the corresponding number of
+# iterations can be defined using \code{levelset.resample_method} (default is 
+# \code{"CV"}) and \code{levelset.resample_iterations} (default is 
+# \code{10L}).\cr
+# Finally, one can define whether information regarding the resampling process
+# should be printed to the console (\code{levelset.show_info}). The default is
+# \code{FALSE}.
+# @return [\code{\link{list}(20)} of \code{\link{numeric}(1)}].\cr
+# List of features.\cr
+# For further information, see details.
+# @details
+# For each pair of classification method and quantile, the mean
+# misclassfication error (mmce) is returned. In addition, for each quantile
+# and pair of classification methods the ratio of the mmces of the latter is
+# returned.\cr
+# 
+# The final two features show the amount of (additional) function
+# evaluations and running time (in seconds) that were needed for the
+# computation of these features.
+# @examples
+# # (1) create a feature object:
+# X = t(replicate(n = 2000, expr = runif(n = 5, min = -10, max = 10)))
+# feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
+# 
+# # (2) compute the levelset features
+# library(mlr)
+# calculateLevelsetFeatures(feat.object)
+# @export 
 calculateLevelsetFeatures = function(feat.object, control) {
   assertClass(feat.object, "FeatureObject")
   X = extractFeatures(feat.object)

@@ -76,9 +76,9 @@ feat.object2
 feat.object3
 
 # (3) calculate cell mapping features
-calculateCellConvexityFeatures(feat.object1, control = list(cm_conv.diag = TRUE))
-calculateGradientHomogeneityFeatures(feat.object2)
+calculateFeatureSet(feat.object1, "cell_convexity", control = list(cm_conv.diag = TRUE))
+calculateFeatureSet(feat.object2, "gradient_homogeneity")
 library(plyr)
-calculateAngleFeatures(feat.object3, control = list(angle.show_warnings = FALSE))
+calculateFeatureSet(feat.object3, "angle", control = list(angle.show_warnings = FALSE))
 }
 

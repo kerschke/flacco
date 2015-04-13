@@ -2,7 +2,7 @@
 % Please edit documentation in R/measureTime.R
 \name{measureTime}
 \alias{measureTime}
-\title{Helper for measuring time.}
+\title{Measure Runtime of a Feature Computation}
 \usage{
 measureTime(expr, prefix, envir = parent.frame())
 }

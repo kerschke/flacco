@@ -1,4 +1,4 @@
-#' @title Find the Nearest Prototype
+#' @title Find Nearest Prototype
 #'
 #' @description
 #' Among the initial design, a representing observation for each of the cells

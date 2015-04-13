@@ -1,4 +1,4 @@
-#' Helper for measuring time.
+#' Measure Runtime of a Feature Computation
 #'
 #' Simple wrapper around \code{proc.time}.
 #' @param expr [\code{expression}]\cr

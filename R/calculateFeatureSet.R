@@ -1,11 +1,11 @@
-#' @title Calculate Feature Set
+#' @title Calculate Features of a Given Feature Set
 #' @description
-#' Computes features from a specified feature group. 
+#' Computes features that belong to a specific feature set. 
 #' @param feat.object [\code{\link{FeatureObject}}]\cr
 #' A feature object as created by \link{createFeatureObject}.
-#' @param group [\code{\link{character}(1)}]\cr
-#' Name of the group of a feature set, which should be computed.
-#' You can list all possible feature sets using
+#' @param set [\code{\link{character}(1)}]\cr
+#' Name of the feature set, which contains the features that should be
+#' computed. You can list all possible feature sets using
 #' \code{\link{listAvailableFeatureSets}}.
 #' @param control [\code{\link{list}}]\cr
 #' A list object that stores additional configuration parameters.
@@ -20,25 +20,24 @@
 #' feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
 #' 
 #' # (2) compute the meta model features
-#' calculateFeatureSet(feat.object, group = "meta_model")
+#' calculateFeatureSet(feat.object, set = "meta_model")
 #' 
 #' # (3) compute the curvature features
-#' calculateFeatureSet(feat.object, group = "curvature")
+#' calculateFeatureSet(feat.object, set = "curvature")
 #' 
 #' # (4) compute the angle features (note that this requires a feature object)
 #' # which allows cell mapping:
 #' feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2), blocks = 3)
-#' calculateFeatureSet(feat.object, group = "angle", control = list(angle.show_warnings = FALSE))
+#' calculateFeatureSet(feat.object, set = "angle", control = list(angle.show_warnings = FALSE))
 #' @export 
-calculateFeatureSet = function(feat.object, group, control, ...) {
+calculateFeatureSet = function(feat.object, set, control, ...) {
   assertClass(feat.object, "FeatureObject")
-  assertCharacter(group, len = 1L)
-  assertSubset(group, choices = listAvailableFeatureSets())
+  assertCharacter(set, len = 1L)
+  assertSubset(set, choices = listAvailableFeatureSets())
   if (missing(control))
     control = list()
   assertList(control)
-  ## FIXME: needs to be extended for the remaining feature sets
-  switch(group,
+  switch(set,
     angle = calculateAngleFeatures(feat.object, control),
     cell_convexity = calculateCellConvexityFeatures(feat.object, control, ...),
     gradient_homogeneity = calculateGradientHomogeneityFeatures(feat.object, control),
@@ -52,6 +51,9 @@ calculateFeatureSet = function(feat.object, group, control, ...) {
     dispersion = calculateDispersionFeatures(feat.object, control),
     linear_model = calculateLinearModelFeatures(feat.object),
     nearest_better = calculateNearestBetterFeatures(feat.object, control),
-    principal_component = calculatePrincipalComponentFeatures(feat.object, control)
+    principal_component = calculatePrincipalComponentFeatures(feat.object, control),
+    barrier_tree = calculateBarrierTrees(feat.object, control),
+    gcm = calculateGCMFeatures(feat.object, control),
+    info_content = calculateInformationContent(feat.object, control)
   )
 }

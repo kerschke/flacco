@@ -1,47 +1,46 @@
-#' @title Calculate Meta Model Features
-#' @description
-#' Computes features, which describe the dependency between objective and
-#' decision space by means of simple linear and quadratic models.
-#' @param feat.object [\code{\link{FeatureObject}}]\cr
-#' A feature object as created by \link{createFeatureObject}.
-#' @return [\code{\link{list}(9)} of \code{\link{numeric}(1)}].\cr
-#' List of features.\cr
-#' For further information, see details.
-#' @details
-#' Given an initial design, linear and quadratic models of the form
-#' \code{objective ~ features} are created. Both versions are created either
-#' with simple interactions (e.g., \code{x1:x2}) or without interactions.\cr
-#' 
-#' In case of the \emph{simple linear model}, the following five features are
-#' computed:\cr
-#' (1) the model fit, i.e. the adjusted R^2\cr
-#' (2) the estimate of the intercept\cr
-#' (3) the smallest (absolute) value of the models coefficients\cr
-#' (4) the biggest (absolute) value of the models coefficients\cr
-#' (5) the ratio of the biggest and smallest coefficients, i.e. (4) / (5)\cr
-#' 
-#' The 6th feature shows the model fit (i.e., adj. R^2) for the 
-#' \emph{linear model with interactions} and the 7th feature does the same
-#' for a \emph{simple quadratic model}.\cr
-#' Apart from that, the condition of the latter - i.e. the ratio of
-#' its biggest and smallest (absolute) coefficients - is computed.\cr
-#' At last, the model fit of a \emph{quadratic model with interactions} is
-#' being computed.\cr
-#' 
-#' The final two features show the amount of (additional) function
-#' evaluations and running time (in seconds) that were needed for the
-#' computation of these features.
-#' @references
-#' See Mersmann et al. (2011), \dQuote{Exploratory Landscape Analysis} 
-#' (\url{http://dx.doi.org/10.1145/2001576.2001690}).
-#' @examples
-#' # (1) create a feature object:
-#' X = t(replicate(n = 2000, expr = runif(n = 5, min = -10, max = 10)))
-#' feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
-#' # (2) compute the meta model features
-#' calculateMetaModelFeatures(feat.object)
-#' @export 
-
+# @title Calculate Meta Model Features
+# @description
+# Computes features, which describe the dependency between objective and
+# decision space by means of simple linear and quadratic models.
+# @param feat.object [\code{\link{FeatureObject}}]\cr
+# A feature object as created by \link{createFeatureObject}.
+# @return [\code{\link{list}(9)} of \code{\link{numeric}(1)}].\cr
+# List of features.\cr
+# For further information, see details.
+# @details
+# Given an initial design, linear and quadratic models of the form
+# \code{objective ~ features} are created. Both versions are created either
+# with simple interactions (e.g., \code{x1:x2}) or without interactions.\cr
+# 
+# In case of the \emph{simple linear model}, the following five features are
+# computed:\cr
+# (1) the model fit, i.e. the adjusted R^2\cr
+# (2) the estimate of the intercept\cr
+# (3) the smallest (absolute) value of the models coefficients\cr
+# (4) the biggest (absolute) value of the models coefficients\cr
+# (5) the ratio of the biggest and smallest coefficients, i.e. (4) / (5)\cr
+# 
+# The 6th feature shows the model fit (i.e., adj. R^2) for the 
+# \emph{linear model with interactions} and the 7th feature does the same
+# for a \emph{simple quadratic model}.\cr
+# Apart from that, the condition of the latter - i.e. the ratio of
+# its biggest and smallest (absolute) coefficients - is computed.\cr
+# At last, the model fit of a \emph{quadratic model with interactions} is
+# being computed.\cr
+# 
+# The final two features show the amount of (additional) function
+# evaluations and running time (in seconds) that were needed for the
+# computation of these features.
+# @references
+# See Mersmann et al. (2011), \dQuote{Exploratory Landscape Analysis} 
+# (\url{http://dx.doi.org/10.1145/2001576.2001690}).
+# @examples
+# # (1) create a feature object:
+# X = t(replicate(n = 2000, expr = runif(n = 5, min = -10, max = 10)))
+# feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
+# # (2) compute the meta model features
+# calculateMetaModelFeatures(feat.object)
+# @export 
 calculateMetaModelFeatures = function(feat.object) {
   assertClass(feat.object, "FeatureObject")
   measureTime(expression({

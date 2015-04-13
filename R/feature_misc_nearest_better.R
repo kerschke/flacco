@@ -1,33 +1,33 @@
-#' @title Calculate nearest better features
-#'
-#' @description
-#' Computes 5 features based on the comparison of nearest neighbor and nearest
-#' better neighbor, i.e., the nearest neighbor with a better performance value.
-#' @param feat.object [\code{FeatureObject}]\cr
-#'   A feature object as created by createFeatureObject.
-#' @param control [\code{list}]\cr
-#'   A list object that stores additional configuration parameters.
-#' @return [\code{list(7)} of \code{numeric(1)}].\cr
-#'   List of features.\cr
-#'   The first feature is the ratio of the standard deviations between the
-#'   distances of the nearest neighbors and the nearest better neighbors. The
-#'   second feature works analoguous to the first one, but uses the mean
-#'   instead of the standard deviation. The correlation between the two
-#'   distance types is the third feature. The fourth feature gives the 
-#'   coefficient of variation of the ratio of the distances and the fifth
-#'   feature computes the correlation between the fitness values and the
-#'   count of observations, to which an observation is the nearest better.
-#'   The final two features show the amount of (additional) function
-#'   evaluations and running time (in seconds) that were needed for the
-#'   computation of these features.
-#' @examples
-#'   # (1) create the initial design:
-#'   X = t(replicate(1000, runif(2, -10, 10)))
-#'   y = apply(X, 1, function(x) sum(x^2))
-#'   feat.object = createFeatureObject(X = X, y = y)
-#'   # (2) compute the gradient homogeneity features:
-#'   calculateNearestBetterFeatures(feat.object = feat.object)
-#' @export 
+# @title Calculate nearest better features
+# 
+# @description
+# Computes 5 features based on the comparison of nearest neighbor and nearest
+# better neighbor, i.e., the nearest neighbor with a better performance value.
+# @param feat.object [\code{FeatureObject}]\cr
+#   A feature object as created by createFeatureObject.
+# @param control [\code{list}]\cr
+#   A list object that stores additional configuration parameters.
+# @return [\code{list(7)} of \code{numeric(1)}].\cr
+#   List of features.\cr
+#   The first feature is the ratio of the standard deviations between the
+#   distances of the nearest neighbors and the nearest better neighbors. The
+#   second feature works analoguous to the first one, but uses the mean
+#   instead of the standard deviation. The correlation between the two
+#   distance types is the third feature. The fourth feature gives the 
+#   coefficient of variation of the ratio of the distances and the fifth
+#   feature computes the correlation between the fitness values and the
+#   count of observations, to which an observation is the nearest better.
+#   The final two features show the amount of (additional) function
+#   evaluations and running time (in seconds) that were needed for the
+#   computation of these features.
+# @examples
+#   # (1) create the initial design:
+#   X = t(replicate(1000, runif(2, -10, 10)))
+#   y = apply(X, 1, function(x) sum(x^2))
+#   feat.object = createFeatureObject(X = X, y = y)
+#   # (2) compute the gradient homogeneity features:
+#   calculateNearestBetterFeatures(feat.object = feat.object)
+# @export 
 calculateNearestBetterFeatures = function(feat.object, control) {
   assertClass(feat.object, "FeatureObject")
   if (missing(control))

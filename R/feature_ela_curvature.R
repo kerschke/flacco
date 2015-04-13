@@ -1,51 +1,51 @@
-#' @title Calculate Curvature Features
-#' @description
-#' Computes features, which quantify the curvature of a function.
-#' @param feat.object [\code{\link{FeatureObject}}]\cr
-#' A feature object as created by \link{createFeatureObject}.\cr
-#' Note, that the feature object has to contain the function itself in
-#' order to compute the convexity features.
-#' @param control [\code{\link{list}}]\cr
-#' A list object that stores additional configuration parameters:\cr
-#' The element \code{curv.sample_size} defines the number of samples that are
-#' used for calculating the features. The default is \code{1000}.
-#' @details
-#' Given a feature object, \code{curv.sample_size} (per default
-#' \code{100 * d} with \code{d} being the number of features) samples are
-#' randomly chosen. Then, the gradient and hessian of the function are 
-#' estimated based on those points and the following features are computed:\cr
-#' 
-#' The first seven features (\code{curv.grad_norm}) aggregate the length of
-#' the gradients, the next seven features (\code{curv.grad_scale}) summarize
-#' the ratio of biggest and smallest (absolute) gradient direction and the
-#' remaining seven features (\code{curv.hessian_cond}) summarize the ratio of
-#' biggest and smallest eigenvalue of the hessian matrices. The aggregation
-#' is always done in the same order:\cr
-#' (1) minimum\cr
-#' (2) lower quartile (also known as 1st quartile or \code{25\%}-quantile)\cr
-#' (3) arithmetic mean\cr
-#' (4) median\cr
-#' (5) upper quartile (also known as 3rd quartile or \code{75\%}-quantile)\cr
-#' (6) maximum\cr
-#' (7) standard deviation\cr
-#'   
-#' The final two features show the amount of (additional) function
-#' evaluations and running time (in seconds) that were needed for the
-#' computation of these features.
-#' @return [\code{\link{list}(23)} of \code{\link{numeric}(1)}].\cr
-#' List of features.\cr
-#' For further information, see details.
-#' @references
-#' See Mersmann et al. (2011), \dQuote{Exploratory Landscape Analysis} 
-#' (\url{http://dx.doi.org/10.1145/2001576.2001690}).
-#' @examples
-#' # (1) create a feature object:
-#' X = t(replicate(n = 2000, expr = runif(n = 5, min = -10, max = 10)))
-#' feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
-#' 
-#' # (2) compute the curvature features:
-#' calculateCurvatureFeatures(feat.object)
-#' @export 
+# @title Calculate Curvature Features
+# @description
+# Computes features, which quantify the curvature of a function.
+# @param feat.object [\code{\link{FeatureObject}}]\cr
+# A feature object as created by \link{createFeatureObject}.\cr
+# Note, that the feature object has to contain the function itself in
+# order to compute the convexity features.
+# @param control [\code{\link{list}}]\cr
+# A list object that stores additional configuration parameters:\cr
+# The element \code{curv.sample_size} defines the number of samples that are
+# used for calculating the features. The default is \code{1000}.
+# @details
+# Given a feature object, \code{curv.sample_size} (per default
+# \code{100 * d} with \code{d} being the number of features) samples are
+# randomly chosen. Then, the gradient and hessian of the function are 
+# estimated based on those points and the following features are computed:\cr
+# 
+# The first seven features (\code{curv.grad_norm}) aggregate the length of
+# the gradients, the next seven features (\code{curv.grad_scale}) summarize
+# the ratio of biggest and smallest (absolute) gradient direction and the
+# remaining seven features (\code{curv.hessian_cond}) summarize the ratio of
+# biggest and smallest eigenvalue of the hessian matrices. The aggregation
+# is always done in the same order:\cr
+# (1) minimum\cr
+# (2) lower quartile (also known as 1st quartile or \code{25\%}-quantile)\cr
+# (3) arithmetic mean\cr
+# (4) median\cr
+# (5) upper quartile (also known as 3rd quartile or \code{75\%}-quantile)\cr
+# (6) maximum\cr
+# (7) standard deviation\cr
+#   
+# The final two features show the amount of (additional) function
+# evaluations and running time (in seconds) that were needed for the
+# computation of these features.
+# @return [\code{\link{list}(23)} of \code{\link{numeric}(1)}].\cr
+# List of features.\cr
+# For further information, see details.
+# @references
+# See Mersmann et al. (2011), \dQuote{Exploratory Landscape Analysis} 
+# (\url{http://dx.doi.org/10.1145/2001576.2001690}).
+# @examples
+# # (1) create a feature object:
+# X = t(replicate(n = 2000, expr = runif(n = 5, min = -10, max = 10)))
+# feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
+# 
+# # (2) compute the curvature features:
+# calculateCurvatureFeatures(feat.object)
+# @export 
 calculateCurvatureFeatures = function(feat.object, control) {
   assertClass(feat.object, "FeatureObject")
   f = initializeCounter(feat.object$fun)
