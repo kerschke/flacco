@@ -185,7 +185,7 @@ print.FeatureObject = function(x, ...) {
   } else {
     catf("- Lower Boundaries: %s, ...", collapse(sprintf("%.2e", x$lower[1:4]), sep=", "))
     catf("- Upper Boundaries: %s, ...", collapse(sprintf("%.2e", x$upper[1:4]), sep=", "))
-    catf("- Name of Features: %s, ...", collapse(x$feature.names, sep = ", "))
+    catf("- Name of Features: %s, ...", collapse(x$feature.names[1:4], sep = ", "))
   }
   catf("- Optimization problem: %s %s", 
        ifelse(x$minimize, "minimize", "maximize"), x$objective.name)
