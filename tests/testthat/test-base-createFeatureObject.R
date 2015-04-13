@@ -1,4 +1,4 @@
-context("createFeatureObject")
+context("Base: Create Feature Object")
 
 test_that("Basic FeatureObject ", {
   feat.object = createFeatureObject(iris, objective = "Species")

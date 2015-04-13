@@ -10,10 +10,10 @@
 #' The element \code{gradhomo.dist_tie_breaker} defines how ties will be broken
 #' (using \code{selectMin}) when different observations have the same distance
 #' to an observation. Possible values are \code{sample}, \code{first} and
-#' \code{last}. The default is \code{sample}.
-#' @param show.warnings [\code{\link{logical}(1)}]\cr
-#' Should possible warnings about (almost) empty cells be shown? The default is
-#' \code{show.warnings = TRUE}.
+#' \code{last}. The default is \code{sample}.\cr
+#' The parameter \code{gradhomo.show_warnings} indicates, whether possible
+#' warnings about (almost) empty cells should be shown? The default is
+#' \code{TRUE}.
 #' @return [\code{\link{list}(4)}].\cr
 #' List of features.\cr
 #' For further information, see details.
@@ -45,7 +45,7 @@
 #' # (2) compute the gradient homogeneity features:
 #' calculateGradientHomogeneityFeatures(feat.object = feat.object)
 #' @export 
-calculateGradientHomogeneityFeatures = function(feat.object, control, show.warnings) {
+calculateGradientHomogeneityFeatures = function(feat.object, control) {
   assertClass(feat.object, "FeatureObject")
   if (!feat.object$allows.cellmapping)
     stop ("This feature object does not support cell mapping. You first need to define the number of cells per dimension before computing these features.")
@@ -53,6 +53,7 @@ calculateGradientHomogeneityFeatures = function(feat.object, control, show.warni
     control = list()
   assertClass(control, "list")
   tie = control_parameter(control, "gradhomo.dist_tie_breaker", "sample")
+  show.warnings = control_parameter(control, "gradhomo.show_warnings", TRUE)
   measureTime(expression({
     init.grid = feat.object$init.grid
     dims = feat.object$dim
@@ -78,8 +79,6 @@ calculateGradientHomogeneityFeatures = function(feat.object, control, show.warni
         NA_real_
       }                    
     }, double(1))
-    if (missing(show.warnings))
-      show.warnings = TRUE
     if (show.warnings && (mean(is.na(gradhomo)) > 0)) {
       warningf("%.2f%% of the cells contain less than two observations.", 
         100 * mean(is.na(gradhomo)))

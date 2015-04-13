@@ -1,7 +1,7 @@
 context("Features: Principal Component")
 
 
-test_that("Calculation of PCA is possible", {
+test_that("Expected Output", {
   set.seed(2015*03*26)
   
   # (1) create a feature object:
@@ -10,7 +10,7 @@ test_that("Calculation of PCA is possible", {
   feat.object = createFeatureObject(X = X, y = y)
   
   # (2) compute the PCA features
-  features = calculatePrincipalComponentFeatures(feat.object)
+  features = calculateFeatureSet(feat.object, "principal_component")
   
   # test return value types and ranges
   expect_equal(length(features), 10L)

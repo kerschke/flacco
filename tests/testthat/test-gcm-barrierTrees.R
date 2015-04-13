@@ -1,4 +1,4 @@
-context("GCM Barrier Tree Computations")
+context("Features: Barrier Tree")
 
 test_that("GCM-based Barrier Tree features are computed", {
   set.seed(2015*03*25)

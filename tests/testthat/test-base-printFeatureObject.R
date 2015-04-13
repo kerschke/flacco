@@ -1,4 +1,4 @@
-context("print.FeatureObject")
+context("Base: Print Feature Object")
 
 test_that("FeatureObject Output", {
   feat.object = createFeatureObject(iris, objective = "Species")

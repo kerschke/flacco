@@ -1,4 +1,4 @@
-context("computeGridCenters")
+context("Base: Compute Grid Centers")
 
 test_that("computeGridCenters", {
   bl = c(1, 2, 4, 5, 10, 20)

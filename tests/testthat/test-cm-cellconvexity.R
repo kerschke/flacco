@@ -1,14 +1,14 @@
 context("Features: Cell Convexity")
 
-test_that("A cell mapping-enabled FeatureObject is required", {
+test_that("Require Cell Mapping", {
   set.seed(2015*03*26)
   
-  # (1) create a feature object:
+  # (1) Create a Feature Object:
   X = t(replicate(n = 2000, expr = runif(n = 5, min = -10, max = 10)))
   y = apply(X, 1, function(x) sum(x^2))
   feat.object = createFeatureObject(X = X, y = y)
   
-  expect_error(calculateCellConvexityFeatures(feat.object))
+  expect_error(calculateFeatureSet(feat.object, "cell_convexity"))
 })
 
 test_that("Number of blocks has to be >2 in at least 1 dimension.", {
@@ -19,7 +19,7 @@ test_that("Number of blocks has to be >2 in at least 1 dimension.", {
   y = apply(X, 1, function(x) sum(x^2))
   feat.object = createFeatureObject(X = X, y = y, blocks = 2)
   
-  expect_error(calculateCellConvexityFeatures(feat.object))
+  expect_error(calculateFeatureSet(feat.object, "cell_convexity"))
 })
 
 test_that("Calculation of Cell Convexity is possible", {
@@ -31,7 +31,7 @@ test_that("Calculation of Cell Convexity is possible", {
   feat.object = createFeatureObject(X = X, y = y, blocks = c(2, 3, 3, 4, 2))
   
   # (2) compute the cell convexity features
-  features = calculateCellConvexityFeatures(feat.object)
+  features = calculateFeatureSet(feat.object, "cell_convexity")
   
   # test return value types and ranges
   expect_equal(length(features), 6L)

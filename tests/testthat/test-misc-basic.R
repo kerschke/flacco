@@ -1,6 +1,6 @@
 context("Features: Basic")
 
-test_that("Calculation of Basic for non-Cellmapping objects", {
+test_that("Non-Cellmapping Objects", {
   set.seed(2015*03*26)
   
   # (1) create a feature object:
@@ -9,7 +9,7 @@ test_that("Calculation of Basic for non-Cellmapping objects", {
   feat.object = createFeatureObject(X = X, y = y)
   
   # (2) compute the Basic features
-  features = calculateBasicFeatures(feat.object)
+  features = calculateFeatureSet(feat.object, "basic")
   
   # test return value types and ranges
   expect_equal(length(features), 16L)
@@ -43,7 +43,7 @@ test_that("Calculation of Basic for non-Cellmapping objects", {
 })
 
 
-test_that("Calculation of Basic for Cellmapping objects", {
+test_that("Cellmapping Objects", {
   set.seed(2015*03*26)
   
   # (1) create a feature object:
@@ -52,7 +52,7 @@ test_that("Calculation of Basic for Cellmapping objects", {
   feat.object = createFeatureObject(X = X, y = y, blocks = c(2, 3, 4, 3, 5))
   
   # (2) compute the Basic features
-  features = calculateBasicFeatures(feat.object)
+  features = calculateFeatureSet(feat.object, "basic")
   
   # test return value types and ranges
   expect_equal(length(features), 16L)
@@ -92,10 +92,10 @@ test_that("Test Basic Features", {
   feat.object4 = createFeatureObject(X = X, y = y, blocks = 3L, minimize = FALSE)
   
   # (2) compute the Basic features
-  features1 = calculateBasicFeatures(feat.object1)
-  features2 = calculateBasicFeatures(feat.object2)
-  features3 = calculateBasicFeatures(feat.object3)
-  features4 = calculateBasicFeatures(feat.object4)
+  features1 = calculateFeatureSet(feat.object1, "basic")
+  features2 = calculateFeatureSet(feat.object2, "basic")
+  features3 = calculateFeatureSet(feat.object3, "basic")
+  features4 = calculateFeatureSet(feat.object4, "basic")
   
   # test return value types and ranges
   expect_equal(length(features1), 16L)

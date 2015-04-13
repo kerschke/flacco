@@ -1,4 +1,4 @@
-context("Feature Importance Plots")
+context("Plot: Feature Importance Plot")
 
 test_that("Feature Importance Plots", {
   library(mlr)

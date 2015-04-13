@@ -5,10 +5,12 @@
 #' cells, provided the decision space is divided into a grid of cells.
 #' @param feat.object [\code{\link{FeatureObject}}]\cr
 #' A feature object as created by \link{createFeatureObject}.
-#' @param diag [\code{logical}(1)]\cr
-#' Should cells, which are located on the diagonal compared to the current
-#' cell, be considered as neighbouring cells? Per default, only cells along
-#' the axes are considered as neighbours, i.e. \code{diag = FALSE}.
+#' @param control [\code{\link{list}}]\cr
+#' A list object that stores additional configuration parameters:\cr
+#' The element \code{cm_conv.diag} defines whether cells, which are located on
+#' the diagonal compared to the current cell, should be considered as
+#' neighbouring cells? The default is \code{FALSE}, i.e. only cells along
+#' the axes are considered as neighbours.
 #' @param ... [any]\cr
 #' Further arguments, which are used for the computation of the nearest
 #' prototypes (\link{findNearestPrototype}).
@@ -50,13 +52,16 @@
 #' calculateCellConvexityFeatures(feat.object)
 #' 
 #' # ... (2b) considering diagonal neighbours:
-#' calculateCellConvexityFeatures(feat.object, diag = TRUE)
+#' calculateCellConvexityFeatures(feat.object, control = list(cm_conv.diag = TRUE))
 #' @export 
-calculateCellConvexityFeatures = function(feat.object, diag = FALSE, ...) {
+calculateCellConvexityFeatures = function(feat.object, control, ...) {
   assertClass(feat.object, "FeatureObject")
-  assertLogical(diag)
   if (!feat.object$allows.cellmapping)
     stop ("This feature object does not support cell mapping. You first need to define the number of cells per dimension before computing these features.")
+  if (missing(control))
+    control = list()
+  assertList(control)
+  diag = control_parameter(control, "cm_conv.diag", FALSE) 
   measureTime(expression({
     init.grid = feat.object$init.grid
     cell.centers = feat.object$cell.centers

@@ -1,6 +1,6 @@
 context("Features: Nearest Better")
 
-test_that("Calculation of Nearest Better is possible", {
+test_that("Expected Output", {
   set.seed(2015*03*26)
   
   # (1) create a feature object:
@@ -9,7 +9,7 @@ test_that("Calculation of Nearest Better is possible", {
   feat.object = createFeatureObject(X = X, y = y)
   
   # (2) compute the nearest better features
-  features = calculateNearestBetterFeatures(feat.object)
+  features = calculateFeatureSet(feat.object, "nearest_better")
   
   # test return value types and ranges
   expect_equal(length(features), 7L)
@@ -27,7 +27,7 @@ test_that("Calculation of Nearest Better is possible", {
 })
 
 
-test_that("Calculation of Nearest Better based on Minkowski Distance", {
+test_that("Using Minkowski Distance", {
   set.seed(2015*03*26)
   
   # (1) create a feature object:
@@ -36,11 +36,11 @@ test_that("Calculation of Nearest Better based on Minkowski Distance", {
   feat.object = createFeatureObject(X = X, y = y)
   
   # (2) compute the nearest better features
-  features = calculateNearestBetterFeatures(feat.object,
+  features = calculateFeatureSet(feat.object, "nearest_better",
     control = list(nbf.dist_method = "minkowski"))
-  features1 = calculateNearestBetterFeatures(feat.object, 
+  features1 = calculateFeatureSet(feat.object, "nearest_better",
     control = list(nbf.dist_method = "minkowski", nbf.minkowski_p = 10L))
-  features2 = calculateNearestBetterFeatures(feat.object)
+  features2 = calculateFeatureSet(feat.object, "nearest_better")
   
   # test return value types and ranges
   expect_is(features, "list")

@@ -1,4 +1,4 @@
-context("findLinearNeighbours")
+context("Base: Find Linear Neighbours")
 
 test_that("Without Diagonal", {
   cell.ids = c(4, 5, 9, 29)

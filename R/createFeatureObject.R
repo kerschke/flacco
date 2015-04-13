@@ -56,10 +56,10 @@
 #' feat.object3
 #' 
 #' # (3) calculate cell mapping features
-#' calculateCellConvexityFeatures(feat.object1, diag = TRUE)
+#' calculateCellConvexityFeatures(feat.object1, control = list(cm_conv.diag = TRUE))
 #' calculateGradientHomogeneityFeatures(feat.object2)
 #' library(plyr)
-#' calculateAngleFeatures(feat.object3, show.warnings = FALSE)
+#' calculateAngleFeatures(feat.object3, control = list(angle.show_warnings = FALSE))
 #' @export 
 
 createFeatureObject = function(init, X, y, fun, minimize, 

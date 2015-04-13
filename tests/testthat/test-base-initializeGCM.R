@@ -1,4 +1,4 @@
-context("Initialisation of GCM Computations")
+context("Base: Initialize GCM")
 
 test_that("GCM initialisation for factor-valued objectives is not possible", {
   featobj = createFeatureObject(iris, objective = "Species", blocks = 5)

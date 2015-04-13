@@ -1,4 +1,4 @@
-context("GCM Feature Computations")
+context("Features: GCM")
 
 test_that("GCM features are computed", {
   values = iris[, -5] # strip factor column "Species"

@@ -1,6 +1,6 @@
 context("Features: Meta Model")
 
-test_that("Calculation of MetaModel is possible", {
+test_that("Expected Output", {
   set.seed(2015*03*26)
   
   # (1) create a feature object:
@@ -9,7 +9,7 @@ test_that("Calculation of MetaModel is possible", {
   feat.object = createFeatureObject(X = X, y = y)
   
   # (2) compute the meta model features
-  features = calculateMetaModelFeatures(feat.object)
+  features = calculateFeatureSet(feat.object, "meta_model")
   
   # test return value types and ranges
   expect_equal(length(features), 11L)
@@ -30,6 +30,6 @@ test_that("Calculation of MetaModel is possible", {
   
   # test return values
   expect_equal( features$meta.lin.simple.coef.max_by_min, 
-                features$meta.lin.simple.coef.max / features$meta.lin.simple.coef.min, 
-                tolerance = 0.00001 )
+    features$meta.lin.simple.coef.max / features$meta.lin.simple.coef.min, 
+    tolerance = 0.00001 )
 })

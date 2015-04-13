@@ -5,9 +5,11 @@
 #' provided the decision space is divided into a grid of cells.
 #' @param feat.object [\code{\link{FeatureObject}}]\cr
 #' A feature object as created by \link{createFeatureObject}.
-#' @param show.warnings [\code{\link{logical}(1)}]\cr
-#' Should possible warnings about \code{NAs} in the feature computation be 
-#' shown? The default is \code{show.warnings = TRUE}.
+#' @param control [\code{\link{list}}]\cr
+#' A list object that stores additional configuration parameters.\cr
+#' The element \code{angle.show_warnings} indicates whether possible warnings
+#' about \code{NAs} in the feature computation should be shown?
+#' The default is \code{TRUE}.
 #' @return [\code{\link{list}(10)} of \code{\link{numeric}(1)}].\cr
 #' List of features.\cr
 #' For further information, see details.
@@ -49,11 +51,15 @@
 #' library(plyr)
 #' calculateAngleFeatures(feat.object)
 #' @export 
-calculateAngleFeatures = function(feat.object, show.warnings) {
+calculateAngleFeatures = function(feat.object, control) {
   assertClass(feat.object, "FeatureObject")
   if (!feat.object$allows.cellmapping)
     stop ("This feature object does not support cell mapping. You first need to define the number of cells per dimension before computing these features.")
+  if (missing(control))
+    control = list()
+  assertList(control)
   measureTime(expression({
+    show.warnings = control_parameter(control, "angle.show_warnings", TRUE)
     init.grid = feat.object$init.grid
     cell.centers = feat.object$cell.centers
     ft.names = feat.object$feature.names
@@ -92,8 +98,6 @@ calculateAngleFeatures = function(feat.object, show.warnings) {
         angle = angle, b2w.ratio = b2w.ratio))
     }, double(4))
     prob.cells = mean(apply(cell.values, 2, function(x) any(is.na(x))))
-    if (missing(show.warnings))
-      show.warnings = TRUE
     if (show.warnings && (prob.cells > 0)) {
       warningf("%.2f%% of the cells produce NAs during the feature computation.", 
         100 * prob.cells)

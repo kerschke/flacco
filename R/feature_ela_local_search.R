@@ -61,9 +61,9 @@
 #' X = t(replicate(n = 2000, expr = runif(n = 5, min = -10, max = 10)))
 #' feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
 #' 
-#' # (2a) compute the convexity features (simple)
+#' # (2a) compute the local search features (simple)
 #' calculateLocalSearchFeatures(feat.object)
-#' # (2b) compute the convexity features (with some control settings)
+#' # (2b) compute the local search features (with some control settings)
 #' cluster_function = function(cl) as.numeric(quantile(cl$height, 0.25))
 #' calculateLocalSearchFeatures(feat.object, control = list(
 #'   local.optim_method = "L-BFGS-B", 

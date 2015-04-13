@@ -1,6 +1,6 @@
 context("Features: Levelset")
 
-test_that("Calculation of Levelset is possible", {
+test_that("Expected Output", {
   set.seed(2015*03*26)
   
   # (1) create a feature object:
@@ -8,7 +8,7 @@ test_that("Calculation of Levelset is possible", {
   feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
   
   # (2) compute the levelset features
-  features = calculateLevelsetFeatures(feat.object)
+  features = calculateFeatureSet(feat.object, "levelset")
   
   # test return values
   expect_equal(length(features), 20L)

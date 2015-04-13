@@ -1,4 +1,4 @@
-context("ICoFiS Computations")
+context("Features: Information Content")
 
 test_that("Information content-based features are computed", {
   set.seed(2015*03*25)

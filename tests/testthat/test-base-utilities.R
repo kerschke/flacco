@@ -1,4 +1,4 @@
-context("Utility Functions (main and GCM)")
+context("Base: Utility Functions (main and GCM)")
 
 test_that("findAllNeighbours", {
   h = c(1, 1)

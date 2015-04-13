@@ -1,13 +1,13 @@
 context("Features: Linear Model")
 
-test_that("A cell mapping-enabled FeatureObject is required", {
+test_that("Require Cell Mapping", {
   feat.object = createFeatureObject(init = iris[, -5], objective = "Sepal.Length")
-  expect_error(calculateLinearModelFeatures(feat.object))
+  expect_error(calculateFeatureSet(feat.object, "linear_model"))
 })
 
-test_that("calculateLinearModelFeatures -- first use case", {
+test_that("Using Initial Design", {
   feat.object = createFeatureObject(init = iris[, -5], objective = "Sepal.Length", blocks = 3)
-  features = calculateLinearModelFeatures(feat.object)
+  features = calculateFeatureSet(feat.object, "linear_model")
   expect_equal(length(features), 14L)
   expect_is(features, class = "list")
   expect_equal(as.character(sapply(features, class)), c(rep("numeric", 12L), "integer", "numeric"))
@@ -27,10 +27,10 @@ test_that("calculateLinearModelFeatures -- first use case", {
   expect_true( testNumber(features$limo.costs_runtime, lower = 0) )
 })
 
-test_that("calculateLinearModelFeatures -- second use case", {
+test_that("Using X and y", {
   A = rbind(c(0, 0), c(0, 3), c(4, 3))
   feat.object = createFeatureObject(X = A, y = 1:3, blocks = 1)
-  features = calculateLinearModelFeatures(feat.object)
+  features = calculateFeatureSet(feat.object, "linear_model")
   expect_identical(features$limo.length.sd, NA_real_)
   expect_identical(features$limo.cor, NaN)
   expect_identical(features$limo.cor.scaled, NaN)
