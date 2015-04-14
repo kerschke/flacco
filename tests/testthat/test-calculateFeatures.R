@@ -10,7 +10,7 @@ test_that("Non-Cellmapping Objects", {
   
   # (2) compute all non-cellmapping and non-expensive features
   features = calculateFeatures(feat.object, allow.cellmapping = FALSE, 
-    allow.additional_costs = FALSE, control = list(show_progress = FALSE))
+    allow.additional_costs = FALSE)
   
   # test return value types and ranges
   expect_equal(length(features), 87L)

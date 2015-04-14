@@ -38,7 +38,7 @@
 #' @export 
 calculateFeatures = function(feat.object, control, subset, allow.cellmapping, allow.additional_costs, blacklist, ...) {
   assertClass(feat.object, "FeatureObject")
-  possible = unlist(listAllFeatureSets())
+  possible = as.character(unlist(listAllFeatureSets()))
   if (missing(subset))
     subset = possible
   assertSubset(subset, choices = possible)
@@ -71,9 +71,10 @@ calculateFeatures = function(feat.object, control, subset, allow.cellmapping, al
   prog = control_parameter(control, "show_progress", TRUE)
   if (prog) {
     bar = makeProgressBar(min = 0, max = length(sets), label = "")
+    no_chars = max(nchar(sets))
     features = lapply(sets, function(set) {
-      messagef("\n\ncomputing %s", set)
-      bar$inc(1L)
+      txt = paste0(set, paste(rep(" ", no_chars - nchar(set)), collapse = ""))
+      bar$inc(1L, txt)
       calculateFeatureSet(feat.object, set, control, ...)
     })
   } else {
