@@ -45,6 +45,7 @@ test_that("Warning if cells are populated sparsely", {
   y = apply(X, 1, function(x) { sum(x^2) })
   feat.object = createFeatureObject(X = X, y = y, blocks = c(10, 5, 5, 8, 4))
 
-  expect_warning(calculateFeatureSet(feat.object, "gradient_homogeneity"), 
+  expect_warning(calculateFeatureSet(feat.object, "gradient_homogeneity",
+    control = list(gradhomo.show_warnings = TRUE)), 
     "% of the cells contain less than two observations.")
 })

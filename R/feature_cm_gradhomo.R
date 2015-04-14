@@ -13,7 +13,7 @@
 # \code{last}. The default is \code{sample}.\cr
 # The parameter \code{gradhomo.show_warnings} indicates, whether possible
 # warnings about (almost) empty cells should be shown? The default is
-# \code{TRUE}.
+# \code{FALSE}.
 # @return [\code{\link{list}(4)}].\cr
 # List of features.\cr
 # For further information, see details.
@@ -53,7 +53,7 @@ calculateGradientHomogeneityFeatures = function(feat.object, control) {
     control = list()
   assertClass(control, "list")
   tie = control_parameter(control, "gradhomo.dist_tie_breaker", "sample")
-  show.warnings = control_parameter(control, "gradhomo.show_warnings", TRUE)
+  show.warnings = control_parameter(control, "gradhomo.show_warnings", FALSE)
   measureTime(expression({
     init.grid = feat.object$init.grid
     dims = feat.object$dim

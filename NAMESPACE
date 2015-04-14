@@ -2,6 +2,7 @@
 
 S3method(print,FeatureObject)
 export(calculateFeatureSet)
+export(calculateFeatures)
 export(computeGridCenters)
 export(convertInitDesignToGrid)
 export(createFeatureObject)
