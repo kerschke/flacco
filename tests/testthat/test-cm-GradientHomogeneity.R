@@ -47,6 +47,10 @@ test_that("Warning if cells are populated sparsely", {
   expect_warning(calculateFeatureSet(feat.object, "gradient_homogeneity",
     control = list(gradhomo.show_warnings = TRUE)), 
     "% of the cells contain less than two observations.")
+  
+  expect_warning(calculateFeatureSet(feat.object, "gradient_homogeneity",
+    control = list(gradhomo.show_warnings = TRUE, gradhomo.dist_method = "manhattan")), 
+    "% of the cells contain less than two observations.")
 })
 
 test_that("Using Minkowski Distance", {
