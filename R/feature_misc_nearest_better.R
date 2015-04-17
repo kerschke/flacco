@@ -59,8 +59,7 @@ calculateNearestBetterQuickFeatures = function(feat.object, control) {
       fast_k = ceiling(fast_k * feat.object$n.obs) 
     assertInt(fast_k, lower = 0L, upper = feat.object$n.obs)
     X = extractFeatures(feat.object)
-    y = extractObjective(feat.object)
-    y = ifelse(feat.object$minimize, 1, -1) * y
+    y = ifelse(feat.object$minimize, 1, -1) * extractObjective(feat.object)
     nn = RANN::nn2(X, k = fast_k)
     nb.stats = t(vapply(1:nrow(X), function(i) {
       y_rec = y[i]
@@ -75,7 +74,7 @@ calculateNearestBetterQuickFeatures = function(feat.object, control) {
         if (any(y[ind_alt] < y_rec)) {
           ind_alt = ind_alt[which(y[ind_alt] < y_rec)]
         } else if (any(y[ind_alt] == y_rec)) {
-          ind_alt = ind_alt[which(y[ind_alt] < y_rec)]
+          ind_alt = ind_alt[which(y[ind_alt] == y_rec)]
         } else {
           return(c(i, NA_real_, NA_real_))
         }

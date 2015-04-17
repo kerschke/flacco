@@ -4,7 +4,7 @@
 \alias{findNearestPrototype}
 \title{Find Nearest Prototype}
 \usage{
-findNearestPrototype(feat.object, dist_meth, mink_p, ...)
+findNearestPrototype(feat.object, dist_meth, mink_p, fast_k, ...)
 }
 \arguments{
 \item{feat.object}{[\code{\link{FeatureObject}}]\cr
@@ -18,6 +18,10 @@ Which distance method should be used? Possible values are
 \item{mink_p}{[\code{\link{integer}(1)}]\cr
 The value for \code{p} in case \code{dist_meth} is \code{"minkowski"}.
 The default is \code{2}, i.e. the euclidean distance.}
+
+\item{fast_k}{[\code{\link{numeric}(1)}]\cr
+Percentage of elements that should be considered within nn-computation.
+The default is \code{0.05}.}
 
 \item{...}{[any]\cr
 Further arguments, which might be used within the distance computation

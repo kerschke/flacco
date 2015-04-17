@@ -12,6 +12,9 @@
 #' @param mink_p [\code{\link{integer}(1)}]\cr
 #' The value for \code{p} in case \code{dist_meth} is \code{"minkowski"}.
 #' The default is \code{2}, i.e. the euclidean distance.
+#' @param fast_k [\code{\link{numeric}(1)}]\cr
+#' Percentage of elements that should be considered within nn-computation.
+#' The default is \code{0.05}.
 #' @param ... [any]\cr
 #' Further arguments, which might be used within the distance computation
 #' (\code{\link{dist}}).
@@ -29,14 +32,20 @@
 #' # (2) find the nearest prototypes of all cells:
 #' findNearestPrototype(feat.object)
 #' @export 
-findNearestPrototype = function(feat.object, dist_meth, mink_p, ...) {
+findNearestPrototype = function(feat.object, dist_meth, mink_p, fast_k, ...) {
   assertClass(feat.object, "FeatureObject")
   if (missing(dist_meth))
     dist_meth = "euclidean"
   if (missing(mink_p))
     mink_p = 2L
+  if (missing(fast_k))
+    fast_k = 0.05
+  assertNumber(fast_k)
+  if (fast_k < 1)
+    fast_k = ceiling(fast_k * feat.object$n.obs) 
+  assertInt(fast_k, lower = 0L, upper = feat.object$n.obs)
   if ((dist_meth == "euclidean") || ((dist_meth == "minkowski") & (mink_p == 2))) {
-    findNearestPrototypeQuick(feat.object, ...)
+    findNearestPrototypeQuick(feat.object, fast_k = fast_k, ...)
   } else {
     findNearestPrototypeFlex(feat.object, ...)
   }
@@ -60,14 +69,14 @@ findNearestPrototypeFlex = function(feat.object, ...) {
 
 
 
-findNearestPrototypeQuick = function(feat.object, ...) {
+findNearestPrototypeQuick = function(feat.object, fast_k,...) {
   assertClass(feat.object, "FeatureObject")
   init.grid = extractInit(feat.object)
   X = extractFeatures(feat.object)
   cell.centers = feat.object$cell.centers
   dims = feat.object$dim
   n.cells = nrow(cell.centers)
-  nn = RANN::nn2(rbind(cell.centers[, 1:dims], X))$nn.idx
+  nn = RANN::nn2(rbind(cell.centers[, 1:dims], X), k = fast_k)$nn.idx
   nn = nn[seq_len(n.cells), -1] - n.cells
   nearest.grid = init.grid[apply(nn, 1, function(x) (x[x > 0])[1]), ]
   
