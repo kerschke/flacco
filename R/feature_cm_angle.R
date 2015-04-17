@@ -61,54 +61,54 @@ calculateAngleFeatures = function(feat.object, control) {
   measureTime(expression({
     show.warnings = control_parameter(control, "angle.show_warnings", TRUE)
     init.grid = feat.object$init.grid
-    cell.centers = feat.object$cell.centers
     ft.names = feat.object$feature.names
+    cell.centers = as.matrix(feat.object$cell.centers)[, ft.names]
     obj = feat.object$objective.name
     if (!feat.object$minimize)
       init.grid[, obj] = -1 * init.grid[, obj]
-    grid.best = plyr::ddply(init.grid, "cell.ID", function(x) x[selectMin(x[, obj]), ])
-    grid.worst = plyr::ddply(init.grid, "cell.ID", function(x) x[selectMax(x[, obj]), ])
+    grid.best = as.matrix(plyr::ddply(init.grid, "cell.ID", function(x) x[selectMin(x[, obj]), ]))
+    grid.worst = as.matrix(plyr::ddply(init.grid, "cell.ID", function(x) x[selectMax(x[, obj]), ]))
     y.global.worst = max(grid.worst[, obj], na.rm = TRUE)
     y.global.best = min(grid.best[, obj], na.rm = TRUE)
-    cell.values = vapply(1:nrow(cell.centers), function(i) {
-      x.center = cell.centers[i, ft.names]
-      x.worst = grid.worst[i, ft.names]
-      x.best = grid.best[i, ft.names]
-      y.local.worst = grid.worst[i, obj]
-      y.local.best = grid.best[i, obj]
+    non_empty = sort.int(unique(grid.best[, "cell.ID"]), method = "quick")
+    no_total = as.integer(prod(feat.object$blocks))
+    no_empty = as.integer(no_total - length(non_empty))
+    if (no_total == 1) {
+      cell.centers = t(cell.centers)
+    }
+    ## only consider non-empty cells
+    cell.values = vapply(seq_len(nrow(grid.worst)), function(i) {
+      x.center = as.numeric(cell.centers[i, ft.names])
+      x.worst = as.numeric(grid.worst[i, ft.names])
+      x.best = as.numeric(grid.best[i, ft.names])
+      y.local.worst = as.numeric(grid.worst[i, obj])
+      y.local.best = as.numeric(grid.best[i, obj])
       b2w.ratio = (y.local.worst - y.local.best) / 
-        (y.global.worst - y.global.best)
-      if (all(!is.na(x.best))) {
-        c2b.vect = x.best - x.center
-        c2b.dist = drop(sqrt(crossprod(as.numeric(c2b.vect))))
-        c2w.vect = x.worst - x.center
-        c2w.dist = drop(sqrt(crossprod(as.numeric(c2w.vect))))
-        x = drop(crossprod(as.numeric(c2b.vect), as.numeric(c2w.vect))) / 
-          (c2b.dist * c2w.dist)
-        if (all(x.worst == x.best)) {
-          angle = 0
-        } else {
-          ## this formula automatically results in an angle of max. 180 degree
-          angle = acos(x) * 180 / pi
-        }      
+      (y.global.worst - y.global.best)
+      c2b.vect = x.best - x.center
+      c2b.dist = as.numeric(sqrt(crossprod(as.numeric(c2b.vect))))
+      c2w.vect = x.worst - x.center
+      c2w.dist = as.numeric(sqrt(crossprod(as.numeric(c2w.vect))))
+      x = as.numeric(crossprod(c2b.vect, c2w.vect)) / (c2b.dist * c2w.dist)
+      if (all(x.worst == x.best)) {
+        angle = 0
       } else {
-        c2w.dist = c2b.dist = angle = NA_real_
-      }
+        angle = acos(x) * 180 / pi
+      }      
       return(c(c2b.dist = c2b.dist, c2w.dist = c2w.dist, 
         angle = angle, b2w.ratio = b2w.ratio))
     }, double(4))
-    prob.cells = mean(apply(cell.values, 2, function(x) any(is.na(x))))
-    if (show.warnings && (prob.cells > 0)) {
+    if (show.warnings && (no_empty > 0L)) {
       warningf("%.2f%% of the cells produce NAs during the feature computation.", 
-        100 * prob.cells)
+        100 * no_empty / no_total)
     }
-    return(list(cm_angle.dist_ctr2best.mean = mean(cell.values["c2b.dist", ], na.rm = TRUE),
-      cm_angle.dist_ctr2best.sd = sd(cell.values["c2b.dist", ], na.rm = TRUE),
-      cm_angle.dist_ctr2worst.mean = mean(cell.values["c2w.dist", ], na.rm = TRUE),
-      cm_angle.dist_ctr2worst.sd = sd(cell.values["c2w.dist", ], na.rm = TRUE),
-      cm_angle.angle.mean = mean(cell.values["angle", ], na.rm = TRUE),
-      cm_angle.angle.sd = sd(cell.values["angle", ], na.rm = TRUE),
-      cm_angle.y_ratio_best2worst.mean = mean(cell.values["b2w.ratio", ], na.rm = TRUE),
-      cm_angle.y_ratio_best2worst.sd = sd(cell.values["b2w.ratio", ], na.rm = TRUE)))
+    return(list(cm_angle.dist_ctr2best.mean = mean(cell.values["c2b.dist", ]),
+      cm_angle.dist_ctr2best.sd = sd(cell.values["c2b.dist", ]),
+      cm_angle.dist_ctr2worst.mean = mean(cell.values["c2w.dist", ]),
+      cm_angle.dist_ctr2worst.sd = sd(cell.values["c2w.dist", ]),
+      cm_angle.angle.mean = mean(cell.values["angle", ]),
+      cm_angle.angle.sd = sd(cell.values["angle", ]),
+      cm_angle.y_ratio_best2worst.mean = mean(cell.values["b2w.ratio", ]),
+      cm_angle.y_ratio_best2worst.sd = sd(cell.values["b2w.ratio", ])))
   }), "cm_angle")
 }

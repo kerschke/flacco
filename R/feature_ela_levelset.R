@@ -50,8 +50,9 @@ calculateLevelsetFeatures = function(feat.object, control) {
     probs = control_parameter(control, "levelset.quantiles", 
       c(0.10, 0.25, 0.5))
     ## FIXME: what about svm, rpart, etc?!
+    ## FIXME: removed mda due to inconsistency
     methods = control_parameter(control, "levelset.classif_methods", 
-      c("lda", "qda", "mda"))
+      c("lda", "qda", "rpart"))
     show.info = control_parameter(control, "levelset.show_info", FALSE)
     res.iters = control_parameter(control, "levelset.resample_iterations", 10L)
     res.meth = control_parameter(control, "levelset.resample_method", "CV")
