@@ -62,6 +62,8 @@ calculateCellConvexityFeatures = function(feat.object, control, ...) {
     control = list()
   assertList(control)
   diag = control_parameter(control, "cm_conv.diag", FALSE) 
+  meth = control_parameter(control, "cm_conv.dist_method", "euclidean")
+  mink = control_parameter(control, "cm_conv.minkowski_p", 2)
   measureTime(expression({
     init.grid = feat.object$init.grid
     cell.centers = feat.object$cell.centers
@@ -70,7 +72,7 @@ calculateCellConvexityFeatures = function(feat.object, control, ...) {
     if (all(blocks <= 2L)) {
       stop("The cell convexity features can only be computed when at least one dimension has more than 2 cells.")
     }
-    near = findNearestPrototype(feat.object, ...)
+    near = findNearestPrototype(feat.object, dist_meth = meth, mink_p = mink, ...)
     nb.blocks = findLinearNeighbours(near$represented.cell, blocks, diag = diag)
     convexity.counter = vapply(nb.blocks, function(cell.pairs) {
       X = near[near$represented.cell %in% cell.pairs, ]

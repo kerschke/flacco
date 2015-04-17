@@ -4,11 +4,20 @@
 \alias{findNearestPrototype}
 \title{Find Nearest Prototype}
 \usage{
-findNearestPrototype(feat.object, ...)
+findNearestPrototype(feat.object, dist_meth, mink_p, ...)
 }
 \arguments{
 \item{feat.object}{[\code{\link{FeatureObject}}]\cr
 A feature object as created by \link{createFeatureObject}.}
+
+\item{dist_meth}{[\code{\link{character}(1)}]\cr
+Which distance method should be used? Possible values are
+\code{"euclidean"}, \code{"maximum"}, \code{"manhattan"}, \code{"canberra"},
+\code{"binary"} or \code{"minkowski"}. The default is \code{"euclidean"}.}
+
+\item{mink_p}{[\code{\link{integer}(1)}]\cr
+The value for \code{p} in case \code{dist_meth} is \code{"minkowski"}.
+The default is \code{2}, i.e. the euclidean distance.}
 
 \item{...}{[any]\cr
 Further arguments, which might be used within the distance computation

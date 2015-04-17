@@ -5,6 +5,13 @@
 #' is selected.
 #' @param feat.object [\code{\link{FeatureObject}}]\cr
 #' A feature object as created by \link{createFeatureObject}.
+#' @param dist_meth [\code{\link{character}(1)}]\cr
+#' Which distance method should be used? Possible values are
+#' \code{"euclidean"}, \code{"maximum"}, \code{"manhattan"}, \code{"canberra"},
+#' \code{"binary"} or \code{"minkowski"}. The default is \code{"euclidean"}.
+#' @param mink_p [\code{\link{integer}(1)}]\cr
+#' The value for \code{p} in case \code{dist_meth} is \code{"minkowski"}.
+#' The default is \code{2}, i.e. the euclidean distance.
 #' @param ... [any]\cr
 #' Further arguments, which might be used within the distance computation
 #' (\code{\link{dist}}).
@@ -22,17 +29,57 @@
 #' # (2) find the nearest prototypes of all cells:
 #' findNearestPrototype(feat.object)
 #' @export 
-findNearestPrototype = function(feat.object, ...) {
+findNearestPrototype = function(feat.object, dist_meth, mink_p, ...) {
   assertClass(feat.object, "FeatureObject")
-  init.grid = feat.object$init.grid
-  X = init.grid[, feat.object$feature.names]
+  if (missing(dist_meth))
+    dist_meth = "euclidean"
+  if (missing(mink_p))
+    mink_p = 2L
+  if ((dist_meth == "euclidean") || ((dist_meth == "minkowski") & (mink_p == 2))) {
+    findNearestPrototypeQuick(feat.object, ...)
+  } else {
+    findNearestPrototypeFlex(feat.object, ...)
+  }
+}
+
+
+
+findNearestPrototypeFlex = function(feat.object, ...) {
+  init.grid = extractInit(feat.object)
+  X = extractFeatures(feat.object)
   cell.centers = feat.object$cell.centers
   dims = feat.object$dim
   n.cells = nrow(cell.centers)
-  n.obs = feat.object$n.obs
   dists = as.matrix(dist(rbind(cell.centers[, 1:dims], X)
     ), ...)[1:n.cells,-(1:n.cells)]
   nearest.grid = init.grid[apply(dists, 1, selectMin), ]
+  rownames(nearest.grid) = 1:n.cells
+  nearest.grid$represented.cell = cell.centers$cell.ID
+  nearest.grid
+}
+
+
+
+findNearestPrototypeQuick = function(feat.object, ...) {
+  assertClass(feat.object, "FeatureObject")
+  init.grid = extractInit(feat.object)
+  X = extractFeatures(feat.object)
+  cell.centers = feat.object$cell.centers
+  dims = feat.object$dim
+  n.cells = nrow(cell.centers)
+  nn = RANN::nn2(rbind(cell.centers[, 1:dims], X))$nn.idx
+  nn = nn[seq_len(n.cells), -1] - n.cells
+  nearest.grid = init.grid[apply(nn, 1, function(x) (x[x > 0])[1]), ]
+  
+  ## in case none of the nearest observations is a non-cell-center
+  all_centers = apply(nn, 1, function(x) all(x < 0))
+  if (any(all_centers)) {
+    n_ctr = sum(all_centers)
+    nn_backup = RANN::nn2(rbind(cell.centers[all_centers, 1:dims], X), k = n_ctr + 1L)$nn.idx
+    nn_backup = nn_backup[seq_len(n_ctr), -1] - n_ctr
+    nearest.grid[all_centers, ] = init.grid[apply(nn_backup, 1, function(x) (x[x > 0])[1]), ]
+  }
+  
   rownames(nearest.grid) = 1:n.cells
   nearest.grid$represented.cell = cell.centers$cell.ID
   nearest.grid

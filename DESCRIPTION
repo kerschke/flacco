@@ -26,9 +26,12 @@ Suggests:
     mlr,
     numDeriv,
     plyr,
+    RANN,
     rpart,
     shape,
     testthat
 License: BSD_3_clause + file LICENSE
 URL: https://github.com/kerschke/flacco
 BugReports: https://github.com/kerschke/flacco/issues
+LazyData: yes
+ByteCompile: yes
