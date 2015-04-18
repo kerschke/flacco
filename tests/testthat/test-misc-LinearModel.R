@@ -5,6 +5,18 @@ test_that("Require Cell Mapping", {
   expect_error(calculateFeatureSet(feat.object, "linear_model"))
 })
 
+
+test_that("Sparse Cells lead to NAs", {
+  set.seed(2015*03*26)
+  X = replicate(5, runif(100))
+  y = apply(X, 1, function(x) { sum(x^2) })
+  feat.object = createFeatureObject(X = X, y = y, blocks = 7L)
+  features = calculateFeatureSet(feat.object, "linear_model")
+  expect_identical(unique(unlist(features[1:12])), NA_real_)
+})
+
+
+
 test_that("Using Initial Design", {
   feat.object = createFeatureObject(init = iris[, -5], objective = "Sepal.Length", blocks = 3)
   features = calculateFeatureSet(feat.object, "linear_model")
