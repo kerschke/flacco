@@ -63,6 +63,14 @@ calculateLinearModelFeatures = function(feat.object) {
     cells = split(init.grid, init.grid$cell.ID)
     dep = paste(feat.object$feature.names, collapse = " + ")
     form = as.formula(paste(feat.object$objective.name, dep, sep = " ~ "))
+    if (max(vapply(cells, nrow, integer(1))) <= dims) {
+      result = as.list(rep(NA_real_, 12L))
+      names(result) = c("limo.avg.length", "limo.avg.length.scaled", "limo.length.mean",
+        "limo.length.sd", "limo.cor", "limo.cor.scaled", "limo.ratio.mean",
+        "limo.ratio.sd", "limo.sd.max_min_ratio", "limo.sd.max_min_ratio.scaled",
+        "limo.sd.mean", "limo.sd.mean.scaled")
+      return(result)
+    }    
     ## vectors of coefficients (except for intercept)
     coeff.vect = vapply(cells, function(cell) {
       if (nrow(cell) > dims) {
@@ -79,14 +87,6 @@ calculateLinearModelFeatures = function(feat.object) {
         max(abs(x), na.rm = TRUE) / min(abs(x), na.rm = TRUE)
       }
     })
-    if (all(is.na(coeff.ratio))) {
-      result = as.list(rep(NA_real_, 12L))
-      names(result) = c("limo.avg.length", "limo.avg.length.scaled", "limo.length.mean",
-        "limo.length.sd", "limo.cor", "limo.cor.scaled", "limo.ratio.mean",
-        "limo.ratio.sd", "limo.sd.max_min_ratio", "limo.sd.max_min_ratio.scaled",
-        "limo.sd.mean", "limo.sd.mean.scaled")
-      return(result)
-    }
     ## normalized vectors of coefficients
     norm.coeff.vect = apply(coeff.vect, 2, normalizeVector)
     ## length of each single coefficient vector
