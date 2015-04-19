@@ -53,7 +53,7 @@
 # y = apply(X, 1, function(x) sum(x^2))
 # feat.object = createFeatureObject(X = X, y = y)
 # # (2) compute the ICoFiS features:
-# calculateInformationContent(feat.object = feat.object)
+# calculateInformationContentFeatures(feat.object = feat.object)
 # @export 
 calculateInformationContentFeatures = function(feat.object, control = list()) {
   assertClass(feat.object, "FeatureObject")

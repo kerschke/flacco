@@ -13,7 +13,7 @@ test_that("Non-Cellmapping Objects", {
     allow.additional_costs = FALSE)
   
   # test return value types and ranges
-  expect_equal(length(features), 87L)
+  expect_equal(length(features), 91L)
   expect_is(features, class = "list")
 
   # all objects are either NA, logical or a number
@@ -34,7 +34,7 @@ test_that("Non-Cellmapping Objects", {
     blacklist = c("local_search", "curvature", "convexity"), control = list(show_progress = FALSE))
   
   # test return value types and ranges
-  expect_equal(length(features), 87L)
+  expect_equal(length(features), 91L)
   expect_is(features, class = "list")
   
   # all objects are either NA, logical or a number
@@ -72,7 +72,7 @@ test_that("Cellmapping Objects", {
     control = list(show_progress = FALSE, angle.show_warnings = FALSE))
   
   # test return value types and ranges
-  expect_equal(length(features), 121L)
+  expect_equal(length(features), 209L)
   expect_is(features, class = "list")
   
   # all objects are either NA, logical or a number
@@ -108,7 +108,7 @@ test_that("Underlying Functions Available (non-cellmapping)", {
     control = list(show_progress = FALSE))
   
   # test return value types and ranges
-  expect_equal(length(features), 131L)
+  expect_equal(length(features), 135L)
   expect_is(features, class = "list")
   
   # all objects are either NA, logical or a number
@@ -148,7 +148,7 @@ test_that("Underlying Functions Available (cellmapping)", {
   features = calculateFeatures(feat.object, control = list(show_progress = FALSE))
   
   # test return value types and ranges
-  expect_equal(length(features), 165L)
+  expect_equal(length(features), 253L)
   expect_is(features, class = "list")
   
   # all objects are either NA, logical or a number

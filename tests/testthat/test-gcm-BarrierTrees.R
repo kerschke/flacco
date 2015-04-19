@@ -12,9 +12,6 @@ test_that("GCM-based Barrier Tree features are computed", {
  
   # postconditions
   expect_is(features, "list")
-  expect_is(features$barrierTree.min, "list")
-  expect_is(features$barrierTree.mean, "list")
-  expect_is(features$barrierTree.near, "list")
 })
 
 test_that("GCM-based Barrier Tree fallback is computed for boring barrier trees", {
@@ -29,19 +26,10 @@ test_that("GCM-based Barrier Tree fallback is computed for boring barrier trees"
   
   # postconditions: data type
   expect_is(features, "list")
-  expect_is(features$barrierTree.min, "list")
-  expect_is(features$barrierTree.mean, "list")
-  expect_is(features$barrierTree.near, "list")
   
   # postconditions: all values == 0
-  sapply( names(features$barrierTree.min), function(name) {
-    expect_equal(features$barrierTree.min[[name]], 0, info = paste("name=", name))
-  })
-  sapply( names(features$barrierTree.mean), function(name) {
-    expect_equal(features$barrierTree.mean[[name]], 0, info = paste("name=", name))
-  })
-  sapply( names(features$barrierTree.near), function(name) {
-    expect_equal(features$barrierTree.near[[name]], 0, info = paste("name=", name))
+  sapply( names(features), function(name) {
+    expect_equal(features[[name]], 0, info = paste("name=", name))
   })
 })
 

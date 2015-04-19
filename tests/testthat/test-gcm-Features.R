@@ -11,9 +11,6 @@ test_that("GCM features are computed", {
  
   # postconditions
   expect_is(features, "list")
-  expect_is(features$gcm.min, "list")
-  expect_is(features$gcm.mean, "list")
-  expect_is(features$gcm.near, "list")
 })
 
 test_that("GCM features cannot compute on non-cellmapping object", {
