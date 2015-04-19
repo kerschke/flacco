@@ -52,7 +52,7 @@ calculateFeatureSet = function(feat.object, set, control, ...) {
     linear_model = calculateLinearModelFeatures(feat.object),
     nearest_better = calculateNearestBetterFeatures(feat.object, control),
     principal_component = calculatePrincipalComponentFeatures(feat.object, control),
-    barrier_tree = calculateBarrierTrees(feat.object, control),
+    barrier_tree = calculateBarrierTreeFeatures(feat.object, control),
     gcm = calculateGCMFeatures(feat.object, control),
     info_content = calculateInformationContentFeatures(feat.object, control)
   )

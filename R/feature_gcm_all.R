@@ -31,10 +31,10 @@
 #   calculates seven features each. Furthermore, three features summarise the 
 #   findings of the \code{min} and \code{mean} approaches in order to study similarities and 
 #   differences between both.\cr
-#   \code{gcm.{min, mean, near}$uncert_ratio}: Ratio of uncertain cells (for min and mean approaches),\cr
-#   \code{gcm.{min, mean, near}$prob_best}: Probability to find the best cell,\cr
-#   \code{gcm.{min, mean, near}${min, max, mean, std}_bs}: Aggregations of the different basin sizes,\cr
-#   \code{gcm.{min, mean, near}$no_attr}: Number of attractors within the grid,\cr
+#   \code{gcm.{min, mean, near}.uncert_ratio}: Ratio of uncertain cells (for min and mean approaches),\cr
+#   \code{gcm.{min, mean, near}.prob_best}: Probability to find the best cell,\cr
+#   \code{gcm.{min, mean, near}.{min, max, mean, std}_bs}: Aggregations of the different basin sizes,\cr
+#   \code{gcm.{min, mean, near}.no_attr}: Number of attractors within the grid,\cr
 #   \code{gcm.common.pcells}: Number of periodic cells common between min and mean approaches,\cr
 #   \code{gcm.common.tcells}: Number of transient cells common between min and mean approaches, and\cr
 #   \code{gcm.common.dcells}: Percentage of cells that change their roles from one approach to the other.
@@ -100,9 +100,29 @@ calculateGCMFeatures = function (feat.object, control = list()) {
     features.min$diffcell = features.mean$diffcell = features.near$diffcell = NULL
   
   return (list(
-    gcm.min = features.min,
-    gcm.mean = features.mean,
-    gcm.near = features.near,
+    gcm.min.no_attr = features.min$no_attr, # number of attractors
+    gcm.min.uncert_ratio = features.min$uncert_ratio, # uncertainty ratio
+    gcm.min.prob_best = features.min$prob_best, # probability to find the best
+    gcm.min.std_bs = features.min$std_bs, # loc / disp of basin sizes
+    gcm.min.min_bs = features.min$min_bs,
+    gcm.min.mean_bs = features.min$mean_bs,
+    gcm.min.max_bs = features.min$max_bs,
+    
+    gcm.mean.no_attr = features.mean$no_attr, # number of attractors
+    gcm.mean.uncert_ratio = features.mean$uncert_ratio, # uncertainty ratio
+    gcm.mean.prob_best = features.mean$prob_best, # probability to find the best
+    gcm.mean.std_bs = features.mean$std_bs, # loc / disp of basin sizes
+    gcm.mean.min_bs = features.mean$min_bs,
+    gcm.mean.mean_bs = features.mean$mean_bs,
+    gcm.mean.max_bs = features.mean$max_bs,
+    
+    gcm.near.no_attr = features.near$no_attr, # number of attractors
+    gcm.near.uncert_ratio = features.near$uncert_ratio, # uncertainty ratio
+    gcm.near.prob_best = features.near$prob_best, # probability to find the best
+    gcm.near.std_bs = features.near$std_bs, # loc / disp of basin sizes
+    gcm.near.min_bs = features.near$min_bs,
+    gcm.near.mean_bs = features.near$mean_bs,
+    gcm.near.max_bs = features.near$max_bs,
     
     gcm.common.pcells = common_p,  # common periodic and transient (and differing) cells, comparing min and mean
     gcm.common.tcells = common_t,

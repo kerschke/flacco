@@ -63,8 +63,6 @@ calculateFeatures = function(feat.object, control, subset, allow.cellmapping, al
     stop("The local search features require the exact function!")
   sets = listAvailableFeatureSets(subset, allow.cellmapping, allow.additional_costs, blacklist)
   
-  sets = setdiff(sets, c("gcm", "barrier_tree")) ## FIXME: needs to be removed, once those work fine
-  
   if (missing(control))
     control = list()
   assertList(control)

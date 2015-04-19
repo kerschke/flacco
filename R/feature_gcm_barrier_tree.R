@@ -19,20 +19,20 @@
 #   A list object that stores additional configuration parameters.
 #   The following parameter is used here:
 #   [\code{barrierTree.plot}] is a boolean, indicating whether barrier trees are visualised in a plot [experimental].
-# @return [\code{\link{list}(30)} of \code{\link{numeric}(1)}].\cr
+# @return [\code{\link{list}(60)} of \code{\link{numeric}(1)}].\cr
 #   List of features.\cr
 #   For further information, see details.
 # @details
 # For each GCM approach, i.e. \code{min}, \code{mean}, and \code{near}, ten features are computed:\cr
-#   \code{barrierTree.{min, mean, near}$levels}: Levels of the barrier tree,\cr
-#   \code{barrierTree.{min, mean, near}$depth}: Distance from root of the barrier tree to the node with the minimum value,\cr
-#   \code{barrierTree.{min, mean, near}$ratioDepthLevels}: Ratio depth/levels,\cr
-#   \code{barrierTree.{min, mean, near}$ratioLevelsLeaves}: Ratio levels/leaves (where leaves is the number of leaf nodes of the tree),\cr
-#   \code{barrierTree.{min, mean, near}${min, mean, max, mean, std}w}: Aggregations of weights, i.e. distances between tree nodes,\cr
-#   \code{barrierTree.{min, mean, near}${min, mean, max, mean, std}Distance}: Aggregations of distances between global and local optima,\cr
-#   \code{barrierTree.{min, mean, near}$bratio{Uncertain, Certain, Max}}: Ratio of maximum and minimum of {uncertain, certain, and maximum}\cr basins,
-#   \code{barrierTree.{min, mean, near}${min, mean, max, mean, std}BasinIntersectionCount}: Aggregations of numbers of intersections, intersecting global and local basins,\cr
-#   \code{barrierTree.{min, mean, near}$range}: Range of basins.
+#   \code{barrierTree.{min, mean, near}.levels}: Levels of the barrier tree,\cr
+#   \code{barrierTree.{min, mean, near}.depth}: Distance from root of the barrier tree to the node with the minimum value,\cr
+#   \code{barrierTree.{min, mean, near}.ratioDepthLevels}: Ratio depth/levels,\cr
+#   \code{barrierTree.{min, mean, near}.ratioLevelsLeaves}: Ratio levels/leaves (where leaves is the number of leaf nodes of the tree),\cr
+#   \code{barrierTree.{min, mean, near}.{min, mean, max, std}w}: Aggregations of weights, i.e. distances between tree nodes,\cr
+#   \code{barrierTree.{min, mean, near}.{min, mean, max, std}Distance}: Aggregations of distances between global and local optima,\cr
+#   \code{barrierTree.{min, mean, near}.bratio{Uncertain, Certain, Max}}: Ratio of maximum and minimum of {uncertain, certain, and maximum}\cr basins,
+#   \code{barrierTree.{min, mean, near}.{min, mean, max, std}BasinIntersectionCount}: Aggregations of numbers of intersections, intersecting global and local basins,\cr
+#   \code{barrierTree.{min, mean, near}.range}: Range of basins.
 # @references
 #  For the underlying concept of GCM refer to Kerschke et al. (2014), 
 #  \dQuote{Cell Mapping Techniques for Exploratory Landscape Analysis}, 
@@ -45,9 +45,9 @@
 # feat.object = createFeatureObject(X = X, y = y, 
 #   lower = -1000, upper = 1000, blocks = 10)
 # # (2) compute the GCM-based Barrier Tree features:
-# calculateBarrierTrees(feat.object = feat.object, control = list(barrierTree.plot=TRUE))
+# calculateBarrierTreeFeatures(feat.object = feat.object, control = list(barrierTree.plot=TRUE))
 # @export 
-calculateBarrierTrees = function (feat.object, control = list()) {
+calculateBarrierTreeFeatures = function (feat.object, control = list()) {
   assertClass(feat.object, "FeatureObject")
   assertList(control)
   # [ for gcm: x is var, y is fun ]
@@ -86,9 +86,68 @@ calculateBarrierTrees = function (feat.object, control = list()) {
                       visualise_barrierTrees, visualise_barrierTrees.colors)
   
   return (list(
-    barrierTree.min = barrierTree.min,
-    barrierTree.mean = barrierTree.mean,
-    barrierTree.near = barrierTree.near
+    barrierTree.min.levels = barrierTree.min$levels,                    # levels & depth
+    barrierTree.min.depth = barrierTree.min$depth,
+    barrierTree.min.ratioDepthLevels = barrierTree.min$ratioDepthLevels,  
+    barrierTree.min.ratioLevelsLeaves = barrierTree.min$ratioLevelsLeaves,    # ratio levels/leaves
+    barrierTree.min.minw = barrierTree.min$minw,                        # loc/disp of weights
+    barrierTree.min.meanw = barrierTree.min$meanw, 
+    barrierTree.min.maxw = barrierTree.min$maxw, 
+    barrierTree.min.stdw = barrierTree.min$stdw,                 
+    barrierTree.min.minDistance = barrierTree.min$minDistance,          # distances global -> local optima
+    barrierTree.min.meanDistance = barrierTree.min$meanDistance,
+    barrierTree.min.maxDistance = barrierTree.min$maxDistance, 
+    barrierTree.min.stdDistance = barrierTree.min$stdDistance,
+    barrierTree.min.bratioUncertain = barrierTree.min$bratioUncertain,  # basins
+    barrierTree.min.bratioCertain = barrierTree.min$bratioCertain, 
+    barrierTree.min.bratioMax = barrierTree.min$bratioMax, 
+    barrierTree.min.minBasinIntersectionCount = barrierTree.min$minBasinIntersectionCount, # loc/disp of basins
+    barrierTree.min.meanBasinIntersectionCount = barrierTree.min$meanBasinIntersectionCount,
+    barrierTree.min.maxBasinIntersectionCount = barrierTree.min$maxBasinIntersectionCount,
+    barrierTree.min.stdBasinIntersectionCount = barrierTree.min$stdBasinIntersectionCount,
+    barrierTree.min.range = barrierTree.min$range,                       # ranges of basins
+    
+    barrierTree.mean.levels = barrierTree.mean$levels,                    # levels & depth
+    barrierTree.mean.depth = barrierTree.mean$depth,
+    barrierTree.mean.ratioDepthLevels = barrierTree.mean$ratioDepthLevels,  
+    barrierTree.mean.ratioLevelsLeaves = barrierTree.mean$ratioLevelsLeaves,    # ratio levels/leaves
+    barrierTree.mean.minw = barrierTree.mean$minw,                        # loc/disp of weights
+    barrierTree.mean.meanw = barrierTree.mean$meanw, 
+    barrierTree.mean.maxw = barrierTree.mean$maxw, 
+    barrierTree.mean.stdw = barrierTree.mean$stdw,                 
+    barrierTree.mean.minDistance = barrierTree.mean$minDistance,          # distances global -> local optima
+    barrierTree.mean.meanDistance = barrierTree.mean$meanDistance,
+    barrierTree.mean.maxDistance = barrierTree.mean$maxDistance, 
+    barrierTree.mean.stdDistance = barrierTree.mean$stdDistance,
+    barrierTree.mean.bratioUncertain = barrierTree.mean$bratioUncertain,  # basins
+    barrierTree.mean.bratioCertain = barrierTree.mean$bratioCertain, 
+    barrierTree.mean.bratioMax = barrierTree.mean$bratioMax, 
+    barrierTree.mean.minBasinIntersectionCount = barrierTree.mean$minBasinIntersectionCount, # loc/disp of basins
+    barrierTree.mean.meanBasinIntersectionCount = barrierTree.mean$meanBasinIntersectionCount,
+    barrierTree.mean.maxBasinIntersectionCount = barrierTree.mean$maxBasinIntersectionCount,
+    barrierTree.mean.stdBasinIntersectionCount = barrierTree.mean$stdBasinIntersectionCount,
+    barrierTree.mean.range = barrierTree.mean$range,                       # ranges of basins
+    
+    barrierTree.near.levels = barrierTree.near$levels,                    # levels & depth
+    barrierTree.near.depth = barrierTree.near$depth,
+    barrierTree.near.ratioDepthLevels = barrierTree.near$ratioDepthLevels,  
+    barrierTree.near.ratioLevelsLeaves = barrierTree.near$ratioLevelsLeaves,    # ratio levels/leaves
+    barrierTree.near.minw = barrierTree.near$minw,                        # loc/disp of weights
+    barrierTree.near.meanw = barrierTree.near$meanw, 
+    barrierTree.near.maxw = barrierTree.near$maxw, 
+    barrierTree.near.stdw = barrierTree.near$stdw,                 
+    barrierTree.near.minDistance = barrierTree.near$minDistance,          # distances global -> local optima
+    barrierTree.near.meanDistance = barrierTree.near$meanDistance,
+    barrierTree.near.maxDistance = barrierTree.near$maxDistance, 
+    barrierTree.near.stdDistance = barrierTree.near$stdDistance,
+    barrierTree.near.bratioUncertain = barrierTree.near$bratioUncertain,  # basins
+    barrierTree.near.bratioCertain = barrierTree.near$bratioCertain, 
+    barrierTree.near.bratioMax = barrierTree.near$bratioMax, 
+    barrierTree.near.minBasinIntersectionCount = barrierTree.near$minBasinIntersectionCount, # loc/disp of basins
+    barrierTree.near.meanBasinIntersectionCount = barrierTree.near$meanBasinIntersectionCount,
+    barrierTree.near.maxBasinIntersectionCount = barrierTree.near$maxBasinIntersectionCount,
+    barrierTree.near.stdBasinIntersectionCount = barrierTree.near$stdBasinIntersectionCount,
+    barrierTree.near.range = barrierTree.near$range                       # ranges of basins
     ))
 }
 
