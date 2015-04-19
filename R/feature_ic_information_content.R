@@ -55,7 +55,7 @@
 # # (2) compute the ICoFiS features:
 # calculateInformationContent(feat.object = feat.object)
 # @export 
-calculateInformationContent = function(feat.object, control = list()) {
+calculateInformationContentFeatures = function(feat.object, control = list()) {
   assertClass(feat.object, "FeatureObject")
   assertList(control)
   # epsilon values
