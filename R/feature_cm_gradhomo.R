@@ -65,8 +65,6 @@ calculateGradientHomogeneityFeatures = function(feat.object, control) {
 ## distance metrics
 calculateGradientHomogeneityFlex = function(feat.object, control) {
   assertClass(feat.object, "FeatureObject")
-  if (!feat.object$allows.cellmapping)
-    stop ("This feature object does not support cell mapping. You first need to define the number of cells per dimension before computing these features.")
   if (missing(control))
     control = list()
   assertClass(control, "list")
@@ -114,8 +112,6 @@ calculateGradientHomogeneityFlex = function(feat.object, control) {
 ## so far, only available for euclidean distances
 calculateGradientHomogeneityQuick = function(feat.object, control) {
   assertClass(feat.object, "FeatureObject")
-  if (!feat.object$allows.cellmapping)
-    stop ("This feature object does not support cell mapping. You first need to define the number of cells per dimension before computing these features.")
   if (missing(control))
     control = list()
   assertClass(control, "list")
@@ -133,6 +129,8 @@ calculateGradientHomogeneityQuick = function(feat.object, control) {
       if (n.obs > 2L) {
         nn = RANN::nn2(cell[, 1L:dims], k = 2L)
         norm.vectors = vapply(1:n.obs, function(row) {
+          if (nn$nn.dists[row, 2L] == 0)
+            return(rep(0, length = dims))
           nearest = nn$nn.idx[row, 2L]
           # compute normalized vector
           ifelse(funvals[row] > funvals[nearest], -1, 1) * 
@@ -146,9 +144,9 @@ calculateGradientHomogeneityQuick = function(feat.object, control) {
     }, double(1))
     if (show.warnings && (mean(is.na(gradhomo)) > 0)) {
       warningf("%.2f%% of the cells contain less than two observations.", 
-               100 * mean(is.na(gradhomo)))
+        100 * mean(is.na(gradhomo)))
     }
     return(list(gradhomo.mean = mean(gradhomo, na.rm = TRUE),
-                gradhomo.sd = sd(gradhomo, na.rm = TRUE)))
+      gradhomo.sd = sd(gradhomo, na.rm = TRUE)))
   }), "gradhomo")
 }

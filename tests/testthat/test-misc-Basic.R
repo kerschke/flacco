@@ -28,11 +28,11 @@ test_that("Non-Cellmapping Objects", {
   expect_true(features$basic.lower.min <= features$basic.upper.min)
   expect_true(features$basic.lower.max <= features$basic.upper.max)
   
-  expect_identical(features$basic.blocks.min, NA_integer_)
-  expect_identical(features$basic.blocks.max, NA_integer_)
+  expect_identical(features$basic.blocks.min, 1L)
+  expect_identical(features$basic.blocks.max, 1L)
   
-  expect_identical(features$basic.cells.total, NA_integer_)
-  expect_identical(features$basic.cells.filled, NA_integer_)
+  expect_identical(features$basic.cells.total, 1L)
+  expect_identical(features$basic.cells.filled, 1L)
   
   expect_identical(features$basic.allows_cm, FALSE)
   expect_identical(features$basic.minimize_fun, TRUE)

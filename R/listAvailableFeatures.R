@@ -32,7 +32,7 @@ listAvailableFeatureSets = function(subset, allow.cellmapping, allow.additional_
     blacklist = NULL
   assertSubset(blacklist, choices = possible)
   if (!allow.cellmapping)
-    subset = setdiff(subset, c(unlist(allFeats[c("cm.feats", "gcm.feats")]), "linear_model"))
+    subset = setdiff(subset, c(unlist(allFeats$gcm.feats), "cell_convexity"))
   if (!allow.additional_costs)
     subset = setdiff(subset, c("convexity", "curvature", "local_search"))
   return(setdiff(subset, blacklist))

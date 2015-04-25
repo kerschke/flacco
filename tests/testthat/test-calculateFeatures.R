@@ -13,7 +13,7 @@ test_that("Non-Cellmapping Objects", {
     allow.additional_costs = FALSE)
   
   # test return value types and ranges
-  expect_equal(length(features), 91L)
+  expect_equal(length(features), 119L)
   expect_is(features, class = "list")
 
   # all objects are either NA, logical or a number
@@ -23,10 +23,10 @@ test_that("Non-Cellmapping Objects", {
   expect_true( all(unlist(features[grep("costs_fun_evals", names(features))]) == 0) )
   
   # since the feature object was a non-cellmapping feature object, the following tests should pass
-  expect_identical(features$basic.blocks.min, NA_integer_)
-  expect_identical(features$basic.blocks.max, NA_integer_)
-  expect_identical(features$basic.cells.total, NA_integer_)
-  expect_identical(features$basic.cells.filled, NA_integer_)
+  expect_identical(features$basic.blocks.min, 1L)
+  expect_identical(features$basic.blocks.max, 1L)
+  expect_identical(features$basic.cells.total, 1L)
+  expect_identical(features$basic.cells.filled, 1L)
   expect_identical(features$basic.allows_cm, FALSE)
   
   # (3) do the same, but blacklist the expensive features
@@ -34,7 +34,7 @@ test_that("Non-Cellmapping Objects", {
     blacklist = c("local_search", "curvature", "convexity"), control = list(show_progress = FALSE))
   
   # test return value types and ranges
-  expect_equal(length(features), 91L)
+  expect_equal(length(features), 119L)
   expect_is(features, class = "list")
   
   # all objects are either NA, logical or a number
@@ -44,10 +44,10 @@ test_that("Non-Cellmapping Objects", {
   expect_true( all(unlist(features[grep("costs_fun_evals", names(features))]) == 0) )
   
   # as the feature object was a non-cellmapping feature object, the following tests should pass
-  expect_identical(features$basic.blocks.min, NA_integer_)
-  expect_identical(features$basic.blocks.max, NA_integer_)
-  expect_identical(features$basic.cells.total, NA_integer_)
-  expect_identical(features$basic.cells.filled, NA_integer_)
+  expect_identical(features$basic.blocks.min, 1L)
+  expect_identical(features$basic.blocks.max, 1L)
+  expect_identical(features$basic.cells.total, 1L)
+  expect_identical(features$basic.cells.filled, 1L)
   expect_identical(features$basic.allows_cm, FALSE)
   
   # (4) test, whether an incorrect input causes an error:
@@ -108,7 +108,7 @@ test_that("Underlying Functions Available (non-cellmapping)", {
     control = list(show_progress = FALSE))
   
   # test return value types and ranges
-  expect_equal(length(features), 135L)
+  expect_equal(length(features), 163L)
   expect_is(features, class = "list")
   
   # all objects are either NA, logical or a number
@@ -123,10 +123,10 @@ test_that("Underlying Functions Available (non-cellmapping)", {
   expect_true( all(x[setdiff(names(x), names(expensive))] == 0) )
   
   # as the feature object was a non-cellmapping feature object, the following tests should pass
-  expect_identical(features$basic.blocks.min, NA_integer_)
-  expect_identical(features$basic.blocks.max, NA_integer_)
-  expect_identical(features$basic.cells.total, NA_integer_)
-  expect_identical(features$basic.cells.filled, NA_integer_)
+  expect_identical(features$basic.blocks.min, 1L)
+  expect_identical(features$basic.blocks.max, 1L)
+  expect_identical(features$basic.cells.total, 1L)
+  expect_identical(features$basic.cells.filled, 1L)
   expect_identical(features$basic.allows_cm, FALSE)
   
   # (4) test, whether an incorrect input causes an error:

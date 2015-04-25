@@ -9,11 +9,14 @@ test_that("Basic FeatureObject ", {
   expect_equal(feat.object$n.obs, nrow(iris))
   expect_equal(feat.object$feature.names, setdiff(colnames(iris), "Species"))
   expect_equal(feat.object$objective.name, "Species")
-  expect_equal(feat.object$blocks, rep(NA, ncol(iris) - 1L))
+  expect_equal(feat.object$blocks, rep(1L, ncol(iris) - 1L))
   expect_false(feat.object$allows.cellmapping)
-  expect_null(feat.object$init.grid)
-  expect_null(feat.object$cell.centers)
-  expect_null(feat.object$cell.size)
+  expect_identical(feat.object$init.grid, data.frame(iris, cell.ID = 1L))
+  expect_identical(feat.object$cell.centers, 
+    data.frame(t(colMeans(rbind(apply(iris[, -5], 2, max), 
+      apply(iris[, -5], 2, min)))), cell.ID = 1L))
+  expect_identical(feat.object$cell.size, 
+    apply(iris[, -5], 2, function(x) diff(range(x))))
   expect_equal(feat.object$env$init, iris)
   expect_is(feat.object, class = "FeatureObject")
 })

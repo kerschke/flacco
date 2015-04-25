@@ -55,8 +55,6 @@
 # @export 
 calculateLinearModelFeatures = function(feat.object) {
   assertClass(feat.object, "FeatureObject")
-  if (!feat.object$allows.cellmapping)
-    stop ("This feature object does not support cell mapping. You first need to define the number of cells per dimension before computing these features.")
   measureTime(expression({
     init.grid = feat.object$init.grid
     dims = feat.object$dim
@@ -98,17 +96,27 @@ calculateLinearModelFeatures = function(feat.object) {
     ## correlation between coefficients
     cor.unscaled = cor(t(coeff.vect), use = "pairwise.complete.obs")
     diag(cor.unscaled) = NA_real_
+    if (all(is.na(cor.unscaled))) {
+      limo.cor = NA_real_
+    } else {
+      limo.cor = mean(cor.unscaled, na.rm = TRUE)
+    }
     ## correlation between coefficients
     cor.scaled = cor(t(norm.coeff.vect), use = "pairwise.complete.obs")
     diag(cor.scaled) = NA_real_
+    if (all(is.na(cor.scaled))) {
+      limo.cor.scaled = NA_real_
+    } else {
+      limo.cor.scaled = mean(cor.scaled, na.rm = TRUE)
+    }
     return(list(limo.avg.length = 
         sqrt(sum((rowMeans(coeff.vect, na.rm = TRUE))^2)),
       limo.avg.length.scaled = 
         sqrt(sum((rowMeans(norm.coeff.vect, na.rm = TRUE))^2)),
       limo.length.mean = mean(length.coeff.vects, na.rm = TRUE),
       limo.length.sd = sd(length.coeff.vects, na.rm = TRUE),
-      limo.cor = mean(cor.unscaled, na.rm = TRUE),
-      limo.cor.scaled = mean(cor.scaled, na.rm = TRUE),
+      limo.cor = limo.cor,
+      limo.cor.scaled = limo.cor.scaled,
       limo.ratio.mean = mean(coeff.ratio, na.rm = TRUE),
       limo.ratio.sd = sd(coeff.ratio, na.rm = TRUE),
       limo.sd.max_min_ratio = max(sds.unscaled) / min(sds.unscaled),

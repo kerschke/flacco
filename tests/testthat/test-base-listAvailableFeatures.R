@@ -9,14 +9,16 @@ test_that("listAvailableFeatures", {
   
   expect_error(listAvailableFeatureSets(subset = c("cell angle")))
   
-  x = c("angle", "linear_model", "curvature")
+  x = c("barrier_tree", "linear_model", "curvature")
   expect_equal(listAvailableFeatureSets(subset = x), x)
   expect_equal(listAvailableFeatureSets(
-    subset = x, allow.cellmapping = FALSE), "curvature")
+    subset = x, allow.cellmapping = FALSE), c("linear_model", "curvature"))
   expect_equal(listAvailableFeatureSets(
-    subset = x, allow.additional_costs = FALSE), c("angle", "linear_model"))
+    subset = x, allow.additional_costs = FALSE), c("barrier_tree", "linear_model"))
   expect_equal(listAvailableFeatureSets(subset = x, 
-    allow.cellmapping = FALSE, allow.additional_costs = FALSE), character())
+    allow.cellmapping = FALSE, allow.additional_costs = FALSE), "linear_model")
   expect_equal(listAvailableFeatureSets(subset = x,
-    allow.cellmapping = FALSE, blacklist = c("curvature", "meta_model")), character())
+    allow.cellmapping = FALSE, 
+    blacklist = c("curvature", "meta_model", "linear_model")), 
+    character())
 })
