@@ -18,9 +18,9 @@ before_install:
   - ./travis-tool.sh bootstrap
 
 install:
+  - ./travis-tool.sh github_package jimhester/robustr
   - ./travis-tool.sh github_package jimhester/covr
   - ./travis-tool.sh github_package hadley/testthat
-  - ./travis-tool.sh github_package berndbischl/BBmisc
   - ./travis-tool.sh install_deps
 
 script: ./travis-tool.sh run_tests
