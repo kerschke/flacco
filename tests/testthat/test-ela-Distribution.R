@@ -23,5 +23,4 @@ test_that("Expected Output", {
     equals(features$y_dist.number_of_peaks) )
   expect_identical(features$y_dist.costs_fun_evals, 0L)
   expect_true( testNumber(features$y_dist.costs_runtime, lower = 0) )
-  
 })

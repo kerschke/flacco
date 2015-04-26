@@ -1,7 +1,6 @@
 # Bundle functions that are common to the initialisation of GCM and Barrier Tree features
 # (and stricly only used there).
 # gcm_init, which is calling create and canform. Canform, in turn, calls commclasses.
-
 gcm_init = function(feat.object) {
   # option 1 => min
   # check whether matrices are already cached (otherwise, calculate them)
@@ -72,7 +71,6 @@ create = function (feat.object, approach) {
     nearest = findNearestPrototype(feat.object)
     fe = vector()
     fe[nearest$represented.cell] = nearest[[feat.object$objective.name]]
-    
   }
   
   fromcell = c() # fromcell
@@ -96,8 +94,7 @@ create = function (feat.object, approach) {
       })
       
       neighbours = neighbours[!discard,]
-      
-      
+       
       #Select the neighbours that are better according to the objective function
       apply(neighbours, 1, function (row) {
         neighbourIndex = ztocell(row, feat.object$blocks)            
@@ -135,8 +132,7 @@ create = function (feat.object, approach) {
         pi = 1
       }
       return(pi)
-    })
-    , use.names=FALSE))
+    }), use.names = FALSE))
   
   return (list( fromcell = fromcell, tocell = tocell,
                 probabilities = probability, fe = fe))
@@ -147,11 +143,9 @@ create = function (feat.object, approach) {
 # permutation contains the permutation of indices
 # sumV is the number of closed classes
 canform = function(stochasticMatrix) { # [ orig: function [Q p sv]=canform(P) ]
-  
   res = commclasses(stochasticMatrix)
   commClass = res$commClass
   closedClass = res$closedClass
-  
   
   sumV = sum(closedClass)
   closedIndices = which(closedClass == 1) # indices in  comprise union of closed classes [formerly u]
@@ -204,23 +198,18 @@ commclasses = function(stochasticMatrix) { # [ orig: function [C,v]=commclasses(
     # (not really. actual classes are checked by logical combination of T and t(T) later on.)
     while (oldVal != newVal) {
       oldVal = sum( which(classesRow > 0) )
-      
       sums = if (length(matrixRows) == 1) 
         stochasticMatrix[matrixRows,] else 
           colSums(stochasticMatrix[matrixRows,])
-      
       d = which( sums > 0 )
-      classesRow[d] = 1
-      
+      classesRow[d] = 1      
       newVal = sum( which(classesRow > 0) )
       matrixRows = d
     }
     classes[i,] = (classesRow == TRUE)
     
   }
-  
   commClass   = classes & t(classes)
   closedClass = ( colSums(  t(commClass)==t(classes)  ) == m )
-  
   return(list(commClass = commClass, closedClass = closedClass))
 }

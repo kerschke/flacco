@@ -24,7 +24,7 @@ test_that("Information content-based features are computed (Random sorting)", {
   X = t(replicate(1000, runif(2, -1000, 1000)))
   y = apply(X, 1, function(x) {x[1]^4 + 1000*(x[1]-3)^3 + 1000*x[1] + x[2]})
   feat.object = createFeatureObject(X = X, y = y, 
-                                lower = -1000, upper = 1000)  
+    lower = -1000, upper = 1000)  
   
   # execution
   features = calculateFeatureSet(feat.object, "info_content", control = 
@@ -43,7 +43,7 @@ test_that("Information content-based features (with partial information) are com
   X = t(replicate(1000, runif(2, -1000, 1000)))
   y = apply(X, 1, function(x) {x[1]^4 + 1000*(x[1]-3)^3 + 1000*x[1] + x[2]})
   feat.object = createFeatureObject(X = X, y = y, 
-                                lower = -1000, upper = 1000)  
+    lower = -1000, upper = 1000)  
   
   # execution
   features = calculateFeatureSet(feat.object, "info_content", control = 
@@ -61,7 +61,7 @@ test_that("Information content-based features are not computed for wrong epsilon
   X = t(replicate(1000, runif(2, -1000, 1000)))
   y = apply(X, 1, function(x) {x[1]^4 + 1000*(x[1]-3)^3 + 1000*x[1] + x[2]})
   feat.object = createFeatureObject(X = X, y = y, 
-                                lower = -1000, upper = 1000)  
+    lower = -1000, upper = 1000)  
   
   # execution
   expect_error( calculateFeatureSet(feat.object, "info_content",
@@ -74,7 +74,7 @@ test_that("Information content-based features are able to compute random samples
   X = t(replicate(50, runif(2, -1000, 1000)))
   fun = function(x) {sum(sqrt(abs(x)))}
   feat.object = createFeatureObject(X = X, fun = fun, 
-                                lower = -1000, upper = 1000)  
+    lower = -1000, upper = 1000)  
   
   # execution
   features = calculateFeatureSet(feat.object, "info_content", 
@@ -103,7 +103,7 @@ test_that("Information content-based features can create a plot", {
   X = t(replicate(1000, runif(2, -1000, 1000)))
   y = apply(X, 1, function(x) {x[1]^4 + 1000*(x[1]-3)^3 + 1000*x[1] + x[2]})
   feat.object = createFeatureObject(X = X, y = y, 
-                                lower = -1000, upper = 1000)  
+    lower = -1000, upper = 1000)  
   
   # execution
   features = calculateFeatureSet(feat.object, "info_content", control =

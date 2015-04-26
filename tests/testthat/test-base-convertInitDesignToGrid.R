@@ -7,7 +7,6 @@ test_that("ConvertInitDesignToGrid", {
   expect_true(all(grid$cell.ID <= 2^4))
 })
 
-
 test_that("Converting an initial design into a grid with one observation per cell", {
   X = expand.grid( -9.5:9.5, -9.5:9.5, -9.5:9.5 )
   y = apply(X = X, MARGIN = 1, FUN = function(x) sum(x^2))
@@ -20,8 +19,7 @@ test_that("Converting an initial design into a grid with one observation per cel
   expect_true( testNumeric(grid$cell.ID, lower=1, upper=20^3) )
   
   # only one observation per cell
-  expect_true( testVector(grid$cell.ID, any.missing = FALSE, unique = TRUE) )
-  
+  expect_true( testVector(grid$cell.ID, any.missing = FALSE, unique = TRUE) )  
 })
 
 test_that("Converting an initial design into a grid with two observations per cell", {
@@ -38,9 +36,7 @@ test_that("Converting an initial design into a grid with two observations per ce
   # exactly two observations per cell
   freq = table(grid$cell.ID)
   expect_true( all(freq == 2) )
-  
 })
-
 
 test_that("Converting an initial design into a grid, assuming a default block count of 10 in each dimension", {
   # (1) create an initial design:

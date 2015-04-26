@@ -12,9 +12,9 @@ test_that("Expected Output", {
   features = calculateFeatureSet(feat.object, "meta_model")
   
   # test return value types and ranges
-  expect_equal(length(features), 11L)
+  expect_identical(length(features), 11L)
   expect_is(features, class = "list")
-  expect_equal(as.character(sapply(features, class)), c(rep("numeric", 9L), "integer", "numeric"))
+  expect_identical(as.character(sapply(features, class)), c(rep("numeric", 9L), "integer", "numeric"))
   
   expect_true( testNumber(features$meta.lin.simple.adj_r2, lower=-1, upper=1) )
   expect_true( testNumber(features$meta.lin.simple.intercept) )

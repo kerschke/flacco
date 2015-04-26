@@ -9,14 +9,12 @@ test_that("Sparse Cells lead to NAs", {
   expect_identical(unique(unlist(features[1:12])), NA_real_)
 })
 
-
-
 test_that("Using Initial Design", {
   feat.object = createFeatureObject(init = iris[, -5], objective = "Sepal.Length", blocks = 3)
   features = calculateFeatureSet(feat.object, "linear_model")
   expect_equal(length(features), 14L)
   expect_is(features, class = "list")
-  expect_equal(as.character(sapply(features, class)), c(rep("numeric", 12L), "integer", "numeric"))
+  expect_identical(as.character(sapply(features, class)), c(rep("numeric", 12L), "integer", "numeric"))
   expect_true( testNumber(features$limo.avg.length, lower = 0) )
   expect_true( testNumber(features$limo.avg.length.scaled, lower = 0, upper = 1) )
   expect_true( testNumber(features$limo.length.mean, lower = 0) )

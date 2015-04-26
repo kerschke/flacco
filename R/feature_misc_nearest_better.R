@@ -42,7 +42,6 @@ calculateNearestBetterFeatures = function(feat.object, control) {
   }
 }
 
-
 ## Quick version of Nearest Better Features
 ## so far only available for euclidean distances
 calculateNearestBetterQuickFeatures = function(feat.object, control) {
@@ -128,7 +127,6 @@ calculateNearestBetterQuickFeatures = function(feat.object, control) {
   }), "nb")
 }
 
-
 ## Flexible version of Nearest Better Features
 ## slower than the quick version, but able to handle other
 ## distance metrics as well.
@@ -146,13 +144,13 @@ calculateNearestBetterFlexFeatures = function(feat.object, control) {
     y = init[, feat.object$objective.name]
     if (meth != "minkowski") {
       distmat = as.matrix(dist(X, method = meth,
-                               diag = TRUE, upper = TRUE))  
+        diag = TRUE, upper = TRUE))  
     } else {
       distmat = as.matrix(dist(X, method = meth,
-                               p = mink, diag = TRUE, upper = TRUE))  
+        p = mink, diag = TRUE, upper = TRUE))  
     }
     nb.stats = computeNearestBetterStats(distmat = distmat,
-                                         objectives = ifelse(feat.object$minimize, 1, -1) * y)
+      objectives = ifelse(feat.object$minimize, 1, -1) * y)
     nn.dists = nb.stats$nearDist
     nb.dists = nb.stats$nbDist
     # cure global optima
@@ -201,10 +199,10 @@ computeNearestBetterStats = function(distmat, objectives) {
     toMe_dist = median(result$nbDist[x])
     if (count > 0L) {
       return(c(toMe_count = count, toMe_dist_median = toMe_dist,
-               nb_median_toMe_ratio = result$nbDist[row] / toMe_dist))
+        nb_median_toMe_ratio = result$nbDist[row] / toMe_dist))
     } else {
       return(c(toMe_count = 0, toMe_dist_median = NA_real_, 
-               nb_median_toMe_ratio = NA_real_))
+        nb_median_toMe_ratio = NA_real_))
     }
   }, double(3))))
   return(result)

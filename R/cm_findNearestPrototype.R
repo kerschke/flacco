@@ -51,8 +51,6 @@ findNearestPrototype = function(feat.object, dist_meth, mink_p, fast_k, ...) {
   }
 }
 
-
-
 findNearestPrototypeFlex = function(feat.object, ...) {
   init.grid = extractInit(feat.object)
   X = extractFeatures(feat.object)
@@ -66,8 +64,6 @@ findNearestPrototypeFlex = function(feat.object, ...) {
   nearest.grid$represented.cell = cell.centers$cell.ID
   nearest.grid
 }
-
-
 
 findNearestPrototypeQuick = function(feat.object, fast_k,...) {
   assertClass(feat.object, "FeatureObject")

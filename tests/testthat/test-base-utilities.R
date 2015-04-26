@@ -62,7 +62,6 @@ test_that("ztocell", {
   
   N = c(4,4,4,4)
   expect_equal(ztocell(c(4,3,2,2), N), 92)
-  
 })
 
 test_that("celltoz", {
@@ -82,7 +81,6 @@ test_that("celltoz", {
   N = c(4,4,4,4)
   expect_equal(celltoz(92, N), c(4,3,2,2))
   expect_equal(celltoz(348, N), c(4,3,2,2)) # Wraparound
-  
 })
 
 test_that("ztox", {
@@ -101,7 +99,6 @@ test_that("ztox", {
   lb = c(-5, -5, -5, -5)
   h = c(2, 2, 2, 2)
   expect_equal(ztox(c(4,3,9,8), h, lb), c(2, 0, 12, 10))
-  
 })
 
 test_that("selectMin", {
@@ -116,7 +113,6 @@ test_that("selectMin", {
   expect_identical(selectMin(x, tie.breaker = "first"), min(ind))
   expect_identical(selectMin(x, tie.breaker = "last"), max(ind))
 })
-
 
 test_that("selectMax", {
   x = c(5, 3, 3, 5, 6, 10, 10, 3, 5.4)

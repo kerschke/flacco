@@ -11,9 +11,9 @@ test_that("Expected Output", {
   features = calculateFeatureSet(feat.object, "levelset")
   
   # test return values
-  expect_equal(length(features), 20L)
+  expect_identical(length(features), 20L)
   expect_is(features, class = "list")
-  expect_equal(as.character(sapply(features, class)), c(rep("numeric", 18L), "integer", "numeric"))
+  expect_identical(as.character(sapply(features, class)), c(rep("numeric", 18L), "integer", "numeric"))
   
   expect_true( testNumber(features$lvlset.mmce_lda_10, lower = 0, upper = 1) )
   expect_true( testNumber(features$lvlset.mmce_qda_10, lower = 0, upper = 1) )
@@ -35,5 +35,4 @@ test_that("Expected Output", {
   expect_true( testNumber(features$lvlset.qda_rpart_50, lower = 0) )
   expect_identical(features$lvlset.costs_fun_evals, 0L)
   expect_true( testNumber(features$lvlset.costs_runtime, lower = 0) )
-  
 })

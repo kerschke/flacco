@@ -10,7 +10,6 @@ test_that("Require original function", {
   
   # (2) compute the curvature features
   expect_error(calculateFeatureSet(feat.object, "curvature"))
-  
 })
 
 test_that("Expected Output", {
@@ -24,9 +23,9 @@ test_that("Expected Output", {
   features = calculateFeatureSet(feat.object, "curvature")
   
   # test return values
-  expect_equal(length(features), 23L)
+  expect_identical(length(features), 23L)
   expect_is(features, class = "list")
-  expect_equal(as.character(sapply(features, class)), c(rep("numeric", 21L), "integer", "numeric"))
+  expect_identical(as.character(sapply(features, class)), c(rep("numeric", 21L), "integer", "numeric"))
   
   expect_true( testNumber(features$curv.grad_norm.min, lower = 0) )
   expect_true( testNumber(features$curv.grad_norm.lq, lower = 0) )

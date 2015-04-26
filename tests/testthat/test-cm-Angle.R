@@ -4,9 +4,9 @@ test_that("Using an Initial Design", {
   feat.object = createFeatureObject(init = iris[, -5], 
     objective = "Sepal.Length", blocks = 3)
   angle.feats = suppressWarnings(calculateFeatureSet(feat.object, "angle"))
-  expect_equal(length(angle.feats), 10L)
+  expect_identical(length(angle.feats), 10L)
   expect_is(angle.feats, class = "list")
-  expect_equal(as.character(sapply(angle.feats, class)), 
+  expect_identical(as.character(sapply(angle.feats, class)), 
     c(rep("numeric", 8), "integer", "numeric"))
 })
 
@@ -35,23 +35,23 @@ test_that("Only one block", {
   angle.feats = calculateFeatureSet(feat.object, "angle", 
     control = list(angle.show_warnings = FALSE))
   
-  expect_equal(length(angle.feats), 10L)
+  expect_identical(length(angle.feats), 10L)
   expect_is(angle.feats, class = "list")
-  expect_equal(as.character(sapply(angle.feats, class)), 
+  expect_identical(as.character(sapply(angle.feats, class)), 
     c(rep("numeric", 8), "integer", "numeric"))
 
   expect_true( testNumber(angle.feats$cm_angle.dist_ctr2best.mean,
-    lower = -180, upper = 180) )
-  expect_equal(angle.feats$cm_angle.dist_ctr2best.sd, NA_real_)
+    lower = 0) )
+  expect_identical(angle.feats$cm_angle.dist_ctr2best.sd, NA_real_)
   expect_true( testNumber(angle.feats$cm_angle.dist_ctr2worst.mean,
-    lower = -180, upper = 180) )
-  expect_equal(angle.feats$cm_angle.dist_ctr2worst.sd, NA_real_)
+    lower = 0) )
+  expect_identical(angle.feats$cm_angle.dist_ctr2worst.sd, NA_real_)
   expect_true( testNumber(angle.feats$cm_angle.angle.mean,
     lower = -180, upper = 180) )
-  expect_equal(angle.feats$cm_angle.angle.sd, NA_real_)
+  expect_identical(angle.feats$cm_angle.angle.sd, NA_real_)
   expect_true( testNumber(angle.feats$cm_angle.y_ratio_best2worst.mean,
-    lower = -180, upper = 180) )
-  expect_equal(angle.feats$cm_angle.y_ratio_best2worst.sd, NA_real_)
+    lower = 0, upper = 1) )
+  expect_identical(angle.feats$cm_angle.y_ratio_best2worst.sd, NA_real_)
   expect_identical(angle.feats$cm_angle.costs_fun_evals, 0L)
   expect_true( testNumber(angle.feats$cm_angle.costs_runtime, lower = 0) )
 })

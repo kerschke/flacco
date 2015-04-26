@@ -18,7 +18,6 @@ test_that("Without Diagonal", {
     list(28:30, c(24, 29, 34), c(9, 29, 49)))
 })
 
-
 test_that("With Diagonal", {
   cell.ids = c(4, 5, 9, 29)
   blocks = c(5, 4, 7)

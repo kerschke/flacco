@@ -23,9 +23,10 @@ test_that("Identical blocks", {
   features = calculateFeatureSet(feat.object, "gradient_homogeneity", 
     control = list(gradhomo.show_warnings = FALSE))
   
-  expect_equal(length(features), 4L)
+  expect_identical(length(features), 4L)
   expect_is(features, class = "list")
-  expect_equal(as.character(sapply(features, class)), c(rep("numeric", 2), "integer", "numeric"))
+  expect_identical(as.character(sapply(features, class)), 
+    c(rep("numeric", 2), "integer", "numeric"))
   
   expect_true( testNumber(features$gradhomo.mean, lower = -1, upper = 1) )
   expect_true( testNumber(features$gradhomo.sd) )
@@ -42,12 +43,13 @@ test_that("Only one block", {
   features = calculateFeatureSet(feat.object, "gradient_homogeneity", 
     control = list(gradhomo.show_warnings = FALSE))
   
-  expect_equal(length(features), 4L)
+  expect_identical(length(features), 4L)
   expect_is(features, class = "list")
-  expect_equal(as.character(sapply(features, class)), c(rep("numeric", 2), "integer", "numeric"))
+  expect_identical(as.character(sapply(features, class)), 
+    c(rep("numeric", 2), "integer", "numeric"))
   
   expect_true( testNumber(features$gradhomo.mean, lower = -1, upper = 1) )
-  expect_equal( features$gradhomo.sd , NA_real_)
+  expect_identical( features$gradhomo.sd , NA_real_)
   expect_identical(features$gradhomo.costs_fun_evals, 0L)
   expect_true( testNumber(features$gradhomo.costs_runtime, lower = 0) )
 })
@@ -90,7 +92,6 @@ test_that("Using Minkowski Distance", {
   expect_false(identical(features2[-4L], features1[-4L]))
 })
 
-
 test_that("Using Manhattan Distance", {
   set.seed(2015*03*26)
   X = t(replicate(n = 2000, expr = runif(n = 5, min = -10, max = 10)))
@@ -102,9 +103,10 @@ test_that("Using Manhattan Distance", {
     control = list(gradhomo.dist_method = "manhattan"))
   
   # test return value types and ranges
-  expect_equal(length(features), 4L)
+  expect_identical(length(features), 4L)
   expect_is(features, class = "list")
-  expect_equal(as.character(sapply(features, class)), c(rep("numeric", 2), "integer", "numeric"))
+  expect_identical(as.character(sapply(features, class)),
+    c(rep("numeric", 2), "integer", "numeric"))
   
   expect_true( testNumber(features$gradhomo.mean, lower = -1, upper = 1) )
   expect_true( testNumber(features$gradhomo.sd) )

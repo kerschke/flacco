@@ -79,4 +79,3 @@ calculateCurvatureFeatures = function(feat.object, control) {
     return(c(fn, curv.costs_fun_evals = showEvals(f)))
   }), "curv")
 }
-

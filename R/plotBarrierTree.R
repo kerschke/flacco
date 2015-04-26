@@ -1,5 +1,5 @@
 plotBarrierTree3d = function(z2, pred2, w2, root2, fe, divisions, levels,
-                              custom.colors) {
+  custom.colors) {
   orig.margins = par("mar")
   on.exit ( par(mar=orig.margins) )
   par(mar=c(0,1,0,0))
@@ -13,7 +13,6 @@ plotBarrierTree3d = function(z2, pred2, w2, root2, fe, divisions, levels,
     palette[1:overwrite] = custom.colors[1:overwrite]
   }
   
-  
   Fe = matrix(nrow=divisions[1], ncol = divisions[2])
   
   sapply(1:length(fe), FUN = function(i) {
@@ -26,10 +25,10 @@ plotBarrierTree3d = function(z2, pred2, w2, root2, fe, divisions, levels,
   })
 
   persp3d = persp(1:divisions[2], 1:divisions[1], t(Fe),
-                   theta=330, phi=15, border="grey",
-                   xlab=expression(x[2]), ylab=expression(x[1]),
-                   zlab=expression(y),
-                   col=palette[1])
+    theta=330, phi=15, border="grey",
+    xlab=expression(x[2]), ylab=expression(x[1]),
+    zlab=expression(y),
+    col=palette[1])
   
   # draw root
   rootCoord = celltoz( root2, divisions )
@@ -66,7 +65,7 @@ plotBarrierTree3d = function(z2, pred2, w2, root2, fe, divisions, levels,
       
       points(this3dPoint, col=palette[1+level])
       text(this3dPoint,
-           labels = z2[i], pos=1, col=palette[1+level]) # label point
+        labels = z2[i], pos=1, col=palette[1+level]) # label point
       
       lineBreak3dPoint = trans3d(
         thisCoord[2], thisCoord[1],
@@ -89,27 +88,19 @@ plotBarrierTree3d = function(z2, pred2, w2, root2, fe, divisions, levels,
   
   assert(drawn == length(z2)) # otherwise, an error has caused that some nodes weren't drawn...
 }
-
 #plotBarrierTreePCA = function(z2, pred2, w2, root2, fe, divisions) {
-  #Fe = matrix(nrow=divisions[1], ncol = divisions[2])
-  
+#  Fe = matrix(nrow=divisions[1], ncol = divisions[2])  
 #  coords = sapply(1:length(fe), FUN = function(i) {
 #    celltoz(i, divisions)
 #  })
 #  cell2fe = data.frame(cellX = coords[1, ], cellY = coords[2, ], fe = fe)
-  
-  
 #  principals = princomp(~ cellX + cellY, data = cell2fe)
-  #print(principals$loadings[,1]) # loadings of first PC
-  
+#  print(principals$loadings[,1]) # loadings of first PC
 #  cell2fe$pca = apply(cell2fe, 1, function (row) {
 #    print (row)
 #    sum( c( row[1], row[2] ) 
 #         * principals$loadings[, 1] )
 #    }
 #  )
-  
 #  View(cell2fe)
-  
-  
 #}

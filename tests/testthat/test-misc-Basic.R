@@ -12,9 +12,9 @@ test_that("Non-Cellmapping Objects", {
   features = calculateFeatureSet(feat.object, "basic")
   
   # test return value types and ranges
-  expect_equal(length(features), 16L)
+  expect_identical(length(features), 16L)
   expect_is(features, class = "list")
-  expect_equal(as.character(sapply(features, class)),
+  expect_identical(as.character(sapply(features, class)),
     c("integer", "integer", rep("numeric", 6L), rep("integer", 4L),
       rep("logical", 2L), "integer", "numeric"))
   expect_identical(features$basic.dim, 5L)
@@ -39,9 +39,7 @@ test_that("Non-Cellmapping Objects", {
   
   expect_identical(features$basic.costs_fun_evals, 0L)
   expect_true( testNumber(features$basic.costs_runtime, lower = 0) )
-  
 })
-
 
 test_that("Cellmapping Objects", {
   set.seed(2015*03*26)
@@ -78,7 +76,6 @@ test_that("Cellmapping Objects", {
   expect_true( testNumber(features$basic.cells.filled, 
     lower = 1, upper = features$basic.cells.total) )
 })
-
 
 test_that("Test Basic Features", {
   set.seed(2015*03*26)

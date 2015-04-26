@@ -61,7 +61,6 @@
 #' library(plyr)
 #' calculateFeatureSet(feat.object3, "angle", control = list(angle.show_warnings = FALSE))
 #' @export 
-
 createFeatureObject = function(init, X, y, fun, minimize, 
   lower, upper, blocks, objective) {
     if (missing(init) && (missing(X) || (missing(y) && missing(fun)) ))
@@ -171,7 +170,6 @@ createFeatureObject = function(init, X, y, fun, minimize,
     }
     return(res)
 }
-
 
 #' @export
 print.FeatureObject = function(x, ...) {

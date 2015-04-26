@@ -59,7 +59,6 @@ calculateGradientHomogeneityFeatures = function(feat.object, control) {
   }
 }
 
-
 ## flexible version of Gradient Homogeneity computation;
 ## slower than the quick-version, but able to handle a lot more
 ## distance metrics
@@ -106,7 +105,6 @@ calculateGradientHomogeneityFlex = function(feat.object, control) {
       gradhomo.sd = sd(gradhomo, na.rm = TRUE)))
   }), "gradhomo")
 }
-
 
 ## Quick Version of Gradient Homogeneity Computation;
 ## so far, only available for euclidean distances

@@ -57,8 +57,8 @@ calculateGCMFeatures = function (feat.object, control = list()) {
   # [ for gcm: x is var, y is fun ]
   if (!feat.object$allows.cellmapping) {
     stop( paste(c("This feature object does not support cell mapping. You need to ",
-          "create a feature object with the parameter 'blocks', defining the number ",
-          "of divisons per dimension.")) )
+      "create a feature object with the parameter 'blocks', defining the number ",
+      "of divisons per dimension.")) )
   }
   
   # Visualisation options
@@ -70,24 +70,24 @@ calculateGCMFeatures = function (feat.object, control = list()) {
   
   #Evaluate GCM features for Min
   features.min = evaluateGCM(
-                      feat.object$env$gcm.representatives$min, 
-                      feat.object$env$gcm.canonicalForm$min,
-                      feat.object,
-                      plot.gcm, plot.gcm.colors)
+    feat.object$env$gcm.representatives$min, 
+    feat.object$env$gcm.canonicalForm$min,
+    feat.object,
+    plot.gcm, plot.gcm.colors)
   
   #Evaluate GCM features for Mean
   features.mean = evaluateGCM(
-                      feat.object$env$gcm.representatives$mean, 
-                      feat.object$env$gcm.canonicalForm$mean,
-                      feat.object,
-                      plot.gcm, plot.gcm.colors)
+    feat.object$env$gcm.representatives$mean, 
+    feat.object$env$gcm.canonicalForm$mean,
+    feat.object,
+    plot.gcm, plot.gcm.colors)
   
   #Evaluate GCM features for Near
   features.near = evaluateGCM(
-                      feat.object$env$gcm.representatives$near, 
-                      feat.object$env$gcm.canonicalForm$near,
-                      feat.object,
-                      plot.gcm, plot.gcm.colors)
+    feat.object$env$gcm.representatives$near, 
+    feat.object$env$gcm.canonicalForm$near,
+    feat.object,
+    plot.gcm, plot.gcm.colors)
   
   
   # Evaluate overall features (min + mean)
@@ -133,8 +133,8 @@ calculateGCMFeatures = function (feat.object, control = list()) {
 # [orig: function [no_attr, unc_rat, prob_best, pcell, tcell, diffcell, sd_bs, min_bs, mean_bs, max_bs] = evaluate_features(filename, option, range_x, range_y) ]
 # Perform GCM Calculation for a Specific Mode (i.e. either min, mean, or near)
 evaluateGCM = function(fe, cf, # fe and cf are specific to the mode
-                        feat.object, # passed for common parameters
-                        plot.gcm, plot.gcm.colors) {
+  feat.object, # passed for common parameters
+  plot.gcm, plot.gcm.colors) {
   # rename canform list's components
   canonicalForm    = cf$canonicalForm
   indexPermutation = cf$indexPermutation
@@ -240,14 +240,14 @@ evaluateGCM = function(fe, cf, # fe and cf are specific to the mode
   
   
   return( list(no_attr = numberOfAttractors,        # number of attractors
-               uncert_ratio = ratioUncertainBoxes,  # uncertainty ratio
-               prob_best = bestCellProbability,     # probability to find the best
-               pcell = pcell, tcell = tcell,        # lists of cells (periodic / transient)
-               diffcell = diffcell,                 # number of cells in neither list
-               std_bs = std_bs,                     # loc / disp of basin sizes
-               min_bs = min_bs, 
-               mean_bs = mean_bs, 
-               max_bs = max_bs
+    uncert_ratio = ratioUncertainBoxes,  # uncertainty ratio
+    prob_best = bestCellProbability,     # probability to find the best
+    pcell = pcell, tcell = tcell,        # lists of cells (periodic / transient)
+    diffcell = diffcell,                 # number of cells in neither list
+    std_bs = std_bs,                     # loc / disp of basin sizes
+    min_bs = min_bs, 
+    mean_bs = mean_bs, 
+    max_bs = max_bs
   ) )
 }
 
@@ -272,8 +272,8 @@ calcBasins = function(Fm) {
         columns = seq_len( ncol(Fm) )
         columns = columns[columns != i]
         if ( flag && (any(Fm[j, columns] != 0) ) || 
-               (!flag && length(keys2) > length(keys)) || 
-               (!flag && length(keys2) == length(keys)  && any(keys2 != keys) ) ) {
+          (!flag && length(keys2) > length(keys)) || 
+          (!flag && length(keys2) == length(keys)  && any(keys2 != keys) ) ) {
           ci = c(ci, ncol(Fm)+1)
         } else {
           ci = c(ci, gr)

@@ -1,5 +1,4 @@
 # ( origins: plotgcm.m, plot2.m )
-
 # [orig: function [pcells, nattr, punc] = plotgcm(Fm, R, N, h, lb, ub, fn, iterx, fe) {]
 plotgcm = function(Fm, indexPermutation, feat.object, plot.gcm.colors) {
   orig.margins = par("mar")

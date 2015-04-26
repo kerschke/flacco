@@ -10,7 +10,6 @@ test_that("Require original function", {
   
   # (2) compute the local search features
   expect_error(calculateFeatureSet(feat.object, "local_search"))
-  
 })
 
 test_that("Expected output", {
@@ -24,10 +23,11 @@ test_that("Expected output", {
   features = calculateFeatureSet(feat.object, "local_search")
   
   # test return values
-  expect_equal(length(features), 15L)
+  expect_identical(length(features), 15L)
   expect_is(features, class = "list")
-  expect_equal(as.character(sapply(features, class)),
-    c("integer", rep("numeric", 6L), "integer", rep("numeric", 4L), "integer", "integer", "numeric"))
+  expect_identical(as.character(sapply(features, class)),
+    c("integer", rep("numeric", 6L), "integer", rep("numeric", 4L), 
+    "integer", "integer", "numeric"))
   
   expect_true( testNumber(features$ls.n_loc_opt.abs, lower = 0) )
   expect_true( testNumber(features$ls.n_loc_opt.rel, lower = 0, upper = 1) )

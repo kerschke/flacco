@@ -12,9 +12,9 @@ test_that("Expected Output", {
   features = calculateFeatureSet(feat.object, "dispersion")
   
   # test return value types and ranges
-  expect_equal(length(features), 18L)
+  expect_identical(length(features), 18L)
   expect_is(features, class = "list")
-  expect_equal(as.character(sapply(features, class)), c(rep("numeric", 16L), "integer", "numeric"))
+  expect_identical(as.character(sapply(features, class)), c(rep("numeric", 16L), "integer", "numeric"))
   expect_true( testNumber(features$disp.ratio_mean_02) )
   expect_true( testNumber(features$disp.ratio_mean_05) )
   expect_true( testNumber(features$disp.ratio_mean_10) )
@@ -34,7 +34,6 @@ test_that("Expected Output", {
   expect_identical(features$disp.costs_fun_evals, 0L)
   expect_true( testNumber(features$disp.costs_runtime, lower = 0) )
 })
-
 
 test_that("Using Different Metrics", {
   set.seed(2015*03*26)
@@ -56,7 +55,7 @@ test_that("Using Different Metrics", {
   expect_is(features1, "list")
   expect_is(features2, "list")
   
-  expect_equal(features[-18], features2[-18])
+  expect_identical(features[-18], features2[-18])
   expect_false(identical(features[-18], features1[-18]))
   expect_false(identical(features2[-18], features1[-18]))
 })

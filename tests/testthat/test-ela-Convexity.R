@@ -10,7 +10,6 @@ test_that("Require original function", {
   
   # (2) compute the convexity features
   expect_error(calculateFeatureSet(feat.object, "convexity"))
-  
 })
 
 test_that("Expected Output", {
@@ -24,9 +23,10 @@ test_that("Expected Output", {
   features = calculateFeatureSet(feat.object, "convexity")
   
   # test return value types
-  expect_equal(length(features), 6L)
+  expect_identical(length(features), 6L)
   expect_is(features, class = "list")
-  expect_equal(as.character(sapply(features, class)), c(rep("numeric", 4), "integer", "numeric"))
+  expect_identical(as.character(sapply(features, class)), 
+    c(rep("numeric", 4), "integer", "numeric"))
   
   # test return values and ranges
   expect_true( testNumber(features$conv.conv_prob, lower = 0, upper = 1) )
@@ -37,5 +37,4 @@ test_that("Expected Output", {
   
   expect_true( testNumber(features$conv.costs_fun_evals, lower = 0L) )
   expect_true( testNumber(features$conv.costs_runtime, lower = 0) )
-  
 })

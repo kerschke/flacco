@@ -77,7 +77,6 @@ extractInit = function(feat.object) {
   feat.object$env$init
 }
 
-
 # enable returning tuples without the need for a temporary value
 # it is used like this:
 #list[QR,,QRaux]  <- qr(c(1,1:3,3:1))
@@ -94,9 +93,6 @@ list <- structure(NA,class="result")
   }
   x
 }
-
-
-
 
 #imitates matlab full(sparse(i,j,s)) function for the special case of square matrices.
 # creates an mxm (square) matrix A, where m = max(c(i,j))
