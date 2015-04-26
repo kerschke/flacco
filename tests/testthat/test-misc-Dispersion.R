@@ -55,7 +55,7 @@ test_that("Using Different Metrics", {
   expect_is(features1, "list")
   expect_is(features2, "list")
   
-  expect_identical(features[-18], features2[-18])
+  expect_equal(features[-18], features2[-18])
   expect_false(identical(features[-18], features1[-18]))
   expect_false(identical(features2[-18], features1[-18]))
 })
