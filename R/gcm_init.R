@@ -152,7 +152,6 @@ canform = function(stochasticMatrix) { # [ orig: function [Q p sv]=canform(P) ]
   commClass = res$commClass
   closedClass = res$closedClass
   
-  
   sumV = sum(closedClass)
   closedIndices = which(closedClass == 1) # indices in  comprise union of closed classes [formerly u]
   openIndices   = which(closedClass == 0) # [formerly w]
@@ -216,9 +215,7 @@ commclasses = function(stochasticMatrix) { # [ orig: function [C,v]=commclasses(
       matrixRows = d
     }
     classes[i,] = (classesRow == TRUE)
-    
   }
-  
   commClass   = classes & t(classes)
   closedClass = ( colSums(  t(commClass)==t(classes)  ) == m )
   

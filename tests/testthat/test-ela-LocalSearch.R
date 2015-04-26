@@ -10,7 +10,6 @@ test_that("Require original function", {
   
   # (2) compute the local search features
   expect_error(calculateFeatureSet(feat.object, "local_search"))
-  
 })
 
 test_that("Expected output", {

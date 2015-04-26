@@ -66,36 +66,36 @@ calculateBarrierTrees = function (feat.object, control = list()) {
   
   #Evaluate barrier tree features for Min
   barrierTree.min = evaluate_barrierTree(
-                      feat.object$env$gcm.representatives$min, 
-                      feat.object$env$gcm.canonicalForm$min,
-                      feat.object$blocks, feat.object$lower, feat.object$upper, feat.object$cell.size,
-                      visualise_barrierTrees, visualise_barrierTrees.colors)
+    feat.object$env$gcm.representatives$min, 
+    feat.object$env$gcm.canonicalForm$min,
+    feat.object$blocks, feat.object$lower, feat.object$upper, feat.object$cell.size,
+    visualise_barrierTrees, visualise_barrierTrees.colors)
   
   #Evaluate barrier tree features for Mean
   barrierTree.mean = evaluate_barrierTree(
-                      feat.object$env$gcm.representatives$mean, 
-                      feat.object$env$gcm.canonicalForm$mean,
-                      feat.object$blocks, feat.object$lower, feat.object$upper, feat.object$cell.size,
-                      visualise_barrierTrees, visualise_barrierTrees.colors)
+    feat.object$env$gcm.representatives$mean, 
+    feat.object$env$gcm.canonicalForm$mean,
+    feat.object$blocks, feat.object$lower, feat.object$upper, feat.object$cell.size,
+    visualise_barrierTrees, visualise_barrierTrees.colors)
   
   #Evaluate barrier tree features for Near
   barrierTree.near = evaluate_barrierTree(
-                      feat.object$env$gcm.representatives$near, 
-                      feat.object$env$gcm.canonicalForm$near,
-                      feat.object$blocks, feat.object$lower, feat.object$upper, feat.object$cell.size,
-                      visualise_barrierTrees, visualise_barrierTrees.colors)
+    feat.object$env$gcm.representatives$near, 
+    feat.object$env$gcm.canonicalForm$near,
+    feat.object$blocks, feat.object$lower, feat.object$upper, feat.object$cell.size,
+    visualise_barrierTrees, visualise_barrierTrees.colors)
   
   return (list(
     barrierTree.min = barrierTree.min,
     barrierTree.mean = barrierTree.mean,
     barrierTree.near = barrierTree.near
-    ))
+  ))
 }
 
 # ( origin: barrierTreeGCM3.m, features.m )
 evaluate_barrierTree = function(fe, canform,
-                                 divisions, lowerBounds, upperBounds, cellSize,
-                                 visualise_barrierTrees, visualise_barrierTrees.colors) {
+  divisions, lowerBounds, upperBounds, cellSize,
+  visualise_barrierTrees, visualise_barrierTrees.colors) {
   # rename canform list's components
   canonicalForm    = canform$canonicalForm
   indexPermutation = canform$indexPermutation
@@ -116,11 +116,11 @@ evaluate_barrierTree = function(fe, canform,
     # submatrices Q and R from the canonical form:
     #Q: Probability of transitioning from some transient state [Q = P(idx(sv+1:end),idx(sv+1:end));]
     Q = canonicalForm[(closedClassIndex+1) : length(indexPermutation),
-                       (closedClassIndex+1) : length(indexPermutation)]
+      (closedClassIndex+1) : length(indexPermutation)]
     
     #R: Probability of transitioning from some transient state to some absorbing state [R = P(idx(sv+1:end),idx(1:sv));]
     R = canonicalForm[(closedClassIndex+1) : length(indexPermutation),
-                       seqClosedClasses]
+      seqClosedClasses]
     
     # calculate absorbing probabilities (Apr)
     
@@ -143,22 +143,22 @@ evaluate_barrierTree = function(fe, canform,
     
     # convert into features
     list [levels, depth, ratioDepthLevels,
-          minw, meanw, maxw, stdw,
-          ratioLevelsLeaves,
-          minDistance, meanDistance, maxDistance, stdDistance,
-          bratioUncertain, bratioCertain, bratioMax,
-          minBasinIntersectionCount, meanBasinIntersectionCount, maxBasinIntersectionCount,
-          stdBasinIntersectionCount, range] = features_barrierTree( 
-            fe, barrierTree$cells, root = barrierTree$root, barrierTree$diffs, divisions, 
-            cellSize, lowerBounds, Apr, 
-            indexPermutation, closedClassIndex, barrierTree$preds)
+      minw, meanw, maxw, stdw,
+      ratioLevelsLeaves,
+      minDistance, meanDistance, maxDistance, stdDistance,
+      bratioUncertain, bratioCertain, bratioMax,
+      minBasinIntersectionCount, meanBasinIntersectionCount, maxBasinIntersectionCount,
+      stdBasinIntersectionCount, range] = features_barrierTree( 
+        fe, barrierTree$cells, root = barrierTree$root, barrierTree$diffs, divisions, 
+        cellSize, lowerBounds, Apr, 
+        indexPermutation, closedClassIndex, barrierTree$preds)
     
     
     if (visualise_barrierTrees) {
       
       plotBarrierTree3d(barrierTree$cells, barrierTree$preds,
-                        barrierTree$diffs, barrierTree$root, fe, divisions, levels,
-                        visualise_barrierTrees.colors)
+        barrierTree$diffs, barrierTree$root, fe, divisions, levels,
+        visualise_barrierTrees.colors)
       #plotBarrierTreePCA(barrierTree$cells, barrierTree$preds, 
       #                   barrierTree$diffs, barrierTree$root, fe, divisions)
     }
@@ -250,8 +250,7 @@ create_barrierTree = function(I, Apr, fe, indexPermutation, closedClassIndex) {
   
   #sort fe, obtain permutation ($ix of sort output)
   indexPermutation2 = sort(fe, index.return=TRUE)$ix # [ orig: #   [~, indexPermutation2] = sort(fe); ]
-  
-  
+    
   for (i in 1:length(fe)) {
     #make predecesor graph        
     key3 = which(Apr[indexPermutation2[i], ] != 0)
@@ -301,16 +300,15 @@ create_barrierTree = function(I, Apr, fe, indexPermutation, closedClassIndex) {
   #%     DG = sparse(pred, z, true, len, len);
   #%     h = view(biograph(DG))
   return ( list( cells = cells,     # list of nodes (-> index of function evaluation)
-                 preds = pred,      # list of predecessors of nodes (-> parent node index)
-                 diffs = diffs,     # difference value 
-                 root = root ) )    # root of barrier tree
+    preds = pred,      # list of predecessors of nodes (-> parent node index)
+    diffs = diffs,     # difference value 
+    root = root ) )    # root of barrier tree
 }
-
 
 # [ orig: function [levels, depth, ratio1, minw, meanw, maxw, stdw, ratio2, mind, meand, maxd, stdd, bratio1, bratio2, bratio3, mini, meani, maxi, stdi, range] = features( fe, z2, root, weights, N, h, lb, Apr, idx, sv, pred2 ) ]
 features_barrierTree = function( fe, cells, root, weights, divisions, 
-                                  cellSize, lowerBounds, Apr, indexPermutation, 
-                                  closedClassIndex, preds ) {
+  cellSize, lowerBounds, Apr, indexPermutation, 
+  closedClassIndex, preds ) {
   seqClosedClasses = seq_len(closedClassIndex)
   
   #Levels
@@ -356,7 +354,7 @@ features_barrierTree = function( fe, cells, root, weights, divisions,
   #Distances locals to global
   minValueIdx = which.min(fe)
   gopt = ztox(celltoz(minValueIdx, divisions), cellSize, 
-               lowerBounds) # center of the cell containing the global optimum
+    lowerBounds) # center of the cell containing the global optimum
   
   distances = na.omit(
     sapply( seqClosedClasses , function(i) {
@@ -408,7 +406,6 @@ features_barrierTree = function( fe, cells, root, weights, divisions,
     })
   )
   
-  
   minBasinIntersectionCount  = min(basinIntersectionCount)
   meanBasinIntersectionCount = mean(basinIntersectionCount)
   maxBasinIntersectionCount  = max(basinIntersectionCount)
@@ -418,12 +415,11 @@ features_barrierTree = function( fe, cells, root, weights, divisions,
   coord = sapply(1:length(gbasin), FUN = function(i) {
     celltoz(gbasin[i], divisions)
   })
-  range =  sqrt( sum( # calculate range. suspicious: why don't we (nor the matlab version) care about dimensions?
-    (
-      max(coord)-   # [ orig: max(coord,[],1) ]
-        min(coord))   # [ orig: min(coord,[],1) ]
-    ^2 ) )  # [ orig: norm(max(coord,[],1) - min(coord,[],1));]
-  
+  # calculate range. suspicious: why don't we (nor the matlab version) care about dimensions?
+  # [ orig: max(coord,[],1) ]
+  # [ orig: min(coord,[],1) ]
+  # [ orig: norm(max(coord,[],1) - min(coord,[],1));]
+  range =  sqrt( sum( (max(coord) - min(coord))^2 ))
   return( list(
     levels = levels, depth = depth, ratioDepthLevels = ratioDepthLevels, 
     minw = minw, meanw = meanw, maxw = maxw, stdw = stdw,                 # loc/disp of weights

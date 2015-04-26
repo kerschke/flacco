@@ -78,7 +78,6 @@ test_that("GCM initialisation computations for near are performed", {
   
   # number of closed classes
   expect_equal(feat.object$env$gcm.canonicalForm$near$closedClassIndex, 12)
-  
   # TODO values of feat.object$env$gcm.canonicalForm$near$indexPermutation
   # TODO values of feat.object$env$gcm.canonicalForm$near$canonicalForm
 })

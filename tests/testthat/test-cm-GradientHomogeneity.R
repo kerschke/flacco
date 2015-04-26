@@ -1,10 +1,5 @@
 context("Features: Gradient Homogeneity")
 
-test_that("Require Cell Mapping", {
-  feat.object = createFeatureObject(init = iris[, -5], objective = "Sepal.Length")
-  expect_error(calculateFeatureSet(feat.object, "gradient_homogeneity"))
-})
-  
 test_that("Differing blocks", {
   set.seed(2015*03*26)
   X = t(replicate(n = 2000, expr = runif(n = 5, min = -10, max = 10)))
@@ -94,6 +89,26 @@ test_that("Using Manhattan Distance", {
   
   expect_true( testNumber(features$gradhomo.mean, lower = -1, upper = 1) )
   expect_true( testNumber(features$gradhomo.sd) )
+  expect_identical(features$gradhomo.costs_fun_evals, 0L)
+  expect_true( testNumber(features$gradhomo.costs_runtime, lower = 0) )
+})
+
+test_that("Only one block", {
+  set.seed(2015*03*26)
+  X = t(replicate(n = 2000, expr = runif(n = 5, min = -10, max = 10)))
+  y = apply(X, 1, function(x) sum(x^2))
+  feat.object = createFeatureObject(X = X, y = y, blocks = 1L)
+  
+  features = calculateFeatureSet(feat.object, "gradient_homogeneity",
+    control = list(gradhomo.show_warnings = FALSE))
+  
+  expect_identical(length(features), 4L)
+  expect_is(features, class = "list")
+  expect_identical(as.character(vapply(features, class, character(1))),
+    c(rep("numeric", 2), "integer", "numeric"))
+  
+  expect_true( testNumber(features$gradhomo.mean, lower = 0) )
+  expect_identical(features$gradhomo.sd, NA_real_)
   expect_identical(features$gradhomo.costs_fun_evals, 0L)
   expect_true( testNumber(features$gradhomo.costs_runtime, lower = 0) )
 })

@@ -1,6 +1,5 @@
 context("Features: Principal Component")
 
-
 test_that("Expected Output", {
   set.seed(2015*03*26)
   
@@ -26,5 +25,4 @@ test_that("Expected Output", {
   expect_true( testNumber(features$pc.expl_var_PC1.cor_init, lower = 0, upper = 1) ) 
   expect_identical(features$pc.costs_fun_evals, 0L)
   expect_true( testNumber(features$pc.costs_runtime, lower = 0) )
-  
 })

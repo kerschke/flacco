@@ -13,7 +13,6 @@ test_that("FeatureObject Output", {
     "- Optimization problem: (minimize|maximize) [^\\s]+?",
     sep="\\r?\\n")
   )
-  
 })
  
 test_that("FeatureObject Output with more than 5 feature dims", {
@@ -27,7 +26,6 @@ test_that("FeatureObject Output with more than 5 feature dims", {
     "- Name of Features: [^,\\s]*(, [^,\\s]*)*, ...",
     sep="\\r?\\n")
   )
-  
 })
 
 test_that("FeatureObject Output with a function", {
@@ -38,7 +36,6 @@ test_that("FeatureObject Output with a function", {
   expect_output(print(feat.object), regexp=
     "- Function to be optimized: function \\(x\\) sum\\(x\\^2\\)"
   )
-  
 })
 
 test_that("FeatureObject Output with cellmapping and dim < 5", {
@@ -58,7 +55,6 @@ test_that("FeatureObject Output with cellmapping and dim < 5", {
     "\\s+- non-empty: [0-9e+-.]+",
     sep="\\r?\\n")
   )
-  
 })
 
 test_that("FeatureObject Output with cellmapping and dim >= 5", {
@@ -71,6 +67,5 @@ test_that("FeatureObject Output with cellmapping and dim >= 5", {
       "- Size of Cells per Dimension: [0-9e+.-]+(, [0-9e+-.]+)*, ...",
       sep="\\r?\\n")
   )
-  
 })
                                         

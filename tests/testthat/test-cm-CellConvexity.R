@@ -48,7 +48,6 @@ test_that("Calculation of Cell Convexity is possible", {
   expect_true( features$cm_conv.concave.hard <= features$cm_conv.concave.soft )
 })
 
-
 test_that("Using Minkowski Distance", {
   set.seed(2015*03*26)
   

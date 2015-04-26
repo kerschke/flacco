@@ -10,7 +10,6 @@ test_that("Require original function", {
   
   # (2) compute the convexity features
   expect_error(calculateFeatureSet(feat.object, "convexity"))
-  
 })
 
 test_that("Expected Output", {
@@ -37,5 +36,4 @@ test_that("Expected Output", {
   
   expect_true( testNumber(features$conv.costs_fun_evals, lower = 0L) )
   expect_true( testNumber(features$conv.costs_runtime, lower = 0) )
-  
 })

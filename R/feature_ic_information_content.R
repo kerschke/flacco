@@ -96,14 +96,12 @@ calculateInformationContent = function(feat.object, control = list()) {
     assertNumeric(generate.sample.min, .var.name="control$ic.generate_sample.min")
     assertNumeric(generate.sample.max, .var.name="control$ic.generate_sample.max")
   }
-  
   debug.plot = control_parameter(control, "ic.plot", FALSE)
   # all params set; ready to go.
   
   # default values for those features that rely on partial IC (M)
   Mzero = NA
   epsilon05 = NA
-  
   
   # custom samples
   if (generate.sample) {
@@ -119,7 +117,6 @@ calculateInformationContent = function(feat.object, control = list()) {
     y = extractObjective(feat.object)
   }
 
-  
   # sort values ( NN / R )
   if (sorting == "R") {
     permutation = sample.int( nrow(X) )
@@ -127,23 +124,22 @@ calculateInformationContent = function(feat.object, control = list()) {
     permutation = ic_sort_nearest_neighbour(X)
   }
   
-  
   # calculate psi [Eq. (9)], i.e. symbol sequence with elements in {-1, 0, 1}
   # for an input data set with n entries, n-1 psis will be generated
   psi.indices = seq_len( length(permutation) )
   
   HM = sapply(epsilon, FUN= function(e) {
     psi.epsilon = mapply( ic_symbol_sequence, 
-                              permutation[ psi.indices[-length(psi.indices)] ], # i,
-                              permutation[ psi.indices[-1] ],  #j,
-                              MoreArgs = list(epsilon = e, X=X, y=y)
-                              )
+      permutation[ psi.indices[-length(psi.indices)] ], # i,
+      permutation[ psi.indices[-1] ],  #j,
+      MoreArgs = list(epsilon = e, X=X, y=y)
+    )
     
     # calculate probabilities of finding blocks ab, a != b, in sequence psi
     # results in n-2 different blocks, thus excluding the last two / the last one element[s] from psi
     blocks = mapply( ic_identify_block,
-                     psi.epsilon[ psi.indices[-c(length(psi.indices), length(psi.indices)-1)] ], #x
-                     psi.epsilon[ psi.indices[-c(1,                   length(psi.indices)  )] ]  #y
+      psi.epsilon[ psi.indices[-c(length(psi.indices), length(psi.indices)-1)] ], #x
+      psi.epsilon[ psi.indices[-c(1,                   length(psi.indices)  )] ]  #y
     )
     # convert absolute block frequencies...
     probability = table(blocks)
@@ -152,17 +148,17 @@ calculateInformationContent = function(feat.object, control = list()) {
     
     terms = c(
       ifelse(is.na(probability["neg.neu"]), 0, 
-             probability["neg.neu"] * log( probability["neg.neu"], 6) ),
+        probability["neg.neu"] * log( probability["neg.neu"], 6) ),
       ifelse(is.na(probability["neg.pos"]), 0, 
-             probability["neg.pos"] * log( probability["neg.pos"], 6) ),
+        probability["neg.pos"] * log( probability["neg.pos"], 6) ),
       ifelse(is.na(probability["neu.neg"]), 0, 
-             probability["neu.neg"] * log( probability["neu.neg"], 6) ),
+        probability["neu.neg"] * log( probability["neu.neg"], 6) ),
       ifelse(is.na(probability["neu.pos"]), 0, 
-             probability["neu.pos"] * log( probability["neu.pos"], 6) ),
+        probability["neu.pos"] * log( probability["neu.pos"], 6) ),
       ifelse(is.na(probability["pos.neg"]), 0, 
-             probability["pos.neg"] * log( probability["pos.neg"], 6) ),
+        probability["pos.neg"] * log( probability["pos.neg"], 6) ),
       ifelse(is.na(probability["pos.neu"]), 0, 
-             probability["pos.neu"] * log( probability["pos.neu"], 6) )
+        probability["pos.neu"] * log( probability["pos.neu"], 6) )
     )
     
     # calculate H for epsilon [Eq. (2)] (=> overall result: all H)
@@ -231,7 +227,7 @@ calculateInformationContent = function(feat.object, control = list()) {
 # Therefore, j is probably not equal to i+1.
 ic_symbol_sequence = function(i, j, epsilon, X, y) {
   difference = (y[j] - y[i]) / 
-            sqrt(  sum( (X[j, ] - X[i, ])^2 )  )
+    sqrt(  sum( (X[j, ] - X[i, ])^2 )  )
   
   if (difference < -epsilon) {
     return (-1)
@@ -246,31 +242,31 @@ ic_identify_block = function(x, y) {
   # switch only allows values > 1, therefore add +2 to gain symbols in {1, 2, 3} (original order)
   return(
     switch(x+2,
-           # x neg
-           switch(y+2,
-                  # y neg
-                    "neg.neg",
-                  # y neutral,
-                    "neg.neu",
-                  # y pos
-                    "neg.pos"),
-           # x neutral,
-           switch(y+2,
-                  # y neg
-                  "neu.neg",
-                  # y neutral,
-                  "neu.neu",
-                  # y pos
-                  "neu.pos"),
-           # x pos
-           switch(y+2,
-                  # y neg
-                  "pos.neg",
-                  # y neutral,
-                  "pos.neu",
-                  # y pos
-                  "pos.pos"),
-           )
+      # x neg
+      switch(y+2,
+        # y neg
+        "neg.neg",
+        # y neutral,
+        "neg.neu",
+        # y pos
+        "neg.pos"),
+      # x neutral,
+      switch(y+2,
+        # y neg
+        "neu.neg",
+        # y neutral,
+        "neu.neu",
+        # y pos
+        "neu.pos"),
+      # x pos
+      switch(y+2,
+        # y neg
+        "pos.neg",
+        # y neutral,
+        "pos.neu",
+        # y pos
+        "pos.pos"),
+      )
   )
 }
 
@@ -293,6 +289,5 @@ ic_sort_nearest_neighbour = function(X) {
   }
   # add last candidate
   permutation[length(permutation)] = as.numeric(candidates)
-  
   return (permutation)
 }

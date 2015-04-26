@@ -61,7 +61,6 @@
 #' library(plyr)
 #' calculateFeatureSet(feat.object3, "angle", control = list(angle.show_warnings = FALSE))
 #' @export 
-
 createFeatureObject = function(init, X, y, fun, minimize, 
   lower, upper, blocks, objective) {
     if (missing(init) && (missing(X) || (missing(y) && missing(fun)) ))
@@ -134,7 +133,7 @@ createFeatureObject = function(init, X, y, fun, minimize,
     }
     allows.cellmapping = TRUE
     if (missing(blocks)) {
-      blocks = rep(NA, d)
+      blocks = rep(1L, d)
       allows.cellmapping = FALSE
     } else {
       blocks = as.integer(blocks)
@@ -150,6 +149,8 @@ createFeatureObject = function(init, X, y, fun, minimize,
       fun = NULL
     env = new.env(parent = emptyenv())
     env$init = init
+    centers = computeGridCenters(lower = lower, upper = upper, blocks = blocks)
+    colnames(centers)[1:d] = feat.names
     res =  makeS3Obj("FeatureObject", env = env, 
       minimize = minimize, fun = fun,
       lower = lower, upper = upper, 
@@ -157,20 +158,17 @@ createFeatureObject = function(init, X, y, fun, minimize,
       feature.names = feat.names, 
       objective.name = objective,
       blocks = blocks,
-      allows.cellmapping = allows.cellmapping)
+      allows.cellmapping = allows.cellmapping,
+      init.grid = convertInitDesignToGrid(init = init, 
+        lower = lower, upper = upper, blocks = blocks),
+      cell.centers = centers,
+      cell.size = (upper - lower) / blocks)
     if (allows.cellmapping) {
-      res$init.grid = convertInitDesignToGrid(init = init, 
-        lower = lower, upper = upper, blocks = blocks)
-      centers = computeGridCenters(lower = lower, upper = upper, blocks = blocks)
-      colnames(centers)[1:d] = feat.names
-      res$cell.centers = centers
-      res$cell.size = (upper - lower) / blocks
       res$env$gcm.representatives = list() # to be filled on first call to gcm_init()
       res$env$gcm.canonicalForm = list()   # to be filled on first call to gcm_init()
     }
     return(res)
 }
-
 
 #' @export
 print.FeatureObject = function(x, ...) {

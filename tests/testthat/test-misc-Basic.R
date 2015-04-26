@@ -28,20 +28,18 @@ test_that("Non-Cellmapping Objects", {
   expect_true(features$basic.lower.min <= features$basic.upper.min)
   expect_true(features$basic.lower.max <= features$basic.upper.max)
   
-  expect_identical(features$basic.blocks.min, NA_integer_)
-  expect_identical(features$basic.blocks.max, NA_integer_)
+  expect_identical(features$basic.blocks.min, 1L)
+  expect_identical(features$basic.blocks.max, 1L)
   
-  expect_identical(features$basic.cells.total, NA_integer_)
-  expect_identical(features$basic.cells.filled, NA_integer_)
+  expect_identical(features$basic.cells.total, 1L)
+  expect_identical(features$basic.cells.filled, 1L)
   
   expect_identical(features$basic.allows_cm, FALSE)
   expect_identical(features$basic.minimize_fun, TRUE)
   
   expect_identical(features$basic.costs_fun_evals, 0L)
   expect_true( testNumber(features$basic.costs_runtime, lower = 0) )
-  
 })
-
 
 test_that("Cellmapping Objects", {
   set.seed(2015*03*26)
@@ -78,7 +76,6 @@ test_that("Cellmapping Objects", {
   expect_true( testNumber(features$basic.cells.filled, 
     lower = 1, upper = features$basic.cells.total) )
 })
-
 
 test_that("Test Basic Features", {
   set.seed(2015*03*26)

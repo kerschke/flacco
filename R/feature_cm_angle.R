@@ -53,8 +53,6 @@
 # @export 
 calculateAngleFeatures = function(feat.object, control) {
   assertClass(feat.object, "FeatureObject")
-  if (!feat.object$allows.cellmapping)
-    stop ("This feature object does not support cell mapping. You first need to define the number of cells per dimension before computing these features.")
   if (missing(control))
     control = list()
   assertList(control)

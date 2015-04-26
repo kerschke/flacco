@@ -10,7 +10,6 @@ test_that("Require original function", {
   
   # (2) compute the curvature features
   expect_error(calculateFeatureSet(feat.object, "curvature"))
-  
 })
 
 test_that("Expected Output", {

@@ -1,5 +1,4 @@
 plot_ic <- function (epsilon, calculate.partial.ic, H, M, Hmax, epsilonS, Mzero, epsilon05) {
-
   plot(log10(epsilon), H, type="l", xlab=expression(log[10](epsilon)))
   
   #Hmax
@@ -45,7 +44,6 @@ plot_ic <- function (epsilon, calculate.partial.ic, H, M, Hmax, epsilonS, Mzero,
     legend.points = c(legend.points, 5, 6)
     legend.lines  = c(legend.lines,  NA, NA)
   }
-  
   
   legend("topright",
          legend = legend.descr,

@@ -35,5 +35,4 @@ test_that("Expected Output", {
   expect_true( testNumber(features$lvlset.qda_rpart_50, lower = 0) )
   expect_identical(features$lvlset.costs_fun_evals, 0L)
   expect_true( testNumber(features$lvlset.costs_runtime, lower = 0) )
-  
 })

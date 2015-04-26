@@ -81,7 +81,6 @@ calculateMetaModelFeatures = function(feat.object) {
   }), "meta")
 }
 
-
 ## Calculate adjusted R^2
 calculateAdjustedR2 = function(mod) {
   pred = fitted(mod)

@@ -23,9 +23,7 @@ test_that("Expected Output", {
   expect_true( testNumber(features$nb.nb_fitness.cor, lower = -1, upper = 1) )
   expect_identical(features$nb.costs_fun_evals, 0L)
   expect_true( testNumber(features$nb.costs_runtime, lower = 0) )
-  
 })
-
 
 test_that("Using Minkowski Distance", {
   set.seed(2015*03*26)
@@ -51,7 +49,6 @@ test_that("Using Minkowski Distance", {
   expect_false(identical(features[-7L], features1[-7L]))
   expect_false(identical(features2[-7L], features1[-7L]))
 })
-
 
 test_that("Using Manhattan Distance", {
   set.seed(2015*03*26)
@@ -79,8 +76,6 @@ test_that("Using Manhattan Distance", {
   expect_identical(features$nb.costs_fun_evals, 0L)
   expect_true( testNumber(features$nb.costs_runtime, lower = 0) )
 })
-
-
 
 test_that("Multiple Global Optima", {
   set.seed(2015*03*26)

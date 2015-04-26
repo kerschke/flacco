@@ -35,7 +35,6 @@ test_that("Expected Output", {
   expect_true( testNumber(features$disp.costs_runtime, lower = 0) )
 })
 
-
 test_that("Using Different Metrics", {
   set.seed(2015*03*26)
   

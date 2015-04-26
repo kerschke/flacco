@@ -1,11 +1,5 @@
 context("Features: Linear Model")
 
-test_that("Require Cell Mapping", {
-  feat.object = createFeatureObject(init = iris[, -5], objective = "Sepal.Length")
-  expect_error(calculateFeatureSet(feat.object, "linear_model"))
-})
-
-
 test_that("Sparse Cells lead to NAs", {
   set.seed(2015*03*26)
   X = replicate(5, runif(100))
@@ -14,8 +8,6 @@ test_that("Sparse Cells lead to NAs", {
   features = calculateFeatureSet(feat.object, "linear_model")
   expect_identical(unique(unlist(features[1:12])), NA_real_)
 })
-
-
 
 test_that("Using Initial Design", {
   feat.object = createFeatureObject(init = iris[, -5], objective = "Sepal.Length", blocks = 3)
@@ -44,8 +36,8 @@ test_that("Using X and y", {
   feat.object = createFeatureObject(X = A, y = 1:3, blocks = 1)
   features = calculateFeatureSet(feat.object, "linear_model")
   expect_identical(features$limo.length.sd, NA_real_)
-  expect_identical(features$limo.cor, NaN)
-  expect_identical(features$limo.cor.scaled, NaN)
+  expect_identical(features$limo.cor, NA_real_)
+  expect_identical(features$limo.cor.scaled, NA_real_)
   expect_identical(features$limo.ratio.sd, NA_real_)
   expect_identical(features$limo.sd.max_min_ratio, NA_real_)
   expect_identical(features$limo.sd.max_min_ratio.scaled, NA_real_)

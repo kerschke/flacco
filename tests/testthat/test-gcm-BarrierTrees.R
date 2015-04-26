@@ -5,7 +5,7 @@ test_that("GCM-based Barrier Tree features are computed", {
   X = t(replicate(5000, runif(2, -1000, 1000)))
   y = apply(X, 1, function(x) {x[1]^4 + 1000*(x[1]-3)^3 + 1000*x[1] + x[2]})
   feat.object = createFeatureObject(X = X, y = y, 
-   lower = -1000, upper = 1000, blocks = 10)  
+    lower = -1000, upper = 1000, blocks = 10)  
   
   # execution
   features = calculateFeatureSet(feat.object, "barrier_tree")
@@ -22,7 +22,7 @@ test_that("GCM-based Barrier Tree fallback is computed for boring barrier trees"
   X = t(replicate(5000, runif(2, -1000, 1000)))
   y = apply(X, 1, function(x) {sum(x^2)})
   feat.object = createFeatureObject(X = X, y = y, 
-                                lower = -1000, upper = 1000, blocks = 10)  
+    lower = -1000, upper = 1000, blocks = 10)  
   
   # execution
   features = calculateFeatureSet(feat.object, "barrier_tree")
@@ -50,12 +50,10 @@ test_that("GCM-based Barrier Tree cannot compute on non-cellmapping object", {
   X = t(replicate(5000, runif(2, -1000, 1000)))
   y = apply(X, 1, function(x) {sum(x^2)})
   feat.object = createFeatureObject(X = X, y = y, 
-                                lower = -1000, upper = 1000)  
+    lower = -1000, upper = 1000)  
   
   # execution
   expect_error( calculateFeatureSet(feat.object, "barrier_tree") )
-  
- 
 })
 
 test_that("Barrier Trees are plotted for two-dimensional inputs", {
@@ -63,7 +61,7 @@ test_that("Barrier Trees are plotted for two-dimensional inputs", {
   X = t(replicate(5000, runif(2, -1000, 1000)))
   y = apply(X, 1, function(x) {x[1]^4 + 1000*(x[1]-3)^3 + 1000*x[1] + x[2]})
   feat.object = createFeatureObject(X = X, y = y, 
-                                lower = -1000, upper = 1000, blocks = 10)  
+    lower = -1000, upper = 1000, blocks = 10)  
   
   # execution
   calculateFeatureSet(feat.object, "barrier_tree", 
@@ -80,7 +78,7 @@ test_that("For boring barrier trees, no errors happen when trying to plot two-di
   X = t(replicate(5000, runif(2, -1000, 1000)))
   y = apply(X, 1, function(x) {sum(x^2)})
   feat.object = createFeatureObject(X = X, y = y, 
-                                lower = -1000, upper = 1000, blocks = 10)  
+    lower = -1000, upper = 1000, blocks = 10)  
   
   # execution
   calculateFeatureSet(feat.object, "barrier_tree",
