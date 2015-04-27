@@ -1,35 +1,16 @@
-# travis config, based on https://github.com/craigcitro/r-travis
+# travis config
 
-language: c
+language: r
 
-sudo: true
+sudo: required
 
-env:
-   global:
-     - _R_CHECK_TIMINGS_=0
-
-branches:
-  only:
-   - master
-
-before_install:
-  - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
-  - chmod 755 ./travis-tool.sh
-  - ./travis-tool.sh bootstrap
-
-install:
-  - ./travis-tool.sh github_package jimhester/robustr
-  - ./travis-tool.sh github_package jimhester/covr
-  - ./travis-tool.sh github_package hadley/testthat
-  - ./travis-tool.sh install_deps
-
-script: ./travis-tool.sh run_tests
+r_github_packages:
+  - jimhester/robustr
+  - jimhester/covr
+  - hadley/testthat
 
 after_success:
-  - travis_wait Rscript -e 'library(covr);coveralls()'
-
-after_failure:
-  - ./travis-tool.sh dump_logs
+  - Rscript -e 'library(covr);coveralls(quiet = FALSE);codecov()'
 
 notifications:
   email:
