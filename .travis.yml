@@ -26,8 +26,8 @@ install:
 script: ./travis-tool.sh run_tests
 
 after_success:
-  - Rscript -e 'library(covr);coveralls(quiet=FALSE)'
-  - Rscript -e 'library(covr);codecov(quiet=FALSE)'
+  - travis_wait Rscript -e 'library(covr);coveralls(quiet=FALSE)'
+  - travis_wait Rscript -e 'library(covr);codecov(quiet=FALSE)'
 
 after_failure:
   - ./travis-tool.sh dump_logs
