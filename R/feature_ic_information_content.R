@@ -54,233 +54,121 @@
 # feat.object = createFeatureObject(X = X, y = y)
 # # (2) compute the ICoFiS features:
 # calculateInformationContentFeatures(feat.object = feat.object)
-# @export 
+# @export
 calculateInformationContentFeatures = function(feat.object, control = list()) {
   assertClass(feat.object, "FeatureObject")
+  
   assertList(control)
-  # epsilon values
-  epsilon = control_parameter(control, "ic.epsilon", c(
-    0, 10^(seq(-5,15,length.out=1000)) # as described in section V-A
-    ))
-  assertNumeric(epsilon, .var.name="control$ic.epsilon")
-  if (epsilon[1] != 0) {
-    stop("The first component of ic.epsilon needs to be 0. Please add this component.")
-  }
-  
-  # sorting strategy, either "NN" or "R" (motivation of default value: see discussion chapter)
-  sorting = control_parameter(control, "ic.sorting", "NN")
-  assertChoice(sorting, c("NN", "R"), .var.name="control$ic.sorting")
-  
-  # calculation of partial information content M (default value: see discussion chapter)
-  calculate.partial.ic = control_parameter(control, "ic.calculate_partial", FALSE)
-  
-  generate.sample = control_parameter(control, "ic.generate_sample", FALSE)
-  
-  if (generate.sample) { # control parameters that are only valid if samples are to be generated
-    if (!testFunction(feat.object$fun, args=NULL, ordered=FALSE)) {
-      stop("For generating the sample using LHD you need to specify a function in feat.object.")
+  measureTime(expression({
+    # epsilon values, as described in section V.A
+    epsilon = control_parameter(control, "ic.epsilon", 
+      c(0, 10^(seq(-5, 15, length.out = 1000)))
+    )
+    assertNumeric(epsilon, .var.name="control$ic.epsilon", lower = 0)
+    if (all(epsilon != 0)) {
+      stop("One component of ic.epsilon has to be 0. Please add this component.")
     }
-    # size of sample (according to upper bound, as discussed on p. 78)
-    generate.sample.size = control_parameter(control, "ic.generate_sample.size", 1000)
-    assertInt(generate.sample.size, .var.name="control$ic.generate_sample.size")
+    epsilon = unique(epsilon)
     
-    # input dimensions (default: no. of cols in feat.object)
-    generate.sample.dimensions = control_parameter(control, "ic.generate_sample.dimensions", feat.object$dim)
-    assertInt(generate.sample.dimensions, .var.name="control$ic.generate_sample.dimensions")
+    ## sorting strategy, either "nn" (= default) or "random"
+    ## (motivation of default value: see discussion chapter)
+    sorting = control_parameter(control, "ic.sorting", "nn")
+    assertChoice(sorting, c("nn", "random"), .var.name="control$ic.sorting")
     
-    # minimum and maximum possible value of generated samples
-    # (Needs to be identical for every dimension! Passing vectors leads to unexpected results.
-    # If individual ranges per dimension are required, please generate the sample yourself.)
-    generate.sample.min = control_parameter(control, "ic.generate_sample.min", .Machine$double.xmin)
-    generate.sample.max = control_parameter(control, "ic.generate_sample.max", .Machine$double.xmax)
-    assertNumeric(generate.sample.min, .var.name="control$ic.generate_sample.min")
-    assertNumeric(generate.sample.max, .var.name="control$ic.generate_sample.max")
-  }
-  
-  debug.plot = control_parameter(control, "ic.plot", FALSE)
-  # all params set; ready to go.
-  
-  # default values for those features that rely on partial IC (M)
-  Mzero = NA
-  epsilon05 = NA
-  
-  # custom samples
-  if (generate.sample) {
-    # LHD samples in [0;1]
-    X = lhs::randomLHS(generate.sample.size, generate.sample.dimensions)
-    # convert random numbers in [0; 1] to numbers in [min; max],
-    # assuming uniform distribution and equal range for all dimensions
-    X = qunif(X, min = generate.sample.min, max = generate.sample.max)
-    y = apply(X, 1, feat.object$fun)
-  }
-  else {
-    X = extractFeatures(feat.object)
-    y = extractObjective(feat.object)
-  }
-
-  # sort values ( NN / R )
-  if (sorting == "R") {
-    permutation = sample.int( nrow(X) )
-  } else if (sorting == "NN") {
-    permutation = ic_sort_nearest_neighbour(X)
-  }
-  
-  # calculate psi [Eq. (9)], i.e. symbol sequence with elements in {-1, 0, 1}
-  # for an input data set with n entries, n-1 psis will be generated
-  psi.indices = seq_len( length(permutation) )
-  
-  HM = sapply(epsilon, FUN= function(e) {
-    psi.epsilon = mapply( ic_symbol_sequence, 
-      permutation[ psi.indices[-length(psi.indices)] ], # i,
-      permutation[ psi.indices[-1] ],  #j,
-      MoreArgs = list(epsilon = e, X=X, y=y)
-    )
+    generate.sample = control_parameter(control, "ic.generate_sample", FALSE)
+    assertLogical(generate.sample, len = 1L)
     
-    # calculate probabilities of finding blocks ab, a != b, in sequence psi
-    # results in n-2 different blocks, thus excluding the last two / the last one element[s] from psi
-    blocks = mapply( ic_identify_block,
-      psi.epsilon[ psi.indices[-c(length(psi.indices), length(psi.indices)-1)] ], #x
-      psi.epsilon[ psi.indices[-c(1,                   length(psi.indices)  )] ]  #y
-    )
-    # convert absolute block frequencies...
-    probability = table(blocks)
-    # ...into relative ones
-    probability = probability / sum(probability)
-    
-    terms = c(
-      ifelse(is.na(probability["neg.neu"]), 0, 
-        probability["neg.neu"] * log( probability["neg.neu"], 6) ),
-      ifelse(is.na(probability["neg.pos"]), 0, 
-        probability["neg.pos"] * log( probability["neg.pos"], 6) ),
-      ifelse(is.na(probability["neu.neg"]), 0, 
-        probability["neu.neg"] * log( probability["neu.neg"], 6) ),
-      ifelse(is.na(probability["neu.pos"]), 0, 
-        probability["neu.pos"] * log( probability["neu.pos"], 6) ),
-      ifelse(is.na(probability["pos.neg"]), 0, 
-        probability["pos.neg"] * log( probability["pos.neg"], 6) ),
-      ifelse(is.na(probability["pos.neu"]), 0, 
-        probability["pos.neu"] * log( probability["pos.neu"], 6) )
-    )
-    
-    # calculate H for epsilon [Eq. (2)] (=> overall result: all H)
-    H.epsilon = - sum(terms)
-    
-    M.epsilon = NA
-    if (calculate.partial.ic) {
-      # calculate phi' derived from psi
-      # (actually, only its length is used lateron. Therefore, calculate the lengths of phi')
-
-      #skip zeroes and repeated values
-      last.value = 0
-      changes.length = 0
-      for (value in psi.epsilon) {
-        if (value == 0 || value == last.value) 
-          next
-        
-        changes.length = changes.length + 1
-        last.value     = value
+    if (generate.sample) { 
+      # control parameters, which are only required, if the sample needs to be generated
+      if (!testFunction(feat.object$fun, args = NULL, ordered = FALSE)) {
+        stop("For generating a sample using a LHD, you need to specify a function in feat.object.")
       }
       
-      # calculate M [Eq. (3)]
-      M.epsilon = changes.length / (length(permutation) - 1)
+      # size of sample (according to upper bound, as discussed on p. 78)
+      sample.size = control_parameter(control, "ic.generate_sample.size", 100L * feat.object$dim)
+      assertInt(sample.size, .var.name="control$ic.generate_sample.size")
+      
+      # input dimensions (default: no. of cols in feat.object)
+      sample.dimensions = control_parameter(control, "ic.generate_sample.dimensions", feat.object$dim)
+      assertInt(sample.dimensions, .var.name="control$ic.generate_sample.dimensions")
+      
+      # minimum and maximum possible value of generated samples
+      # (Needs to be identical for every dimension! Passing vectors leads to unexpected results.
+      # If individual ranges per dimension are required, please generate the sample yourself.)
+      sample.lower = control_parameter(control, "ic.generate_sample.lower", feat.object$lower)
+      sample.upper = control_parameter(control, "ic.generate_sample.upper", feat.object$upper)
+      assertNumeric(sample.lower, .var.name = "control$ic.generate_sample.lower")
+      assertNumeric(sample.upper, .var.name = "control$ic.generate_sample.upper")
+      
+      X = initializeLHD(points = sample.size, dims = sample.dimensions, 
+        lower = sample.lower, upper = sample.upper)
+      y = apply(X, 1, feat.object$fun)
+      n = nrow(X)
+    } else {
+      X = extractFeatures(feat.object)
+      y = extractObjective(feat.object)
+      n = feat.object$n.obs
     }
     
-    return( c(H.epsilon, M.epsilon) )
-  })
-  H = HM[1, ] # columns correspond to epsilons
-  M = HM[2, ]
-
-  # calculate Hmax [Eq. (5)] ("maximum information content")
-  Hmax = max(H)
-  
-  # calculate epsilonS [Eq. (6)] ("settling sensitivity")
-  epsilonS = log10( epsilon[ min( which(H < 0.05) ) ] )
-  
-  if (calculate.partial.ic) {
-    # calculate Mzero [Eq. (7)] ("initial partial information")
-    Mzero = M[1]
+    # sort values (nearest neighbours vs. random)
+    if (sorting == "random") {
+      permutation = sample.int(n)
+      d = computeDistances(X = X, permutation = permutation)
+    } else if (sorting == "nn") {
+      start = control_parameter(control, "ic.nn.start", sample.int(n, 1))
+      assertInt(start, .var.name="control$ic.nn.start", lower = 1L, upper = n)
+      res = constructSequence(X = X, start = start)
+      permutation = res[,1]
+      d = res[-1, 2]
+    }
+    
+    psi.eps = vapply(epsilon, function(eps) {
+      computePsi(permutation = permutation, xdists = d, y = y, eps = eps)  
+    }, integer(length(permutation) - 1L))
+    
+    H.eps = apply(psi.eps, 2, computeH)
+    M.eps = apply(psi.eps, 2, computeM)
+    
+    # calculate H.max, cf. equation(5) ("maximum information content")
+    H.max = max(H.eps)
+    
+    # calculate eps.S, cf. equation (6) ("settling sensitivity")
+    settl.sens = control_parameter(control, "ic.settling_sensitivity", 0.05)
+    assertNumeric(settl.sens, .var.name = "control$ic.settling_sensitivity",
+      lower = .Machine$double.xmin, upper = .Machine$double.xmax)
+    eps.S = epsilon[which(H.eps < settl.sens)]
+    if (length(eps.S) > 0) {
+      eps.S = log10(min(eps.S))
+    } else {
+      eps.S = NA_real_
+    }
+    
+    # calculate M0, cf. equation (7) ("initial partial information")
+    M0 = M.eps[epsilon == 0]
     
     # calculate epsilon05 [Eq. (8)] ("half partial information sensitivity")
-    elementsGreaterHalfMzero = which(M > 0.5*Mzero)
-    if (length(elementsGreaterHalfMzero) > 0) {
-      epsilon05 = log10( epsilon[ max( elementsGreaterHalfMzero ) ] )
+    inf.sens = control_parameter(control, "ic.information_sensitivity", 0.5)
+    assertNumeric(inf.sens, .var.name = "control$ic.information_sensitivity",
+      lower = -1, upper = 1)
+    
+    eps05 = which(M.eps > inf.sens * M0)
+    if (length(eps05) > 0) {
+      eps05 = log10(max(epsilon[eps05]))
     } else {
-      epsilon05 = -Inf
+      eps05 = NA_real_
     }
     
-  }
-  
-  if (debug.plot) {
-    plot_ic (epsilon, calculate.partial.ic, H, M, Hmax, epsilonS, Mzero, epsilon05)
-  }
-
-  list(
-    ic.Hmax = Hmax,           #maximum information content
-    ic.epsilonS = epsilonS,   #settling sensitivity
-    ic.Mzero = Mzero,         #initial partial information
-    ic.epsilon05 = epsilon05  #half partial information sensitivity
-  )
-}
-
-# Calculate psi for a certain i and epsilon [Eq. (9)]
-# j , i.e. the next element in the sequence, is also passed since a
-# permutation of values has taken place before.
-# Therefore, j is probably not equal to i+1.
-ic_symbol_sequence = function(i, j, epsilon, X, y) {
-  difference = (y[j] - y[i]) / 
-            sqrt(  sum( (X[j, ] - X[i, ])^2 )  )
-  
-  if (difference < -epsilon) {
-    return (-1)
-  } else if (difference > epsilon) {
-    return (1)
-  } else {
-    return (0)
-  }
-}
-
-ic_identify_block = function(x, y) {
-  # switch only allows values > 1, therefore add +2 to gain symbols in {1, 2, 3} (original order)
-  return(
-    switch(x+2,
-      # x neg
-      switch(y+2,
-        "neg.neg",  # y neg
-        "neg.neu",  # y neutral
-        "neg.pos"), # y pos
-      # x neutral,
-      switch(y+2,            
-        "neu.neg",  # y neg
-        "neu.neu",  # y neutral,
-        "neu.pos"), # y pos
-      # x pos
-      switch(y+2,
-        "pos.neg",  # y neg
-        "pos.neu",  # y neutral,
-        "pos.pos"), # y pos
-      )
-  )
-}
-
-ic_sort_nearest_neighbour = function(X) {
-  distances = as.matrix(dist(X))
-  
-  # add first candidate (random) and initialise permutation vector (avoids continuous allocation of space)
-  first = sample.int( nrow(X), 1 )
-  candidates = seq_len( nrow(X) )[-first]
-  permutation = c(first, rep(-1, nrow(X)-1))
-  
-  # successively add next candidates
-  for (i in 2 : (length(permutation)-1) ) {
-    # invalidate those that are already in permutation
-    distances[ permutation[i-1], -candidates ] = NA 
-    # then select the neighbour with min. distance (if tie: break deterministically by using fist)
-    permutation[i] = which.min( distances[ permutation[i-1],  ] )
-    # remove from future candidates
-    candidates = candidates[ -which(candidates == permutation[i]) ]
-  }
-  # add last candidate
-  permutation[length(permutation)] = as.numeric(candidates)
-  
-  return (permutation)
+    debug.plot = control_parameter(control, "ic.plot", FALSE)
+    assertLogical(debug.plot, len = 1L)
+    
+    if (debug.plot) {
+      plot_ic(epsilon, TRUE, H.eps, M.eps, H.max, eps.S, M0, eps05)
+    }
+    
+    return(list(ic.max_info_cont = H.max,
+      ic.settl_sens = eps.S,
+      ic.init_part_info = M0,
+      ic.half_part_info_sens = eps05
+    ))
+  }), "ic")
 }
