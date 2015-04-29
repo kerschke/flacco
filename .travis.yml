@@ -10,7 +10,8 @@ r_github_packages:
   - hadley/testthat
   
 after_success:
-  - travis_wait Rscript -e 'library(covr);coveralls()'
+  - Rscript -e 'library(covr);coveralls()'
+  - Rscript -e 'library(covr);codecov()'
 
 notifications:
   email:

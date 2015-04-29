@@ -135,7 +135,7 @@ calculateInformationContentFeatures = function(feat.object, control = list()) {
     # calculate eps.S, cf. equation (6) ("settling sensitivity")
     settl.sens = control_parameter(control, "ic.settling_sensitivity", 0.05)
     assertNumeric(settl.sens, .var.name = "control$ic.settling_sensitivity",
-      lower = .Machine$double.xmin, upper = .Machine$double.xmax)
+      lower = 0, upper = .Machine$double.xmax)
     eps.S = epsilon[which(H.eps < settl.sens)]
     if (length(eps.S) > 0) {
       eps.S = log10(min(eps.S))

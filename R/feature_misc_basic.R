@@ -45,13 +45,9 @@ calculateBasicFeatures = function(feat.object) {
     X = extractFeatures(feat.object)
     y = extractObjective(feat.object)
     blocks = unique(feat.object$blocks)
-    if (any(is.na(blocks))) {
-      min.blocks = max.blocks = no.cells = NA_integer_
-    } else {
-      no.cells = as.integer(prod(feat.object$blocks))
-      min.blocks = as.integer(min(blocks))
-      max.blocks = as.integer(max(blocks))
-    }
+    no.cells = as.integer(prod(feat.object$blocks))
+    min.blocks = as.integer(min(blocks))
+    max.blocks = as.integer(max(blocks))
     filled.cells = length(unique(feat.object$init.grid$cell.ID))
     return(list(basic.dim = feat.object$dim,
       basic.observations = feat.object$n.obs,
