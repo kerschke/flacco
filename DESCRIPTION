@@ -6,7 +6,6 @@ Description: Contains tools and features, which can be used for an exploratory l
 Authors@R: c(person("Pascal", "Kerschke", role = c("aut", "cre"),
     email = "kerschke@uni-muenster.de"),
     person("Jan", "Dagefoerde", role = "aut"))
-Maintainer: Pascal Kerschke <kerschke@uni-muenster.de>
 URL: https://github.com/kerschke/flacco
 BugReports: https://github.com/kerschke/flacco/issues
 License: BSD_3_clause + file LICENSE
