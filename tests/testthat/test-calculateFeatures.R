@@ -71,7 +71,7 @@ test_that("Cellmapping Objects", {
     control = list(show_progress = FALSE, angle.show_warnings = FALSE))
   
   # test return value types and ranges
-  expect_identical(length(features), 211L)
+  expect_identical(length(features), 215L)
   expect_is(features, class = "list")
   
   # all objects are either NA, logical or a number
@@ -145,7 +145,7 @@ test_that("Underlying Functions Available (cellmapping)", {
   features = calculateFeatures(feat.object, control = list(show_progress = FALSE))
   
   # test return value types and ranges
-  expect_identical(length(features), 255L)
+  expect_identical(length(features), 259L)
   expect_is(features, class = "list")
   
   # all objects are either NA, logical or a number
