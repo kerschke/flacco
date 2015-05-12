@@ -150,7 +150,7 @@ calculateBarrierTreeFeatures = function (feat.object, control = list()) {
     barrierTree.near.stdBasinIntersectionCount = barrierTree.near$stdBasinIntersectionCount,
     barrierTree.near.range = barrierTree.near$range                       # ranges of basins
     ))
-  ), "barrier_tree")
+  }), "barrier_tree")
 }
 
 # ( origin: barrierTreeGCM3.m, features.m )
