@@ -126,3 +126,12 @@ test_that("selectMax", {
   expect_identical(selectMax(x, tie.breaker = "first"), min(ind))
   expect_identical(selectMax(x, tie.breaker = "last"), max(ind))
 })
+
+test_that("fullsparse expects identical lengths", {
+  expect_warning(fullsparse(rep(1, 4), rep(1, 5), rep(1, 5)))
+  expect_warning(fullsparse(rep(1, 5), rep(1, 4), rep(1, 5)))
+  expect_warning(fullsparse(rep(1, 5), rep(1, 5), rep(1, 4)))
+  A = fullsparse(1:5, 1:5, rep(5, 5))
+  expect_is(A, "matrix")
+  expect_true( all(diag(A) == 5) )
+})
