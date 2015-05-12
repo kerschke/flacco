@@ -61,6 +61,7 @@ calculateGCMFeatures = function (feat.object, control = list()) {
       "of divisons per dimension.")) )
   }
   
+  measureTime(expression({
   # Visualisation options
   plot.gcm = control_parameter(control, "gcm.plot", FALSE)
   plot.gcm.colors = control_parameter(control, "gcm.plot.colors", NULL)
@@ -128,6 +129,7 @@ calculateGCMFeatures = function (feat.object, control = list()) {
     gcm.common.tcells = common_t,
     gcm.common.dcells = 1 - ( (1/prod(feat.object$blocks)) * (common_p + common_t) )
     ))
+  }), "gcm")
 }
 
 # [orig: function [no_attr, unc_rat, prob_best, pcell, tcell, diffcell, sd_bs, min_bs, mean_bs, max_bs] = evaluate_features(filename, option, range_x, range_y) ]
