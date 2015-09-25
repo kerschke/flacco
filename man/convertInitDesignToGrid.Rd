@@ -12,15 +12,13 @@ The initial design, consisting of \code{d + 1} columns ({d} dimensions and
 one column for the objective value) and one row per observation.}
 
 \item{lower}{[\code{\link{numeric}} or \code{\link{integer}}]\cr
-The lower limits per dimension. If not defined, the function will use the
-minimum value per dimension.}
+The lower limits per dimension.}
 
 \item{upper}{[\code{\link{numeric}} or \code{\link{integer}}]\cr
-The upper limits per dimension. If not defined, the function will use the
-maximum value per dimension.}
+The upper limits per dimension.}
 
 \item{blocks}{[\code{\link{integer}}]\cr
-The number of blocks per dimension. The default is \code{10} blocks per dimension.}
+The number of blocks per dimension.}
 }
 \value{
 [\code{\link{data.frame}}].\cr
@@ -29,10 +27,10 @@ The number of blocks per dimension. The default is \code{10} blocks per dimensio
   value between 1 and \code{prod(blocks)}.
 }
 \description{
-This function takes an initial design - with rows being the observations and
-columns standing for the dimensions (plus the corresponding objective) - and
-adds another column to the \code{data.frame}. This additional column states
-the cell ID for each observation.
+This function takes an initial design -- with rows being the observations
+  and columns standing for the dimensions (plus the corresponding objective)
+  -- and adds an additional column to the \code{data.frame}. This additional
+  column states the cell ID for each observation.
 }
 \examples{
 # (1) create an initial design:

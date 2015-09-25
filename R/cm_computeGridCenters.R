@@ -1,18 +1,19 @@
 #' @title Compute the Cell Centers of a Cell Mapping Grid
+#'
 #' @description
-#' Computes the cell centers and the corresponding cell IDs of a cell mapping
-#' grid.
-#' @param lower [\code{\link{numeric}} or \code{\link{integer}}]\cr
-#'   The lower limits per dimension.
-#' @param upper [\code{\link{numeric}} or \code{\link{integer}}]\cr
-#'   The upper limits per dimension.
-#' @param blocks [\code{\link{integer}}]\cr
-#'   The number of blocks per dimension.
+#'   Computes the cell centers and the corresponding cell IDs of a cell mapping
+#'   grid.
+#'
+#' @template arg_lower_upper
+#' @template arg_blocks
+#'
 #' @return [\code{\link{data.frame}}].\cr
 #'   A \code{data.frame}, which includes the coordinates of the cell centers,
 #'   as well as the corresponding cell ID (\code{cell.ID}).
+#'
 #' @examples
 #' computeGridCenters(lower = -10, upper = 10, blocks = c(10, 5, 8))
+#'
 #' @export 
 computeGridCenters = function(lower, upper, blocks) {
   assertNumeric(lower)

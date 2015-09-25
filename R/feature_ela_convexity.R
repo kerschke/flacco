@@ -1,52 +1,3 @@
-# @title Calculate Convexity Features
-# @description
-# Computes features, which estimate the convexity of a function.
-# @param feat.object [\code{\link{FeatureObject}}]\cr
-# A feature object as created by \link{createFeatureObject}.\cr
-# Note, that the feature object has to contain the function itself in
-# order to compute the convexity features.
-# @param control [\code{\link{list}}]\cr
-# A \code{list} storing additional configuration parameters:\cr
-# The element \code{convex.nsample} defines the number of samples that
-# are drawn for the calculation of the feature. The default is \code{1000}.\cr
-# \code{convex.threshold} defines the threshold of the linearity, i.e.,
-# the tolerance (or deviation) from perfect linearity is allowed in order 
-# to still be considered as linear. Here, the default is \code{1e-10}.
-# @return [\code{\link{list}(6)} of \code{\link{numeric}(1)}].\cr
-# List of features.\cr
-# For further information, see details.
-# @details
-# Two observations are chosen randomly from the initial design. Then, a linear
-# (convex) combination of those observations is calculated -- based on a
-# random weight from [0, 1]. The corresponding function value will be compared
-# to the linear combination of the objectives from the two original
-# observations. This process is replicated \code{convex.nsample} (per
-# default \code{1000}) times and will then be aggregated.\cr
-# 
-# The resulting features are:\cr
-# (1) \code{convex.convex_p} shows the percentage of convexity\cr
-# (2) \code{convex.linear_p} shows the percentage of linearity\cr
-# (3) \code{convex.linear_dev.orig} returns the average deviation between the
-# linear combination of objectives and the objective of the linear combination
-# of the observations.\cr
-# (4) \code{convex.linear_dev.abs} returns the average absolute deviation
-# between the linear combination of objectives and the objective of the
-# linear combination of the observations.\cr
-# 
-# The final two features show the amount of (additional) function
-# evaluations and running time (in seconds) that were needed for the
-# computation of these features.
-# @references
-# See Mersmann et al. (2011), \dQuote{Exploratory Landscape Analysis} 
-# (\url{http://dx.doi.org/10.1145/2001576.2001690}).
-# @examples
-# # (1) create a feature object:
-# X = t(replicate(n = 2000, expr = runif(n = 5, min = -10, max = 10)))
-# feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
-# 
-# # (2) compute the convexity features:
-# calculateConvexityFeatures(feat.object)
-# @export 
 calculateConvexityFeatures = function(feat.object, control) {
   assertClass(feat.object, "FeatureObject")
   if (missing(control))
@@ -70,13 +21,13 @@ calculateConvexityFeatures = function(feat.object, control) {
       drop(f(xn) - y[i] %*% wt)
     }
     n = feat.object$n.obs
-    N = control_parameter(control, "convex.nsample", 1000L)
-    eps = control_parameter(control, "convex.threshold", 1e-10)
+    N = control_parameter(control, "ela_conv.nsample", 1000L)
+    eps = control_parameter(control, "ela_conv.threshold", 1e-10)
     delta = replicate(N, calcDistance(n))
-    list(conv.conv_prob = mean(delta < -eps),
-      conv.lin_prob = mean(abs(delta) <= eps),
-      conv.lin_dev.orig = mean(delta),
-      conv.lin_dev.abs = mean(abs(delta)),
-      conv.costs_fun_evals = showEvals(f))
-  }), "conv")
+    list(ela_conv.conv_prob = mean(delta < -eps),
+      ela_conv.lin_prob = mean(abs(delta) <= eps),
+      ela_conv.lin_dev.orig = mean(delta),
+      ela_conv.lin_dev.abs = mean(abs(delta)),
+      ela_conv.costs_fun_evals = showEvals(f))
+  }), "ela_conv")
 }

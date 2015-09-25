@@ -1,38 +1,39 @@
-context("Features: Levelset")
+context("Features: ELA - Levelset")
 
 test_that("Expected Output", {
   set.seed(2015*03*26)
-  
+
   # (1) create a feature object:
-  X = t(replicate(n = 2000, expr = runif(n = 5, min = -10, max = 10)))
+  X = t(replicate(n = 2000L, expr = runif(n = 5L, min = -10L, max = 10L)))
   feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
-  
+
   # (2) compute the levelset features
-  features = calculateFeatureSet(feat.object, "levelset")
-  
+  features = calculateFeatureSet(feat.object, "ela_level")
+
   # test return values
   expect_identical(length(features), 20L)
-  expect_is(features, class = "list")
-  expect_identical(as.character(sapply(features, class)), c(rep("numeric", 18L), "integer", "numeric"))
-  
-  expect_true( testNumber(features$lvlset.mmce_lda_10, lower = 0, upper = 1) )
-  expect_true( testNumber(features$lvlset.mmce_qda_10, lower = 0, upper = 1) )
-  expect_true( testNumber(features$lvlset.mmce_rpart_10, lower = 0, upper = 1) )
-  expect_true( testNumber(features$lvlset.lda_qda_10, lower = 0) )
-  expect_true( testNumber(features$lvlset.lda_rpart_10, lower = 0) )
-  expect_true( testNumber(features$lvlset.qda_rpart_10, lower = 0) )
-  expect_true( testNumber(features$lvlset.mmce_lda_25, lower = 0, upper = 1) )
-  expect_true( testNumber(features$lvlset.mmce_qda_25, lower = 0, upper = 1) )
-  expect_true( testNumber(features$lvlset.mmce_rpart_25, lower = 0, upper = 1) )
-  expect_true( testNumber(features$lvlset.lda_qda_25, lower = 0) )
-  expect_true( testNumber(features$lvlset.lda_rpart_25, lower = 0) )
-  expect_true( testNumber(features$lvlset.qda_rpart_25, lower = 0) )
-  expect_true( testNumber(features$lvlset.mmce_lda_50, lower = 0, upper = 1) )
-  expect_true( testNumber(features$lvlset.mmce_qda_50, lower = 0, upper = 1) )
-  expect_true( testNumber(features$lvlset.mmce_rpart_50, lower = 0, upper = 1) )
-  expect_true( testNumber(features$lvlset.lda_qda_50, lower = 0) )
-  expect_true( testNumber(features$lvlset.lda_rpart_50, lower = 0) )
-  expect_true( testNumber(features$lvlset.qda_rpart_50, lower = 0) )
-  expect_identical(features$lvlset.costs_fun_evals, 0L)
-  expect_true( testNumber(features$lvlset.costs_runtime, lower = 0) )
+  expect_list(features)
+  expect_identical(as.character(sapply(features, class)),
+    c(rep("numeric", 18L), "integer", "numeric"))
+
+  expect_true(testNumber(features$ela_level.mmce_lda_10, lower = 0L, upper = 1L))
+  expect_true(testNumber(features$ela_level.mmce_qda_10, lower = 0L, upper = 1L))
+  expect_true(testNumber(features$ela_level.mmce_mda_10, lower = 0L, upper = 1L))
+  expect_true(testNumber(features$ela_level.lda_qda_10, lower = 0L))
+  expect_true(testNumber(features$ela_level.lda_mda_10, lower = 0L))
+  expect_true(testNumber(features$ela_level.qda_mda_10, lower = 0L))
+  expect_true(testNumber(features$ela_level.mmce_lda_25, lower = 0L, upper = 1L))
+  expect_true(testNumber(features$ela_level.mmce_qda_25, lower = 0L, upper = 1L))
+  expect_true(testNumber(features$ela_level.mmce_mda_25, lower = 0L, upper = 1L))
+  expect_true(testNumber(features$ela_level.lda_qda_25, lower = 0L))
+  expect_true(testNumber(features$ela_level.lda_mda_25, lower = 0L))
+  expect_true(testNumber(features$ela_level.qda_mda_25, lower = 0L))
+  expect_true(testNumber(features$ela_level.mmce_lda_50, lower = 0L, upper = 1L))
+  expect_true(testNumber(features$ela_level.mmce_qda_50, lower = 0L, upper = 1L))
+  expect_true(testNumber(features$ela_level.mmce_mda_50, lower = 0L, upper = 1L))
+  expect_true(testNumber(features$ela_level.lda_qda_50, lower = 0L))
+  expect_true(testNumber(features$ela_level.lda_mda_50, lower = 0L))
+  expect_true(testNumber(features$ela_level.qda_mda_50, lower = 0L))
+  expect_identical(features$ela_level.costs_fun_evals, 0L)
+  expect_true(testNumber(features$ela_level.costs_runtime, lower = 0L))
 })

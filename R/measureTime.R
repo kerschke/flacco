@@ -7,16 +7,18 @@
 #'   Name of the corresponding feature set. Used as a prefix for the runtime.
 #' @param envir [\code{environment}]\cr
 #'   Environment in which expr should be evaluated.
-#' @return Return value of evaluated \code{expr} with additional attribute
-#'   \dQuote{time_elapsed}.
+#' @return Returns the value(s) of the evaluated \code{expr} and adds two
+#' additional attributes: the number of function evaluations
+#' \code{costs_fun_evals} and the runtime \code{costs_runtime}, which was
+#' required for evaluating the expression.
 #' @export
 measureTime = function(expr, prefix, envir = parent.frame()) {
   start = proc.time()
   feats = eval(expr, envir = envir)
-  time.elapsed = (proc.time() - start)[3]
-  names(time.elapsed) = NULL
+  runtime = (proc.time() - start)[3]
+  names(runtime) = NULL
   if (all(!grepl("costs_fun_evals", names(feats))))
     feats[[paste(prefix, "costs_fun_evals", sep = ".")]] = 0L
-  feats[[paste(prefix, "costs_runtime", sep = ".")]] = time.elapsed   
+  feats[[paste(prefix, "costs_runtime", sep = ".")]] = runtime   
   return(feats)
 }

@@ -8,35 +8,35 @@ findNearestPrototype(feat.object, dist_meth, mink_p, fast_k, ...)
 }
 \arguments{
 \item{feat.object}{[\code{\link{FeatureObject}}]\cr
-A feature object as created by \link{createFeatureObject}.}
+A feature object as created by \code{\link{createFeatureObject}}.}
 
 \item{dist_meth}{[\code{\link{character}(1)}]\cr
-Which distance method should be used? Possible values are
-\code{"euclidean"}, \code{"maximum"}, \code{"manhattan"}, \code{"canberra"},
-\code{"binary"} or \code{"minkowski"}. The default is \code{"euclidean"}.}
+Which distance method should be used for computing the distance between
+two observations? All methods of \code{\link{dist}} are possible options
+with \code{"euclidean"} being the default.}
 
 \item{mink_p}{[\code{\link{integer}(1)}]\cr
-The value for \code{p} in case \code{dist_meth} is \code{"minkowski"}.
+Value of \code{p} in case \code{dist_meth} is \code{"minkowski"}.
 The default is \code{2}, i.e. the euclidean distance.}
 
 \item{fast_k}{[\code{\link{numeric}(1)}]\cr
-Percentage of elements that should be considered within nn-computation.
-The default is \code{0.05}.}
+Percentage of elements that should be considered within the nearest
+neighbour computation. The default is \code{0.05}.}
 
 \item{...}{[any]\cr
-Further arguments, which might be used within the distance computation
-(\code{\link{dist}}).}
+  Further arguments, which might be used within the distance computation
+  (\code{\link{dist}}).}
 }
 \value{
 [\code{\link{data.frame}}].\cr
-A \code{data.frame}, which consists of one prototype (i.e. a
-representative observation) per cell. Each prototype consists of the
-features, the corresponding objective value, its own cell ID and the cell
-ID of the cell, which it represents.
+  A \code{data.frame} containing one prototype (i.e. a representative
+  observation) per cell. Each prototype consists of its values from the
+  decision space, the corresponding objective value, its own cell ID and the
+  cell ID of the cell, which it represents.
 }
 \description{
-Among the initial design, a representing observation for each of the cells
-is selected.
+For each cell of the initial design, select the closest observation to its
+  center and use it as a representative for that cell.
 }
 \examples{
 # (1) create the initial design:
@@ -44,6 +44,7 @@ X = t(replicate(1000, runif(2, -10, 10)))
 feat.object = createFeatureObject(X = X,
   fun = function(x) sum(x^2),
   lower = -10, upper = 10, blocks = 10)
+
 # (2) find the nearest prototypes of all cells:
 findNearestPrototype(feat.object)
 }

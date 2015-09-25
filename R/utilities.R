@@ -77,40 +77,14 @@ extractInit = function(feat.object) {
   feat.object$env$init
 }
 
-# enable returning tuples without the need for a temporary value
-# it is used like this:
-#list[QR,,QRaux]  <- qr(c(1,1:3,3:1))
-#list[,Green,Blue]  <- col2rgb("aquamarine")
-# by Gabor Grothendieck, obtained from: https://stat.ethz.ch/pipermail/r-help/2004-June/053343.html
-list <- structure(NA,class="result")
-"[<-.result" <- function(x,...,value) {
-  args <- as.list(match.call())
-  args <- args[-c(1:2,length(args))]
-  length(value) <- length(args)
-  for(i in seq(along=args)) {
-    a <- args[[i]]
-    if(!missing(a)) eval.parent(substitute(a <- v,list(a=a,v=value[[i]])))
-  }
-  x
-}
-
-#imitates matlab full(sparse(i,j,s)) function for the special case of square matrices.
-# creates an mxm (square) matrix A, where m = max(c(i,j))
-# and a[i[k], j[k]] = s[k]
-fullsparse <- function (i, j, s) {
-  if (length(i) != length(j) 
-      || length(j) != length(s)
-      || length(i) != length(s))  {
-    warning(paste('lengths of vectors must be equal', length(i), length(j), length(s)))
-  }
-  A <- matrix(0,nrow=max(c(i,j)), ncol=max(c(i,j)))
-  for (elem in 1:length(i)) {
-    A[ i[elem], j[elem] ] = s[elem]
-  }
-  return (A)
-}
-
-# returns the number of non-zero elements of vector
-nnz <- function(vector) {
-  length( which(vector != 0) )
+# Imitates matlab full(sparse(i,j,s)) function for the special case of square matrices.
+# Creates an m by m (square) matrix A, where m = max(i, j) and a[i[k], j[k]] = s[k].
+fullsparse = function (i, j, s) {
+  if (length(i) != length(j) || length(j) != length(s) || length(i) != length(s))
+    warning("Arguments must be of same length!")
+  m = max(i, j)
+  A = matrix(0, nrow = m, ncol = m)
+  for (k in seq_along(i))
+    A[i[k], j[k]] = s[k]
+  return(A)
 }

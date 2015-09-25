@@ -1,20 +1,28 @@
 #' @title List Available Feature Sets
 #'
 #' @description Lists all available feature sets w.r.t. certain restrictions.
+#'
 #' @param subset [\code{\link{character}}]\cr
 #' Vector of feature sets, which should be considered. If not defined, all
 #' features will be considered.
+#'
 #' @param allow.cellmapping [\code{\link{logical}(1)}]\cr
 #' Should (general) cell mapping features be considered as well? The default is
 #' \code{TRUE}.
+#'
 #' @param allow.additional_costs [\code{\link{logical}(1)}]\cr
 #' Should feature sets be considered, which require additional function
 #' evaluations? The default is \code{TRUE}.
+#'
 #' @param blacklist [\code{\link{character}}]\cr
 #' Vector of feature sets, which should not be considered. The default is
 #' \code{NULL}.
+#'
 #' @return [\code{\link{character}}].\cr
 #' Feature sets, which could be computed - based on the provided input.
+#'
+#' @examples
+#' sets = listAvailableFeatureSets()
 #' @export
 listAvailableFeatureSets = function(subset, allow.cellmapping, allow.additional_costs, blacklist) {
   allFeats = listAllFeatureSets()
@@ -32,17 +40,18 @@ listAvailableFeatureSets = function(subset, allow.cellmapping, allow.additional_
     blacklist = NULL
   assertSubset(blacklist, choices = possible)
   if (!allow.cellmapping)
-    subset = setdiff(subset, c(unlist(allFeats$gcm.feats), "cell_convexity"))
+    subset = setdiff(subset, c(unlist(allFeats$gcm), "cm_conv"))
   if (!allow.additional_costs)
-    subset = setdiff(subset, c("convexity", "curvature", "local_search"))
+    subset = setdiff(subset, c("ela_conv", "ela_curv", "ela_local"))
   return(setdiff(subset, blacklist))
 }
 
 listAllFeatureSets = function() {
-  list(cm.feats = c("angle", "cell_convexity", "gradient_homogeneity"),
-    ela.feats = c("convexity", "curvature", "distribution", "levelset", "local_search", "meta_model"),
-    misc.feats = c("basic", "dispersion", "linear_model", "nearest_better", "principal_component"),
-    gcm.feats = c("barrier_tree", "gcm"),
-    ic.feats = "info_content"
+  list(cm = c("cm_angle", "cm_conv", "cm_grad"),
+    ela = c("ela_conv", "ela_curv", "ela_distr", "ela_level", "ela_local", "ela_meta"),
+    misc = c("basic", "disp", "limo", "nbc", "pca"),
+    gcm = "gcm",
+    ic = "ic"
+#     gcm = c("barrier_tree", "gcm"),
   )
 }

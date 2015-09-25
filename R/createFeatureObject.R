@@ -1,13 +1,15 @@
 #' @title Create a Feature Object
+#'
 #' @description
-#' Create a feature object, which will be used as input for all
-#' the feature computations.
+#'   Create a \code{\link{FeatureObject}}, which will be used as input for all
+#'   the feature computations.
+#'
 #' @param init [\code{\link{data.frame}}]\cr
 #'   A \code{data.frame}, which can be used as initial design. If not provided,
 #'   it will be created either based on \code{X} and \code{y} or \code{X} and
 #'   \code{fun}.
 #' @param X [\code{\link{data.frame}} or \code{\link{matrix}}]\cr
-#'   A \code{matrix} or \code{data.frame} containing the features of the
+#'   A \code{data.frame} or \code{matrix} containing the features of the
 #'   initial design. If not provided, it will be extracted from \code{init}.
 #' @param y [\code{\link{numeric}} or \code{\link{integer}}]\cr
 #'   A vector containing the objective values of the initial design.
@@ -18,22 +20,16 @@
 #'   A function, which allows the computation of the objective values. If it is
 #'   not provided, features that require additional function evaluations, can't
 #'   be computed.
-#' @param lower [\code{\link{numeric}} or \code{\link{integer}}]\cr
-#'   A vector containing the lower bounds of each feature. If not provided,
-#'   the minimum value per feature will be taken as lower bound.
-#' @param upper [\code{\link{numeric}} or \code{\link{integer}}]\cr
-#'   A vector containing the upper bounds of each feature. If not provided,
-#'   the maximum value per feature will be taken as upper bound.
-#' @param blocks [\code{\link{integer}}]\cr
-#'   A vector containing the number of cells per dimension. If not provided,
-#'   cell mapping features can't be computed.
+#' @template arg_lower_upper
+#' @template arg_blocks
 #' @param objective [\code{\link{character}(1)}]\cr
-#'   The name of the \dQuote{feature}, which contains the objective values. Per
-#'   default, the objective will be defined as \code{"y"}.
-#' @return FeatureObject [\code{\link{FeatureObject}}].\cr
-#'   An object, containing all the information, which is needed for the
-#'   computation of the landscape features.
+#'   The name of the feature, which contains the objective values. The
+#'   default is \code{"y"}.
+#'
+#' @return [\code{\link{FeatureObject}}].
+#'
 #' @name FeatureObject
+#' @rdname FeatureObject
 #' @examples
 #' # (1a) create a feature object using X and y:
 #' X = t(replicate(n = 500, expr = runif(n = 3, min = -10, max = 10)))
@@ -45,21 +41,22 @@
 #' feat.object2 = createFeatureObject(X = X, 
 #'   fun = function(x) sum(sin(x) * x^2),
 #'   lower = -10, upper = 10, blocks = c(5, 10, 4))
-#'   
+#'
 #' # (1c) create a feature object using a data.frame:
 #' feat.object3 = createFeatureObject(iris[,-5], blocks = 5, 
 #'   objective = "Petal.Length")
-#' 
+#'
 #' # (2) have a look at the feature objects:
 #' feat.object1
 #' feat.object2
 #' feat.object3
-#' 
-#' # (3) calculate cell mapping features
-#' calculateFeatureSet(feat.object1, "cell_convexity", control = list(cm_conv.diag = TRUE))
-#' calculateFeatureSet(feat.object2, "gradient_homogeneity")
+#'
+#' # (3) now, one could calculate features
+#' calculateFeatureSet(feat.object1, "cm_conv", control = list(cm_conv.diag = TRUE))
+#' calculateFeatureSet(feat.object2, "cm_grad")
 #' library(plyr)
-#' calculateFeatureSet(feat.object3, "angle", control = list(angle.show_warnings = FALSE))
+#' calculateFeatureSet(feat.object3, "cm_angle", control = list(cm_angle.show_warnings = FALSE))
+#'
 #' @export 
 createFeatureObject = function(init, X, y, fun, minimize, 
   lower, upper, blocks, objective) {
@@ -160,6 +157,7 @@ createFeatureObject = function(init, X, y, fun, minimize,
       feature.names = feat.names, 
       objective.name = objective,
       blocks = blocks,
+      total.cells = prod(blocks),
       allows.cellmapping = allows.cellmapping,
       init.grid = init.grid,
       cell.centers = centers,
@@ -186,12 +184,12 @@ print.FeatureObject = function(x, ...) {
     catf("- Upper Boundaries: %s, ...", collapse(sprintf("%.2e", x$upper[1:4]), sep=", "))
     catf("- Name of Features: %s, ...", collapse(x$feature.names[1:4], sep = ", "))
   }
-  catf("- Optimization problem: %s %s", 
+  catf("- Optimization Problem: %s %s", 
        ifelse(x$minimize, "minimize", "maximize"), x$objective.name)
   if (!is.null(x$fun)) {
     fun = as.character(enquote(x$fun))[2]
     fun = paste(unlist(strsplit(fun, "\n")), collapse = "")
-    catf("- Function to be optimized: %s", fun)
+    catf("- Function to be Optimized: %s", fun)
   }
   if (x$allows.cellmapping) {
     if (x$dim < 5L) {
@@ -205,13 +203,13 @@ print.FeatureObject = function(x, ...) {
       catf("- Size of Cells per Dimension: %s, ...", collapse(sprintf("%.2f", x$cell.size[1:4]), sep=", "))
     }
     filled.cells = length(unique(x$init.grid$cell.ID))
-    total.cells = prod(x$blocks)
     cat("- Number of Cells:\n")
-    catf("  - total: %i", total.cells)
-    catf("  - non-empty: %i (%.2f%%)", filled.cells, 100 * filled.cells / total.cells)
-    catf("  - empty: %i (%.2f%%)", total.cells - filled.cells, 100 * (total.cells - filled.cells) / total.cells)
+    catf("  - total: %i", x$total.cells)
+    catf("  - non-empty: %i (%.2f%%)", filled.cells, 100 * filled.cells / x$total.cells)
+    catf("  - empty: %i (%.2f%%)", x$total.cells - filled.cells,
+      100 * (x$total.cells - filled.cells) / x$total.cells)
     cat("- Average Number of Observations per Cell:\n")
-    catf("  - total: %.2f", x$n.obs / total.cells)
+    catf("  - total: %.2f", x$n.obs / x$total.cells)
     catf("  - non-empty: %.2f", x$n.obs / filled.cells)  
   }
 }

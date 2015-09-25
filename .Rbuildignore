@@ -12,3 +12,6 @@ test_specific.R
 appveyor.yml
 bin
 solvers
+^Benchmark
+^man-roxygen
+^todos

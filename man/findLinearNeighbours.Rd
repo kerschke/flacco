@@ -12,31 +12,32 @@ Vector of cell IDs (one number per cell) for which the neighbouring cells
 should be computed.}
 
 \item{blocks}{[\code{\link{integer}}]\cr
-Vector, defining the number of cells per dimension.}
+The number of blocks per dimension.}
 
 \item{diag}{[\code{\link{logical}(1)}]\cr
-Logical, indicating whether only cells that are located parallel to the
-axes should be considered (\code{diag = FALSE}) as neighbours.
-Alternatively, one can also look for neighbours that are located
-diagonally to a cell. The default setting is \code{diag = FALSE}.}
+  \code{logical}, indicating whether only cells that are located parallel to
+  the axes should be considered (\code{diag = FALSE}) as neighbours.
+  Alternatively, one can also look for neighbours that are located
+  diagonally to a cell. The default is \code{diag = FALSE}.}
 }
 \value{
 [\code{\link{list}} of \code{\link{integer}(3)}].\cr
-List of neighbours.\cr
-Each list element stands for a combination of predecessing, current
-and succeeding cell.
+  List of neighbours. Each list element stands for a combination of
+  predecessing, current and succeeding cell.
 }
 \description{
-Given a vector of cell IDs (\code{cell.ids}) and another vector
-(\code{blocks}), which defines the number of cells per dimension, a list of
-all combinations of (linearly) neighbouring cells around each element of
-\code{cell.ids} is returned.
+Given a vector of cell IDs (\code{cell.ids}) and a vector (\code{blocks}),
+  which defines the number of blocks / cells per dimension, a list of all
+  combinations of (linearly) neighbouring cells around each element of
+  \code{cell.ids} is returned.
 }
 \examples{
 cell.ids = c(5, 84, 17, 23)
 blocks = c(5, 4, 7)
+
 # (1) Considering diagonal neighbours as well:
 findLinearNeighbours(cell.ids = cell.ids, blocks = blocks, diag = TRUE)
+
 # (2) Only consider neighbours which are parellel to the axes:
 findLinearNeighbours(cell.ids = cell.ids, blocks = blocks)
 }

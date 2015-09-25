@@ -17,8 +17,10 @@ Name of the corresponding feature set. Used as a prefix for the runtime.}
 Environment in which expr should be evaluated.}
 }
 \value{
-Return value of evaluated \code{expr} with additional attribute
-  \dQuote{time_elapsed}.
+Returns the value(s) of the evaluated \code{expr} and adds two
+additional attributes: the number of function evaluations
+\code{costs_fun_evals} and the runtime \code{costs_runtime}, which was
+required for evaluating the expression.
 }
 \description{
 Simple wrapper around \code{proc.time}.

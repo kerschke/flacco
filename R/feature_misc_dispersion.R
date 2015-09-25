@@ -1,28 +1,3 @@
-# @title Calculate dispersion features
-# 
-# @description
-# Computes features based on the comparison of the dispersion of distances
-# among the 'best' elements and the entire initial design.
-# @param feat.object [\code{FeatureObject}]\cr
-#   A feature object as created by createFeatureObject.
-# @param control [\code{list}]\cr
-#   A list object that stores additional configuration parameters.
-# @return [\code{list} of \code{numeric(1)}].\cr
-#   List of features.\cr
-#   The ratios and differences between the mean (and median) distances among 
-#   the distances of the 'best' and all elements.\cr
-#   
-#   The final two features show the amount of (additional) function
-#   evaluations and running time (in seconds) that were needed for the
-#   computation of these features.
-# @examples
-#   # (1) create the initial design:
-#   X = t(replicate(1000, runif(2, -10, 10)))
-#   y = apply(X, 1, function(x) sum(x^2))
-#   feat.object = createFeatureObject(X = X, y = y)
-#   # (2) compute the dispersion features:
-#   calculateDispersionFeatures(feat.object)
-# @export 
 calculateDispersionFeatures = function(feat.object, control) {
   assertClass(feat.object, "FeatureObject")
   if (missing(control))

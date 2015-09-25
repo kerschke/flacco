@@ -1,36 +1,40 @@
 #' @title Find Nearest Prototype
 #'
 #' @description
-#' Among the initial design, a representing observation for each of the cells
-#' is selected.
-#' @param feat.object [\code{\link{FeatureObject}}]\cr
-#' A feature object as created by \link{createFeatureObject}.
+#'   For each cell of the initial design, select the closest observation to its
+#'   center and use it as a representative for that cell.
+#'
+#' @template arg_feat_object
 #' @param dist_meth [\code{\link{character}(1)}]\cr
-#' Which distance method should be used? Possible values are
-#' \code{"euclidean"}, \code{"maximum"}, \code{"manhattan"}, \code{"canberra"},
-#' \code{"binary"} or \code{"minkowski"}. The default is \code{"euclidean"}.
+#'   Which distance method should be used for computing the distance between
+#'   two observations? All methods of \code{\link{dist}} are possible options
+#'   with \code{"euclidean"} being the default.
 #' @param mink_p [\code{\link{integer}(1)}]\cr
-#' The value for \code{p} in case \code{dist_meth} is \code{"minkowski"}.
-#' The default is \code{2}, i.e. the euclidean distance.
+#'   Value of \code{p} in case \code{dist_meth} is \code{"minkowski"}.
+#'   The default is \code{2}, i.e. the euclidean distance.
 #' @param fast_k [\code{\link{numeric}(1)}]\cr
-#' Percentage of elements that should be considered within nn-computation.
-#' The default is \code{0.05}.
+#'   Percentage of elements that should be considered within the nearest
+#'   neighbour computation. The default is \code{0.05}.
 #' @param ... [any]\cr
-#' Further arguments, which might be used within the distance computation
-#' (\code{\link{dist}}).
+#'   Further arguments, which might be used within the distance computation
+#'   (\code{\link{dist}}).
+#'
 #' @return [\code{\link{data.frame}}].\cr
-#' A \code{data.frame}, which consists of one prototype (i.e. a
-#' representative observation) per cell. Each prototype consists of the
-#' features, the corresponding objective value, its own cell ID and the cell
-#' ID of the cell, which it represents.
+#'   A \code{data.frame} containing one prototype (i.e. a representative
+#'   observation) per cell. Each prototype consists of its values from the
+#'   decision space, the corresponding objective value, its own cell ID and the
+#'   cell ID of the cell, which it represents.
+#'
 #' @examples
 #' # (1) create the initial design:
 #' X = t(replicate(1000, runif(2, -10, 10)))
 #' feat.object = createFeatureObject(X = X, 
 #'   fun = function(x) sum(x^2), 
 #'   lower = -10, upper = 10, blocks = 10)
+#'
 #' # (2) find the nearest prototypes of all cells:
 #' findNearestPrototype(feat.object)
+#'
 #' @export 
 findNearestPrototype = function(feat.object, dist_meth, mink_p, fast_k, ...) {
   assertClass(feat.object, "FeatureObject")
@@ -75,16 +79,16 @@ findNearestPrototypeQuick = function(feat.object, fast_k,...) {
   nn = RANN::nn2(rbind(cell.centers[, 1:dims], X), k = fast_k)$nn.idx
   nn = nn[seq_len(n.cells), -1] - n.cells
   nearest.grid = init.grid[apply(nn, 1, function(x) (x[x > 0])[1]), ]
-  
+
   ## in case none of the nearest observations is a non-cell-center
   all_centers = apply(nn, 1, function(x) all(x < 0))
   if (any(all_centers)) {
     n_ctr = sum(all_centers)
     nn_backup = RANN::nn2(rbind(cell.centers[all_centers, 1:dims], X), k = n_ctr + 1L)$nn.idx
-    nn_backup = nn_backup[seq_len(n_ctr), -1] - n_ctr
+    nn_backup = nn_backup[seq_len(n_ctr), -1, drop = FALSE] - n_ctr
     nearest.grid[all_centers, ] = init.grid[apply(nn_backup, 1, function(x) (x[x > 0])[1]), ]
   }
-  
+
   rownames(nearest.grid) = 1:n.cells
   nearest.grid$represented.cell = cell.centers$cell.ID
   nearest.grid

@@ -14,7 +14,7 @@ it will be created either based on \code{X} and \code{y} or \code{X} and
 \code{fun}.}
 
 \item{X}{[\code{\link{data.frame}} or \code{\link{matrix}}]\cr
-A \code{matrix} or \code{data.frame} containing the features of the
+A \code{data.frame} or \code{matrix} containing the features of the
 initial design. If not provided, it will be extracted from \code{init}.}
 
 \item{y}{[\code{\link{numeric}} or \code{\link{integer}}]\cr
@@ -30,29 +30,24 @@ be computed.}
 Should the objective function be minimized? The default is \code{TRUE}.}
 
 \item{lower}{[\code{\link{numeric}} or \code{\link{integer}}]\cr
-A vector containing the lower bounds of each feature. If not provided,
-the minimum value per feature will be taken as lower bound.}
+The lower limits per dimension.}
 
 \item{upper}{[\code{\link{numeric}} or \code{\link{integer}}]\cr
-A vector containing the upper bounds of each feature. If not provided,
-the maximum value per feature will be taken as upper bound.}
+The upper limits per dimension.}
 
 \item{blocks}{[\code{\link{integer}}]\cr
-A vector containing the number of cells per dimension. If not provided,
-cell mapping features can't be computed.}
+The number of blocks per dimension.}
 
 \item{objective}{[\code{\link{character}(1)}]\cr
-The name of the \dQuote{feature}, which contains the objective values. Per
-default, the objective will be defined as \code{"y"}.}
+  The name of the feature, which contains the objective values. The
+  default is \code{"y"}.}
 }
 \value{
-FeatureObject [\code{\link{FeatureObject}}].\cr
-  An object, containing all the information, which is needed for the
-  computation of the landscape features.
+[\code{\link{FeatureObject}}].
 }
 \description{
-Create a feature object, which will be used as input for all
-the feature computations.
+Create a \code{\link{FeatureObject}}, which will be used as input for all
+  the feature computations.
 }
 \examples{
 # (1a) create a feature object using X and y:
@@ -75,10 +70,10 @@ feat.object1
 feat.object2
 feat.object3
 
-# (3) calculate cell mapping features
-calculateFeatureSet(feat.object1, "cell_convexity", control = list(cm_conv.diag = TRUE))
-calculateFeatureSet(feat.object2, "gradient_homogeneity")
+# (3) now, one could calculate features
+calculateFeatureSet(feat.object1, "cm_conv", control = list(cm_conv.diag = TRUE))
+calculateFeatureSet(feat.object2, "cm_grad")
 library(plyr)
-calculateFeatureSet(feat.object3, "angle", control = list(angle.show_warnings = FALSE))
+calculateFeatureSet(feat.object3, "cm_angle", control = list(cm_angle.show_warnings = FALSE))
 }
 

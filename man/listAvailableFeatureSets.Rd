@@ -31,4 +31,7 @@ Feature sets, which could be computed - based on the provided input.
 \description{
 Lists all available feature sets w.r.t. certain restrictions.
 }
+\examples{
+sets = listAvailableFeatureSets()
+}
 

@@ -1,63 +1,10 @@
-# @title Calculate Angle and Distance Features
-# 
-# @description
-# Computes features based on the best and worst observation within a cell,
-# provided the decision space is divided into a grid of cells.
-# @param feat.object [\code{\link{FeatureObject}}]\cr
-# A feature object as created by \link{createFeatureObject}.
-# @param control [\code{\link{list}}]\cr
-# A list object that stores additional configuration parameters.\cr
-# The element \code{angle.show_warnings} indicates whether possible warnings
-# about \code{NAs} in the feature computation should be shown?
-# The default is \code{TRUE}.
-# @return [\code{\link{list}(10)} of \code{\link{numeric}(1)}].\cr
-# List of features.\cr
-# For further information, see details.
-# @details
-# The features are based on the location of the worst and best element within
-# each cell. To be precise, their distance to the cell center and the angle
-# between these three elements (at the center) are the foundation of those
-# eight features: \cr
-# 
-# (1) Arithmetic mean of the distances from the cell center to the best
-# observation within the cell (over all cells).\cr
-# (2) Standard deviation of the distances from (1).\cr
-# (3) Arithmetic mean of the distances from the cell
-# center to the worst observations within a cell.\cr
-# (4) Standard deviation of the distances from (3).\cr
-# (5) Arithmetic mean of the angles (in degree) between worst, center
-# and best element of a cell.\cr
-# (6) Standard deviation of the angles from (5).\cr
-# (7) Arithmetic mean of the ratios between the distance of the worst and
-# best element within a cell and the worst and best element in the entire
-# initial design. The distances are only based on the objective space.\cr
-# (8) Standard deviation of the ratios from (7).\cr
-# 
-# The final two features show the amount of (additional) function
-# evaluations and running time (in seconds) that were needed for the
-# computation of these features.
-# @references
-# See Kerschke et al. (2014), \dQuote{Cell Mapping Techniques for Exploratory Landscape Analysis}, 
-#  in EVOLVE-A Bridge between Probability, Set Oriented Numerics, and Evolutionary Computation V,
-#  pp. 115-131 (\url{http://dx.doi.org/10.1007/978-3-319-07494-8_9}).
-# @examples
-# # (1) create a feature object:
-# X = t(replicate(1000, runif(2, -10, 10)))
-# y = apply(X, 1, function(x) sum(x^2))
-# feat.object = createFeatureObject(X = X, y = y, 
-#   lower = -10, upper = 10, blocks = 10)
-#     
-# # (2) compute the angle and distance features:
-# library(plyr)
-# calculateAngleFeatures(feat.object)
-# @export 
 calculateAngleFeatures = function(feat.object, control) {
   assertClass(feat.object, "FeatureObject")
   if (missing(control))
     control = list()
   assertList(control)
   measureTime(expression({
-    show.warnings = control_parameter(control, "angle.show_warnings", TRUE)
+    show.warnings = control_parameter(control, "cm_angle.show_warnings", FALSE)
     init.grid = feat.object$init.grid
     ft.names = feat.object$feature.names
     cell.centers = as.matrix(feat.object$cell.centers)[, ft.names]

@@ -23,7 +23,7 @@ The number of blocks per dimension.}
 }
 \description{
 Computes the cell centers and the corresponding cell IDs of a cell mapping
-grid.
+  grid.
 }
 \examples{
 computeGridCenters(lower = -10, upper = 10, blocks = c(10, 5, 8))

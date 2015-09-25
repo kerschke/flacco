@@ -1,92 +1,89 @@
-context("Features: Gradient Homogeneity")
+context("Features: CM - Gradient Homogeneity")
 
 test_that("Differing blocks", {
   set.seed(2015*03*26)
-  X = t(replicate(n = 2000, expr = runif(n = 5, min = -10, max = 10)))
-  y = apply(X, 1, function(x) { sum(x^2) })
-  feat.object = createFeatureObject(X = X, y = y, blocks = c(10, 5, 5, 8, 4))
-  
-  features = calculateFeatureSet(feat.object, "gradient_homogeneity", 
-    control = list(gradhomo.show_warnings = FALSE))
-  
-  expect_is(features, "list")
-  expect_true( testNumber(features$gradhomo.mean, lower = -1, upper = 1) )
-  expect_true( testNumber(features$gradhomo.sd) )
+  X = t(replicate(n = 2000L, expr = runif(n = 5L, min = -10L, max = 10L)))
+  feat.object = createFeatureObject(X = X, y = rowSums(X^2),
+    blocks = c(10L, 5L, 5L, 8L, 4L))
+
+  features = calculateFeatureSet(feat.object, "cm_grad", 
+    control = list(cm_grad.show_warnings = FALSE))
+
+  expect_list(features)
+  expect_true(testNumber(features$cm_grad.mean, lower = -1L, upper = 1L))
+  expect_true(testNumber(features$cm_grad.sd))
 })
 
 test_that("Identical blocks", {
   set.seed(2015*03*26)
-  X = t(replicate(n = 2000, expr = runif(n = 5, min = -10, max = 10)))
-  y = apply(X, 1, function(x) { sum(x^2) })
-  feat.object = createFeatureObject(X = X, y = y, blocks = 5)
-  
-  features = calculateFeatureSet(feat.object, "gradient_homogeneity", 
-    control = list(gradhomo.show_warnings = FALSE))
-  
+  X = t(replicate(n = 2000L, expr = runif(n = 5L, min = -10L, max = 10L)))
+  feat.object = createFeatureObject(X = X, y = rowSums(X^2), blocks = 5L)
+
+  features = calculateFeatureSet(feat.object, "cm_grad", 
+    control = list(cm_grad.show_warnings = FALSE))
+
   expect_identical(length(features), 4L)
-  expect_is(features, class = "list")
+  expect_list(features)
   expect_identical(as.character(sapply(features, class)), 
-    c(rep("numeric", 2), "integer", "numeric"))
-  
-  expect_true( testNumber(features$gradhomo.mean, lower = -1, upper = 1) )
-  expect_true( testNumber(features$gradhomo.sd) )
-  expect_identical(features$gradhomo.costs_fun_evals, 0L)
-  expect_true( testNumber(features$gradhomo.costs_runtime, lower = 0) )
+    c(rep("numeric", 2L), "integer", "numeric"))
+
+  expect_true(testNumber(features$cm_grad.mean, lower = -1L, upper = 1L))
+  expect_true(testNumber(features$cm_grad.sd))
+  expect_identical(features$cm_grad.costs_fun_evals, 0L)
+  expect_true(testNumber(features$cm_grad.costs_runtime, lower = 0L))
 })
 
 test_that("Only one block", {
   set.seed(2015*03*26)
-  X = t(replicate(n = 2000, expr = runif(n = 5, min = -10, max = 10)))
-  y = apply(X, 1, function(x) { sum(x^2) })
-  feat.object = createFeatureObject(X = X, y = y, blocks = 1)
-  
-  features = calculateFeatureSet(feat.object, "gradient_homogeneity", 
-    control = list(gradhomo.show_warnings = FALSE))
-  
+  X = t(replicate(n = 2000L, expr = runif(n = 5L, min = -10L, max = 10L)))
+  feat.object = createFeatureObject(X = X, y = rowSums(X^2), blocks = 1L)
+
+  features = calculateFeatureSet(feat.object, "cm_grad", 
+    control = list(cm_grad.show_warnings = FALSE))
+
   expect_identical(length(features), 4L)
-  expect_is(features, class = "list")
+  expect_list(features)
   expect_identical(as.character(sapply(features, class)), 
-    c(rep("numeric", 2), "integer", "numeric"))
-  
-  expect_true( testNumber(features$gradhomo.mean, lower = -1, upper = 1) )
-  expect_identical( features$gradhomo.sd , NA_real_)
-  expect_identical(features$gradhomo.costs_fun_evals, 0L)
-  expect_true( testNumber(features$gradhomo.costs_runtime, lower = 0) )
+    c(rep("numeric", 2L), "integer", "numeric"))
+
+  expect_true(testNumber(features$cm_grad.mean, lower = -1L, upper = 1L))
+  expect_identical(features$cm_grad.sd , NA_real_)
+  expect_identical(features$cm_grad.costs_fun_evals, 0L)
+  expect_true(testNumber(features$cm_grad.costs_runtime, lower = 0L))
 })
 
 test_that("Warning if cells are populated sparsely", {
   set.seed(2015*03*26)
-  X = t(replicate(n = 2000, expr = runif(n = 5, min = -10, max = 10)))
-  y = apply(X, 1, function(x) { sum(x^2) })
-  feat.object = createFeatureObject(X = X, y = y, blocks = c(10, 5, 5, 8, 4))
+  X = t(replicate(n = 2000L, expr = runif(n = 5L, min = -10L, max = 10L)))
+  feat.object = createFeatureObject(X = X, y = rowSums(X^2),
+    blocks = c(10L, 5L, 5L, 8L, 4L))
 
-  expect_warning(calculateFeatureSet(feat.object, "gradient_homogeneity",
-    control = list(gradhomo.show_warnings = TRUE)), 
+  expect_warning(calculateFeatureSet(feat.object, "cm_grad",
+    control = list(cm_grad.show_warnings = TRUE)), 
     "% of the cells contain less than two observations.")
-  
-  expect_warning(calculateFeatureSet(feat.object, "gradient_homogeneity",
-    control = list(gradhomo.show_warnings = TRUE, gradhomo.dist_method = "manhattan")), 
+
+  expect_warning(calculateFeatureSet(feat.object, "cm_grad",
+    control = list(cm_grad.show_warnings = TRUE, cm_grad.dist_method = "manhattan")), 
     "% of the cells contain less than two observations.")
 })
 
 test_that("Using Minkowski Distance", {
   set.seed(2015*03*26)
-  X = t(replicate(n = 2000, expr = runif(n = 5, min = -10, max = 10)))
-  y = apply(X, 1, function(x) { sum(x^2) })
-  feat.object = createFeatureObject(X = X, y = y, blocks = 5)
-  
+  X = t(replicate(n = 2000, expr = runif(n = 5L, min = -10L, max = 10L)))
+  feat.object = createFeatureObject(X = X, y = rowSums(X^2), blocks = 5L)
+
   # (2) compute the cell convexity features
-  features = calculateFeatureSet(feat.object, "gradient_homogeneity",
-    control = list(gradhomo.dist_method = "minkowski"))
-  features1 = calculateFeatureSet(feat.object, "gradient_homogeneity",
-    control = list(gradhomo.dist_method = "minkowski", gradhomo.minkowski_p = 10L))
-  features2 = calculateFeatureSet(feat.object, "gradient_homogeneity")
-  
+  features = calculateFeatureSet(feat.object, "cm_grad",
+    control = list(cm_grad.dist_method = "minkowski"))
+  features1 = calculateFeatureSet(feat.object, "cm_grad",
+    control = list(cm_grad.dist_method = "minkowski", cm_grad.minkowski_p = 10L))
+  features2 = calculateFeatureSet(feat.object, "cm_grad")
+
   # test return value types and ranges
-  expect_is(features, "list")
-  expect_is(features1, "list")
-  expect_is(features2, "list")
-  
+  expect_list(features)
+  expect_list(features1)
+  expect_list(features2)
+
   expect_identical(features[-4L], features2[-4L])
   expect_false(identical(features[-4L], features1[-4L]))
   expect_false(identical(features2[-4L], features1[-4L]))
@@ -94,22 +91,21 @@ test_that("Using Minkowski Distance", {
 
 test_that("Using Manhattan Distance", {
   set.seed(2015*03*26)
-  X = t(replicate(n = 2000, expr = runif(n = 5, min = -10, max = 10)))
-  y = apply(X, 1, function(x) { sum(x^2) })
-  feat.object = createFeatureObject(X = X, y = y, blocks = 5)
-  
+  X = t(replicate(n = 2000L, expr = runif(n = 5L, min = -10L, max = 10L)))
+  feat.object = createFeatureObject(X = X, y = rowSums(X^2), blocks = 5L)
+
   # (2) compute the cell convexity features
-  features = calculateFeatureSet(feat.object, "gradient_homogeneity",
-    control = list(gradhomo.dist_method = "manhattan"))
-  
+  features = calculateFeatureSet(feat.object, "cm_grad",
+    control = list(cm_grad.dist_method = "manhattan"))
+
   # test return value types and ranges
   expect_identical(length(features), 4L)
-  expect_is(features, class = "list")
+  expect_list(features)
   expect_identical(as.character(sapply(features, class)),
-    c(rep("numeric", 2), "integer", "numeric"))
-  
-  expect_true( testNumber(features$gradhomo.mean, lower = -1, upper = 1) )
-  expect_true( testNumber(features$gradhomo.sd) )
-  expect_identical(features$gradhomo.costs_fun_evals, 0L)
-  expect_true( testNumber(features$gradhomo.costs_runtime, lower = 0) )
+    c(rep("numeric", 2L), "integer", "numeric"))
+
+  expect_true(testNumber(features$cm_grad.mean, lower = -1L, upper = 1L))
+  expect_true(testNumber(features$cm_grad.sd))
+  expect_identical(features$cm_grad.costs_fun_evals, 0L)
+  expect_true(testNumber(features$cm_grad.costs_runtime, lower = 0L))
 })
