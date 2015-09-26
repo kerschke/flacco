@@ -22,3 +22,10 @@ test_that("Feature Importance Plots", {
   # no errors were raised.
   expect_true(TRUE) # only TRUE if no error has caused an error
 })
+
+test_that("Use existing featureList", {
+  plotFeatureImportance(featureList)  
+
+  # this can only happen if no error has forced the execution to stop
+  expect_true(TRUE) 
+})

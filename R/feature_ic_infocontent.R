@@ -71,7 +71,7 @@ computeInfoContentStatistics = function(feat.object, control) {
   # remove possible duplicates
   dup.index = duplicated(cbind(X, y))
   if (any(dup.index)) {
-    if (all(dup.index))
+    if (all(dup.index[-1L]))
       stop("Can not compute information content features, because ALL values are identical.")
     X = X[!dup.index,]
     y = y[!dup.index]

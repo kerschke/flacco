@@ -7,17 +7,22 @@
 #'   List of vectors of features. One list element is expected to belong to
 #'   one resampling iteration / fold.
 #' @param control [\code{list}]\cr
-#'   A list object that stores additional configuration parameters.
-#'   Among these parameters, one can define the colors 
-#'   (featimp.col_{high/medium/low}) and thresholds (featimp.perc_{high/low}),
-#'   which are used to highlight the difference between often and rarely used
-#'   features. One can also define the alignment of the axis labels
-#'   (featimp.las), the labels itself (featimp.{xlab/ylab}), the angle of the
-#'   features on the y-axis (featimp.string_angle) and the type 
-#'   (featimp.pch_{active/inactive}) and color (featimp.col_inactive) of the
-#'   inactive points and lines.
+#'   A list, which stores additional configuration parameters:
+#'   \itemize{
+#'     \item{\code{featimp.col_{high/medium/low}}}: Color of the features, which
+#'     are used often, sometimes or only a few times.
+#'     \item{\code{featimp.perc_{high/low}}}: Percentage of the total number of folds,
+#'     defining when a features, is used often, sometimes or only a few times.
+#'     \item{\code{featimp.las}}: Alignment of axis labels.
+#'     \item{\code{featimp.{xlab/ylab}}}: Axis labels.
+#'     \item{\code{featimp.string_angle}}: Angle for the features on the x-axis.
+#'     \item{\code{featimp.pch_{active/inactive}}}: Plot symbol of the active and
+#'     inactive points.
+#'     \item{\code{featimp.col_inactive}}: Color of the inactive points.
+#'     \item{\code{featimp.col_vertical}}: Color of the vertical lines.
+#'    }
 #' @param ... [any]\cr
-#'   Further arguments to be passed into the plot function.
+#'   Further arguments, which can be passed to \code{plot}.
 #' @return [\code{plot}].\cr
 #'   Feature Importance Plot, indicating which feature was used during which iteration.
 #' @examples
@@ -27,48 +32,49 @@
 #' library(mlr)
 #' library(mlbench)
 #' data(Glass)
-#' 
+#'
 #' # (1) Create a classification task:
 #' classifTask = makeClassifTask(data = Glass, target = "Type")
-#' 
+#'
 #' # (2) Define the model (here, a classification tree):
 #' lrn = makeLearner(cl = "classif.rpart")
-#' 
+#'
 #' # (3) Define the resampling strategy, which is supposed to be used within 
 #' # each inner loop of the nested feature selection:
 #' innerResampling = makeResampleDesc("Holdout")
-#' 
+#'
 #' # (4) What kind of feature selection approach should be used? Here, we use a
-#' # sequential backward strategy, i.e. starting with a model based on the
-#' # entire feature set, a feature is iteratively dropped (based on a greedy) 
-#' # approach:
+#' # sequential backward strategy, i.e. starting from a model with all features,
+#' in each step the feature decreasing the performance measure the least is
+#' removed from the model:
 #' ctrl = makeFeatSelControlSequential(method = "sbs")
-#' 
+#'
 #' # (5) Wrap the original model (see (2)) in order to allow feature selection:
 #' wrappedLearner = makeFeatSelWrapper(learner = lrn,
 #'   resampling = innerResampling, control = ctrl)
-#'   
+#'
 #' # (6) Define a resampling strategy for the outer loop. This is necessary in
 #' # order to assess whether the selected features depend on the underlying
 #' # fold:
-#' outerResampling = makeResampleDesc(method = "CV", iters = 3)
-#' 
+#' outerResampling = makeResampleDesc(method = "CV", iters = 10L)
+#'
 #' # (7) Perform the feature selection:
 #' featselResult = resample(learner = wrappedLearner, task = classifTask,
-#' resampling = outerResampling, models = TRUE)
-#'   
+#'   resampling = outerResampling, models = TRUE)
+#'
 #' # (8) Extract the features, which were selected during each iteration of the
 #' # outer loop (i.e. during each of the 5 folds of the cross-validation):
 #' featureList = lapply(featselResult$models, 
-#'   function(mod) getFeatSelResult(mod)$x)
+#'   function(mod) getFeatSelResult(mod)$x)}
 #'
+#' ########################################################################
+#' 
 #' # Now, one could inspect the features manually:
 #' featureList
 #'
 #' # Alternatively, one might use visual means such as the feature
 #' # importance plot:
 #' plotFeatureImportance(featureList)
-#' }
 #' @export
 plotFeatureImportance = function(featureList, control = list(), ...) {
   if (!is.list(featureList))
@@ -83,6 +89,7 @@ plotFeatureImportance = function(featureList, control = list(), ...) {
   col.med = control_parameter(control, "featimp.col_medium", "orange")
   col.low = control_parameter(control, "featimp.col_low", "black")
   col.inactive = control_parameter(control, "featimp.col_inactive", "grey")
+  col.vertical = control_parameter(control, "featimp.col_vertical", "grey")
   pch.active = control_parameter(control, "featimp.pch_active", 19)
   pch.inactive = control_parameter(control, "featimp.pch_inactive", 20)
   iters = seq_along(featureList)
@@ -102,7 +109,7 @@ plotFeatureImportance = function(featureList, control = list(), ...) {
   axis(side = 2, at = min(iters):max(iters), las = las)
   text(x, par("usr")[3], labels = ft.names, srt = srt,
     adj = c(1.1,1.1), xpd = TRUE)
-  abline(v = x, col = col.inactive)
+  abline(v = x, col = col.vertical)
   for(i in x) {
     points(rep(i, length(iters)), iters, pch = pch.inactive, col = col.inactive)
     y = vapply(featureList, function(feats) ft.names[i] %in% feats, logical(1))

@@ -126,6 +126,7 @@ test_that("Checking for strange events", {
   eps = seq(-5, 15, length.out = 200)
   features = calculateFeatureSet(feat.object, "ic", 
     control = list(ic.epsilon = c(0, 10^eps)))
+  expect_identical(features$ic.eps.s, NA_real_)
   
   # warning when initial design contains 1 duplicate
   feat.object = createFeatureObject(init = iris[,-5], objective = "Petal.Width")
@@ -139,4 +140,8 @@ test_that("Checking for strange events", {
   eps = seq(-5, 15, length.out = 200)
   expect_warning(calculateFeatureSet(feat.object, "ic", 
     control = list(ic.epsilon = c(0, 10^eps), ic.show_warnings = TRUE)))
+
+  # expect error if all observations are identical
+  feat.object = createFeatureObject(init = iris[rep(8L, 200L),-5], objective = "Petal.Width")
+  expect_error(calculateFeatureSet(feat.object, "ic"))
 })
