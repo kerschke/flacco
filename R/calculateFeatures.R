@@ -401,7 +401,7 @@
 #'     \item{ELA levelset features}: \itemize{
 #'       \item{\code{ela_level.quantiles}}: Cutpoints (quantiles of the
 #'       objective values) for splitting the objective space. The default is
-#'       \code{c(10, 20, 50)}.
+#'       \code{c(0.10, 0.25, 0.50)}.
 #'       \item{\code{ela_level.classif_methods}}: Methods for classifying
 #'       the artificially splitted objective space. The default is
 #'       \code{c("lda", "qda", "mda")}.

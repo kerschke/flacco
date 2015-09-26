@@ -103,3 +103,40 @@ test_that("Unable to compute samples without a function", {
     control = list(ic.generate_sample = TRUE)) 
   )
 })
+
+test_that("Creating a sample", {
+  set.seed(2015*03*25)
+  X = t(replicate(1000, runif(2, -1000, 1000)))
+  feat.object = createFeatureObject(X = X,
+    fun = function(x) x[1]^4 + 1000 * (x[1] - 3)^3 + 1000 * x[1] + x[2],
+    lower = -1000, upper = 1000)
+  
+  # execution (fewer epsilons for quicker tests)
+  eps = seq(-5, 15, length.out = 200)
+  features = calculateFeatureSet(feat.object, "ic", 
+    control = list(ic.sample.generate = TRUE, ic.epsilon = c(0, 10^eps)))
+  
+  # test return values
+  testICFeatures(features, eps)
+})
+
+test_that("Checking for strange events", {
+  # NA if half partial information sensitivity is too low  
+  feat.object = createFeatureObject(init = iris[,-5], objective = "Petal.Width")
+  eps = seq(-5, 15, length.out = 200)
+  features = calculateFeatureSet(feat.object, "ic", 
+    control = list(ic.epsilon = c(0, 10^eps)))
+  
+  # warning when initial design contains 1 duplicate
+  feat.object = createFeatureObject(init = iris[,-5], objective = "Petal.Width")
+  eps = seq(-5, 15, length.out = 200)
+  expect_warning(calculateFeatureSet(feat.object, "ic", 
+    control = list(ic.epsilon = c(0, 10^eps), ic.show_warnings = TRUE)))
+
+  # warning when initial design contains 2+ duplicates
+  feat.object = createFeatureObject(init = iris[c(1:150, 1, 1), -5],
+    objective = "Petal.Width")
+  eps = seq(-5, 15, length.out = 200)
+  expect_warning(calculateFeatureSet(feat.object, "ic", 
+    control = list(ic.epsilon = c(0, 10^eps), ic.show_warnings = TRUE)))
+})

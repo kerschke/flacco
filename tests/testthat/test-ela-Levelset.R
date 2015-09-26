@@ -37,3 +37,10 @@ test_that("Expected Output", {
   expect_identical(features$ela_level.costs_fun_evals, 0L)
   expect_true(testNumber(features$ela_level.costs_runtime, lower = 0L))
 })
+
+test_that("Expect Warning", {
+  feat.object = createFeatureObject(init = iris[,-5], objective = "Petal.Width")
+  expect_warning(calculateFeatureSet(feat.object, "ela_level",
+    control = list(ela_level.quantiles = 0.05, ela_level.classif_methods = "lda"))
+  )
+})

@@ -3,7 +3,7 @@ context("Features: CM - Angle")
 test_that("Using an Initial Design", {
   feat.object = createFeatureObject(init = iris[, -5], 
     objective = "Sepal.Length", blocks = 3L)
-  angle_feats = suppressWarnings(calculateFeatureSet(feat.object, "cm_angle"))
+  angle_feats = calculateFeatureSet(feat.object, "cm_angle")
   expect_identical(length(angle_feats), 10L)
   expect_list(angle_feats)
   expect_identical(as.character(sapply(angle_feats, class)), 
@@ -13,7 +13,7 @@ test_that("Using an Initial Design", {
 test_that("Using X and y", {
   A = rbind(c(0L, 0L), c(0L, 3L), c(4L, 3L))
   feat.object = createFeatureObject(X = A, y = 1:3, blocks = 1L)
-  angle_feats = suppressWarnings(calculateFeatureSet(feat.object, "cm_angle"))
+  angle_feats = calculateFeatureSet(feat.object, "cm_angle")
   expect_identical(angle_feats$cm_angle.dist_ctr2best.sd, NA_real_)
   expect_identical(angle_feats$cm_angle.dist_ctr2worst.sd, NA_real_)
   expect_identical(angle_feats$cm_angle.angle.sd, NA_real_)
@@ -52,4 +52,11 @@ test_that("Only one block", {
   expect_identical(angle_feats$cm_angle.y_ratio_best2worst.sd, NA_real_)
   expect_identical(angle_feats$cm_angle.costs_fun_evals, 0L)
   expect_true(testNumber(angle_feats$cm_angle.costs_runtime, lower = 0L))
+})
+
+test_that("Show Warning", {
+  feat.object = createFeatureObject(init = iris[, -5], 
+    objective = "Sepal.Length", blocks = 3L)
+  expect_warning(calculateFeatureSet(feat.object, "cm_angle",
+    control = list(cm_angle.show_warnings = TRUE)))
 })

@@ -33,6 +33,7 @@ Further arguments to be passed into the plot function.}
 Creates a feature importance plot.
 }
 \examples{
+\dontrun{
 # At the beginning, one needs a list of features, e.g. derived during a
 # nested feature selection within mlr (see the following 8 steps):
 library(mlr)
@@ -65,20 +66,20 @@ wrappedLearner = makeFeatSelWrapper(learner = lrn,
 outerResampling = makeResampleDesc(method = "CV", iters = 3)
 
 # (7) Perform the feature selection:
-#featselResult = resample(learner = wrappedLearner, task = classifTask,
-# resampling = outerResampling, models = TRUE)
+featselResult = resample(learner = wrappedLearner, task = classifTask,
+resampling = outerResampling, models = TRUE)
 
 # (8) Extract the features, which were selected during each iteration of the
 # outer loop (i.e. during each of the 5 folds of the cross-validation):
-#featureList = lapply(featselResult$models,
-#  function(mod) getFeatSelResult(mod)$x)
-
+featureList = lapply(featselResult$models,
+  function(mod) getFeatSelResult(mod)$x)
 
 # Now, one could inspect the features manually:
-#featureList
+featureList
 
 # Alternatively, one might use visual means such as the feature
 # importance plot:
-#plotFeatureImportance(featureList)
+plotFeatureImportance(featureList)
+}
 }
 
