@@ -112,11 +112,7 @@ computeInfoContentStatistics = function(feat.object, control) {
   settl.sens = control_parameter(control, "ic.settling_sensitivity", 0.05)
   assertNumeric(settl.sens, lower = 0, upper = .Machine$double.xmax)
   eps.S = epsilon[which(H < settl.sens)]
-  if (length(eps.S) > 0) {
-    eps.S = log10(min(eps.S))
-  } else {
-    eps.S = NA_real_
-  }
+  eps.S = ifelse(length(eps.S) > 0, log10(min(eps.S)), NA_real_)
 
   # calculate M0, cf. equation (7) ("initial partial information")
   M0 = M[epsilon == 0]
