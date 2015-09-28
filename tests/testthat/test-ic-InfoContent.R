@@ -84,7 +84,7 @@ test_that("Create random samples using LHD", {
   fun = function(x) {sum(sqrt(abs(x)))}
   feat.object = createFeatureObject(X = X, fun = fun, 
     lower = -1000, upper = 1000)  
-  
+
   # execution (fewer epsilons for quicker tests)
   eps = seq(-5, 15, length.out = 200)
   features = calculateFeatureSet(feat.object, "ic",
@@ -110,24 +110,31 @@ test_that("Creating a sample", {
   feat.object = createFeatureObject(X = X,
     fun = function(x) x[1]^4 + 1000 * (x[1] - 3)^3 + 1000 * x[1] + x[2],
     lower = -1000, upper = 1000)
-  
+
   # execution (fewer epsilons for quicker tests)
   eps = seq(-5, 15, length.out = 200)
   features = calculateFeatureSet(feat.object, "ic", 
     control = list(ic.sample.generate = TRUE, ic.epsilon = c(0, 10^eps)))
-  
+
   # test return values
   testICFeatures(features, eps)
 })
 
 test_that("Checking for strange events", {
-  # NA if half partial information sensitivity is too low  
+  # NA if half partial information sensitivity is too low
   feat.object = createFeatureObject(init = iris[,-5], objective = "Petal.Width")
   eps = seq(-5, 15, length.out = 200)
   features = calculateFeatureSet(feat.object, "ic", 
     control = list(ic.epsilon = c(0, 10^eps)))
   expect_identical(features$ic.eps.s, NA_real_)
-  
+
+  # NA if ratio is too high
+  feat.object = createFeatureObject(init = iris[,-5], objective = "Petal.Width")
+  eps = seq(-5, 15, length.out = 200)
+  features = calculateFeatureSet(feat.object, "ic",
+    control = list(ic.epsilon = c(0, 10^eps), ic.info_sensitivity = 1))
+  expect_identical(features$ic.eps.ratio, NA_real_)
+
   # warning when initial design contains 1 duplicate
   feat.object = createFeatureObject(init = iris[,-5], objective = "Petal.Width")
   eps = seq(-5, 15, length.out = 200)

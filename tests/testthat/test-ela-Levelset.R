@@ -1,15 +1,6 @@
 context("Features: ELA - Levelset")
 
-test_that("Expected Output", {
-  set.seed(2015*03*26)
-
-  # (1) create a feature object:
-  X = t(replicate(n = 2000L, expr = runif(n = 5L, min = -10L, max = 10L)))
-  feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
-
-  # (2) compute the levelset features
-  features = calculateFeatureSet(feat.object, "ela_level")
-
+checkLevelOutput = function(features) {
   # test return values
   expect_identical(length(features), 20L)
   expect_list(features)
@@ -36,6 +27,17 @@ test_that("Expected Output", {
   expect_true(testNumber(features$ela_level.qda_mda_50, lower = 0L))
   expect_identical(features$ela_level.costs_fun_evals, 0L)
   expect_true(testNumber(features$ela_level.costs_runtime, lower = 0L))
+}
+
+test_that("Expected Output", {
+  set.seed(2015*03*26)
+
+  # (1) create a feature object:
+  X = t(replicate(n = 2000L, expr = runif(n = 5L, min = -10L, max = 10L)))
+  feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
+
+  # (2) compute the levelset features
+  features = calculateFeatureSet(feat.object, "ela_level")
 })
 
 test_that("Expect Warning", {

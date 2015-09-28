@@ -3,3 +3,5 @@
 .git
 .Rhistory
 Rplots*.pdf
+^Benchmark
+^todos

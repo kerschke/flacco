@@ -14,9 +14,7 @@ Roxygen: list(wrap = FALSE)
 Depends:
     R (>= 3.0.0),
     BBmisc,
-    checkmate,
-    graphics,
-    stats
+    checkmate
 Suggests:
     devtools,
     e1071,
@@ -28,6 +26,8 @@ Suggests:
     mlbench,
     mlr,
     numDeriv,
+    parallel,
+    parallelMap,
     plyr,
     RANN,
     rpart,

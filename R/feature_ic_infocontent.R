@@ -122,11 +122,8 @@ computeInfoContentStatistics = function(feat.object, control) {
   assertNumeric(inf.sens, lower = -1, upper = 1)
 
   eps05 = which(M > inf.sens * M0)
-  if (length(eps05) > 0) {
-    eps05 = log10(max(epsilon[eps05]))
-  } else {
-    eps05 = NA_real_
-  }
+  eps05 = ifelse(length(eps05) > 0, log10(max(epsilon[eps05])), NA_real_)
+
   return(list(H = H, M = M, eps = epsilon, eps05 = eps05, eps.S = eps.S,
     M0 = M0, Hmax = max(H)))
 }

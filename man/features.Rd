@@ -337,7 +337,15 @@ Performs an Exploratory Landscape Analysis of a continuous function and
   }
 }
 \details{
-Possible \code{control} arguments are:
+Note that if you want to speed up the runtime of the features, you might
+  consider running your feature computation parallelized. For more
+  information, please refer to the \code{parallelMap} package or to
+  \url{http://mlr-org.github.io/mlr-tutorial/release/html/parallelization/index.html}.
+  Especially the runtime of the ELA fevelset features can be reduced
+  significantly.\cr
+
+  Furthermore, please consider adapting the feature computation to your
+  needs. Possible \code{control} arguments are:
   \itemize{
     \item{general}: \itemize{
       \item{\code{show_progress}}: Show progress bar when computing the
@@ -547,13 +555,31 @@ X = t(replicate(n = 2000, expr = runif(n = 5, min = -10, max = 10)))
 feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
 
 # (2) compute all non-cellmapping features
-\dontrun{features = calculateFeatures(feat.object, control = list(allow_cellmapping = FALSE))}
+ctrl = list(allow_cellmapping = FALSE)
+features = calculateFeatures(feat.object, control = ctrl)
 
 # (3) in order to allow the computation of the cell mapping features, one
 # has to provide a feature object that has knowledge about the number of
 # cells per dimension:
-feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2), blocks = 3)
-\dontrun{features = calculateFeatures(feat.object)}
+f = function(x) sum(x^2)
+feat.object = createFeatureObject(X = X, fun = f, blocks = 3)
+features = calculateFeatures(feat.object)
+
+# (4) if you want to compute a specific feature set, you can use
+# calculateFeatureSet:
+features.angle = calculateFeatureSet(feat.object, "cm_angle")
+
+# (5) as noted in the details, it might be useful to compute the levelset
+# features parallelized:
+\dontrun{
+library(parallelMap)
+library(parallel)
+n.cores = detectCores()
+parallelStart(mode = "multicore", cpus = n.cores,
+  logging = FALSE, show.info = FALSE)
+system.time((levelset.par = calculateFeatureSet(feat.object, "ela_level")))
+parallelStop()
+system.time((levelset.seq = calculateFeatureSet(feat.object, "ela_level")))}
 }
 \references{
 \itemize{
