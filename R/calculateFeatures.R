@@ -392,7 +392,7 @@
 #'     }
 #'     \item{ELA curvature features}: \itemize{
 #'       \item{\code{ela_curv.sample_size}}: Number of samples used for
-#'       calculating the curvature features. The default is \code{1000}.
+#'       calculating the curvature features. The default is \code{100*d}.
 #'     }
 #'     \item{ELA distribution features}: \itemize{
 #'       \item{\code{ela_distr.smoothing_bandwidth}}: The smoothing bandwidth,

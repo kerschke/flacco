@@ -10,6 +10,9 @@ calculateCurvatureFeatures = function(feat.object, control) {
     X = extractFeatures(feat.object)
     d = feat.object$dim
     N = control_parameter(control, "ela_curv.sample_size", 100L * d)
+    if (N > feat.object$n.obs)
+      stopf("The sample size (ela_curv.sample_size = %i) is bigger than the total number of observations (%i) in this object.",
+        N, feat.object$n.obs)
     calcNumDeriv = function(par) {
       gr = numDeriv::grad(f, par)
       hess = numDeriv::hessian(f, par)

@@ -7,7 +7,19 @@ test_that("Require original function", {
   X = t(replicate(n = 2000, expr = runif(n = 5L, min = -10L, max = 10L)))
   feat.object = createFeatureObject(X = X, y = rowSums(X^2))
 
-  # (2) compute the curvature features
+  # (2) error because of missing function
+  expect_error(calculateFeatureSet(feat.object, "ela_curv"))
+})
+
+test_that("Required sample size is too big for the given data", {
+  set.seed(2015*03*26)
+  
+  # (1) create a feature object:
+  X = t(replicate(n = 100, expr = runif(n = 3L, min = -10L, max = 10L)))
+  f = function(x) sum(x^2)
+  feat.object = createFeatureObject(X = X, fun = f)
+  
+  # (2) error because of missing function
   expect_error(calculateFeatureSet(feat.object, "ela_curv"))
 })
 
