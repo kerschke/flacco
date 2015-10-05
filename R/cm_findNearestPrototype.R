@@ -81,7 +81,7 @@ findNearestPrototypeQuick = function(feat.object, fast_k,...) {
   nearest.grid = init.grid[apply(nn, 1, function(x) (x[x > 0])[1]), ]
 
   ## in case none of the nearest observations is a non-cell-center
-  all_centers = apply(nn, 1, function(x) all(x < 0))
+  all_centers = apply(nn, 1, function(x) all(x <= 0))
   if (any(all_centers)) {
     n_ctr = sum(all_centers)
     nn_backup = RANN::nn2(rbind(cell.centers[all_centers, 1:dims], X), k = n_ctr + 1L)$nn.idx

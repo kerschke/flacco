@@ -68,21 +68,36 @@ computeInfoContentStatistics = function(feat.object, control) {
     n = feat.object$n.obs
   }
   
-  # remove possible duplicates
-  dup.index = duplicated(cbind(X, y))
+  ## aggregate observations which have duplicates in the decision space
+  dup.index = duplicated(X)
   if (any(dup.index)) {
     if (all(dup.index[-1L]))
       stop("Can not compute information content features, because ALL values are identical.")
+    completely.duplicated = duplicated(cbind(X, y))
+    if (any(completely.duplicated)) {
+      X = X[!completely.duplicated,]
+      y = y[!completely.duplicated]
+      dup.index = duplicated(X)
+    }
+    aggr = control_parameter(control, "ic.aggregate_duplicated", mean)
+    dup.index = dup.index | rev(duplicated(X[nrow(X):1L,]))
+    Z = X[dup.index,]
     X = X[!dup.index,]
+    v = y[dup.index]
     y = y[!dup.index]
     if (control_parameter(control, "ic.show_warnings", FALSE)) {
-      n.dupl = sum(dup.index)
-      if (n.dupl == 1)
-        warning("1 duplicated observation was removed when computing the information content features.")
-      else
-        warningf("%i duplicated observations were removed when computing the information content features.",
-          sum(dup.index))
+      warningf("%i duplicated observations were aggregated when computing the information content features.",
+        sum(dup.index))
     }
+    while (length(v) > 1) {
+      index = vapply(1:nrow(Z), function(i) all(Z[i,] == Z[1,]), logical(1L))
+      X = rbind(X, Z[1,])
+      Z = Z[!index,]
+      y = c(y, aggr(v[index]))
+      v = v[!index]
+    }
+    rownames(X) = 1:nrow(X)
+    n = nrow(X)
   }
 
   # sort values (nearest neighbours vs. random) and compute distances

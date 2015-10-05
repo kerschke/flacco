@@ -360,8 +360,6 @@ Note that if you want to speed up the runtime of the features, you might
       otherwise \code{FALSE}.
       \item{\code{blacklist}}: Which features should NOT be computed? The
       default is \code{NULL}, i.e. none of the features will be excluded.
-      \item{} all the other control arguments from each feature set
-      (\code{calculateAngleFeatures})
     }
     \item{cell mapping angle features}: \itemize{
       \item{\code{cm_angle.show_warnings}}: Should possible warnings about
@@ -408,7 +406,7 @@ Note that if you want to speed up the runtime of the features, you might
     }
     \item{ELA curvature features}: \itemize{
       \item{\code{ela_curv.sample_size}}: Number of samples used for
-      calculating the curvature features. The default is \code{1000}.
+      calculating the curvature features. The default is \code{100*d}.
     }
     \item{ELA distribution features}: \itemize{
       \item{\code{ela_distr.smoothing_bandwidth}}: The smoothing bandwidth,
@@ -485,6 +483,9 @@ Note that if you want to speed up the runtime of the features, you might
       created with a LHS. The default is \code{100 * feat.object$lower}.
       \item{\code{ic.sample.upper}}: Upper bounds of the initial design, if
       created with a LHS. The default is \code{100 * feat.object$upper}.
+      \item{\code{ic.aggregate_duplicated}}: How should observations, which
+      have duplicates in the decision space, be aggregated? The default is
+      \code{mean}.
       \item{\code{ic.show_warnings}}: Should warnings be shown, when
       possible duplicates are removed? The default is \code{FALSE}.
       \item{\code{ic.seed}}: Possible seed, which can be used for making

@@ -121,13 +121,6 @@ test_that("Creating a sample", {
 })
 
 test_that("Checking for strange events", {
-  # NA if half partial information sensitivity is too low
-  feat.object = createFeatureObject(init = iris[,-5], objective = "Petal.Width")
-  eps = seq(-5, 15, length.out = 200)
-  features = calculateFeatureSet(feat.object, "ic", 
-    control = list(ic.epsilon = c(0, 10^eps)))
-  expect_identical(features$ic.eps.s, NA_real_)
-
   # NA if ratio is too high
   feat.object = createFeatureObject(init = iris[,-5], objective = "Petal.Width")
   eps = seq(-5, 15, length.out = 200)
