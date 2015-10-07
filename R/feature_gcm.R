@@ -18,10 +18,7 @@ calculateGCMFeatures = function (feat.object, control) {
       sparse.matrix = calculateSparseMatrix(feat.object, yvals)
       canonical.list = computeCanonical(sparse.matrix)
       fundamental.list = computeFundamental(
-        canonical.form = canonical.list$canonical.form,
-        permutation.index = canonical.list$permutation.index,
-        no.attractors = canonical.list$no.attractors,
-        gcm.control = gcm.control)
+        canonical.list = canonical.list, gcm.control = gcm.control)
       feats = computeGCMFeats(fundamental.list, yvals)
       names(feats) = sprintf("gcm.%s.%s", approach, names(feats))
       return(feats)
@@ -113,7 +110,7 @@ computeCanonical = function(mat) {
 
   # Each closed class has a unique representative in representative.
   ind = lapply(index.closed, function(i) which(communicating.class[i,]))
-  permutation = c(unlist(ind), index.open)
+  permutation = c(unique(unlist(ind)), index.open)
   return(list(canonical.form = mat[permutation, permutation],
     permutation.index = permutation, no.attractors = sum(closed.class)))
 }
@@ -148,7 +145,11 @@ findDirectedGraph = function(mat) {
 }
 
 
-computeFundamental = function(canonical.form, permutation.index, no.attractors, gcm.control) {
+computeFundamental = function(canonical.list, gcm.control) {
+
+  canonical.form = canonical.list$canonical.form
+  permutation.index = canonical.list$permutation.index
+  no.attractors = canonical.list$no.attractors
   seq.closed.classes = seq_len(no.attractors)
 
   # approximate canonical.form to the power of infinity
