@@ -24,10 +24,43 @@ Visualizes the transitions among the cells in the General Cell Mapping approach.
 Possible \code{control} arguments are:
   \itemize{
     \item{Computation of GCM Features}: \itemize{
-      \item{tbc}
+      \item{\code{gcm.approach}}: Which approach should be used when
+      computing the representatives of a cell. The default is \code{"min"},
+      i.e. the observation with the best (minimum) value within per cell.
+      \item{\code{gcm.cf_power}}: Theoretically, we need to compute the
+      canonical form to the power of infinity. However, we use this value
+      as approximation of infinity. The default is \code{256}.
     }
     \item{Plot Control}: \itemize{
-      \item{tbc}
+      \item{\code{gcm.margin}}: The margins of the plot as used by
+      \code{par("mar")}. The default is \code{c(5, 5, 4, 4)}.
+      \item{\code{gcm.color_attractor}}: Color of the attractors. The
+      default is \code{"#333333"}, i.e. dark grey.
+      \item{\code{gcm.color_uncertain}}: Color of the uncertain cells. The
+      default is \code{"#cccccc"}, i.e. grey.
+      \item{\code{gcm.color_basin}}: Color of the basins of attraction. This
+      has to be a function, which computes the colors, depending on the
+      number of attractors. The default is \code{function(n) topo.colors(n)}.
+      \item{\code{gcm.plot_arrows}}: Should arrows be plotted? The default
+      is \code{TRUE}.
+      \item{\code{gcm.arrow.length_{x, y}}}: Scaling factor of the arrow
+      length in x- and y-direction. The default is \code{0.9}, i.e. 90\%
+      of the actual length.
+      \item{\code{gcm.arrowhead.{length, width}}}: Scaling factor for the
+      width and length of the arrowhead. Per default (\code{0.1}) the
+      arrowhead is 10\% of the length of the original arrow.
+      \item{\code{gcm.arrowhead.type}}: Type of the arrowhead. Possible
+      options are \code{"simple"}, \code{"curved"}, \code{"triangle"}
+      (default), \code{"circle"}, \code{"ellipse"} and \code{"T"}.
+      \item{\code{gcm.color_grid}}: Color of the grid lines. The default is
+      \code{"#333333"}, i.e. dark grey.
+      \item{\code{gcm.label.{x, y}_coord}}: Label of the x-/y-coordinate
+      (below / left side of the plot).
+      \item{\code{gcm.label.{x, y}_id}}: Label of the x-/y-cell ID (above /
+      right side of the plot).
+      \item{\code{gcm.plot_{coord, id}_labels}}: Should the coordinate
+      (bottom and left) / ID (top and right) labels be plotted? The default
+      is \code{TRUE}.
     }
   }
 }

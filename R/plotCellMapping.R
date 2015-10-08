@@ -9,10 +9,43 @@
 #'   Possible \code{control} arguments are:
 #'   \itemize{
 #'     \item{Computation of GCM Features}: \itemize{
-#'       \item{tbc}
+#'       \item{\code{gcm.approach}}: Which approach should be used when
+#'       computing the representatives of a cell. The default is \code{"min"},
+#'       i.e. the observation with the best (minimum) value within per cell.
+#'       \item{\code{gcm.cf_power}}: Theoretically, we need to compute the
+#'       canonical form to the power of infinity. However, we use this value
+#'       as approximation of infinity. The default is \code{256}.
 #'     }
 #'     \item{Plot Control}: \itemize{
-#'       \item{tbc}
+#'       \item{\code{gcm.margin}}: The margins of the plot as used by
+#'       \code{par("mar")}. The default is \code{c(5, 5, 4, 4)}.
+#'       \item{\code{gcm.color_attractor}}: Color of the attractors. The
+#'       default is \code{"#333333"}, i.e. dark grey.
+#'       \item{\code{gcm.color_uncertain}}: Color of the uncertain cells. The
+#'       default is \code{"#cccccc"}, i.e. grey.
+#'       \item{\code{gcm.color_basin}}: Color of the basins of attraction. This
+#'       has to be a function, which computes the colors, depending on the
+#'       number of attractors. The default is \code{function(n) topo.colors(n)}.
+#'       \item{\code{gcm.plot_arrows}}: Should arrows be plotted? The default
+#'       is \code{TRUE}.
+#'       \item{\code{gcm.arrow.length_{x, y}}}: Scaling factor of the arrow
+#'       length in x- and y-direction. The default is \code{0.9}, i.e. 90\%
+#'       of the actual length.
+#'       \item{\code{gcm.arrowhead.{length, width}}}: Scaling factor for the
+#'       width and length of the arrowhead. Per default (\code{0.1}) the
+#'       arrowhead is 10\% of the length of the original arrow.
+#'       \item{\code{gcm.arrowhead.type}}: Type of the arrowhead. Possible
+#'       options are \code{"simple"}, \code{"curved"}, \code{"triangle"}
+#'       (default), \code{"circle"}, \code{"ellipse"} and \code{"T"}.
+#'       \item{\code{gcm.color_grid}}: Color of the grid lines. The default is
+#'       \code{"#333333"}, i.e. dark grey.
+#'       \item{\code{gcm.label.{x, y}_coord}}: Label of the x-/y-coordinate
+#'       (below / left side of the plot).
+#'       \item{\code{gcm.label.{x, y}_id}}: Label of the x-/y-cell ID (above /
+#'       right side of the plot).
+#'       \item{\code{gcm.plot_{coord, id}_labels}}: Should the coordinate
+#'       (bottom and left) / ID (top and right) labels be plotted? The default
+#'       is \code{TRUE}.
 #'     }
 #'   }
 #' @references
@@ -58,7 +91,7 @@ plotCellMapping = function (feat.object, control) {
   
   orig.margins = par("mar")
   on.exit(par(mar = orig.margins))
-  par(mar = control_parameter(control, "gcm.par", c(5, 5, 4, 4)))
+  par(mar = control_parameter(control, "gcm.margin", c(5, 5, 4, 4)))
 
   blocks = feat.object$blocks
   assertIntegerish(blocks, lower = 1, len = 2)
@@ -116,8 +149,10 @@ plotCellMapping = function (feat.object, control) {
   rownames(arrow.mat) = c("from.x", "from.y", "component.x", "component.y")
 
   # prepare colour palette
-  palette = control_parameter(control, "gcm.color_palette",
-    c("#cccccc","#333333", topo.colors(length(attractors))))
+  col.attr = control_parameter(control, "gcm.color_attractor", "#333333")
+  col.uncert = control_parameter(control, "gcm.color_uncertain", "#cccccc")
+  col.basin = control_parameter(control, "gcm.color_basin", function(n) topo.colors(n))
+  palette = c(col.uncert, col.attr, col.basin(length(attractors)))
 
   # cell information
   # force `image` to consider `color` as a matrix of discrete values
@@ -130,34 +165,61 @@ plotCellMapping = function (feat.object, control) {
   )
 
   # grid
-  abline(v = seq(0.5, blocks[1] + 0.5), col = palette[2],
+  grid.col = control_parameter(control, "gcm.color_grid", "#333333")
+  abline(v = seq(0.5, blocks[1] + 0.5), col = grid.col,
     xlim = c(0.5, blocks[1] + 0.5), ylim = c(0.5, blocks[2] + 0.5)
   )
-  abline(h = seq(0.5, blocks[2] + 0.5), col = palette[2],
+  abline(h = seq(0.5, blocks[2] + 0.5), col = grid.col,
     xlim = c(0.5, blocks[1] + 0.5), ylim = c(0.5, blocks[1] + 0.5)
   )
 
   # attraction
-  apply(arrow.mat, 2, FUN = function(arrow) {
-    arrow.length = sqrt(sum(arrow[3:4]^2))
-    shape::Arrows(arrow[1], arrow[2],
-      arrow[1] + arrow[3] * 0.9, arrow[2] + arrow[4] * 0.9,
-      arr.length = arrow.length * 0.1, 
-      arr.width = arrow.length * 0.1,
-      arr.type = "triangle")
-  })
+  if (control_parameter(control, "gcm.plot_arrows", TRUE)) {
+    arrow.type = control_parameter(control, "gcm.arrowhead.type", "triangle")
+    assertChoice(arrow.type,
+      choices = c("simple", "curved", "triangle", "circle", "ellipse", "T"))
+    arrow.length_x = control_parameter(control, "gcm.arrow.length_x", 0.9)
+    arrow.length_y = control_parameter(control, "gcm.arrow.length_y", 0.9)
+    arrowhead.length = control_parameter(control, "gcm.arrowhead.length", 0.1)
+    arrowhead.width = control_parameter(control, "gcm.arrowhead.width", 0.1)
+    assertNumber(arrow.length_x, lower = 0)
+    assertNumber(arrow.length_y, lower = 0)
+    assertNumber(arrowhead.length, lower = 0)
+    assertNumber(arrowhead.width, lower = 0)
+    apply(arrow.mat, 2, FUN = function(arrow) {
+      arrow.length = sqrt(sum(arrow[3:4]^2))
+      shape::Arrows(x0 = arrow[1], y0 = arrow[2],
+        x1 = arrow[1] + arrow[3] * arrow.length_x,
+        y1 = arrow[2] + arrow[4] * arrow.length_y,
+        arr.length = arrow.length * arrowhead.length, 
+        arr.width = arrow.length * arrowhead.width,
+        arr.type = arrow.type)
+    })  
+  }
 
   # additional axes that represent values of original feature dimensions
-  axis(1, at = seq_len(blocks[1]), labels = rep("", blocks[1]))
-  text(x = seq_len(blocks[1]), y = 0.25, pos = 1, xpd = TRUE,
-    sprintf("%.2e", unique(feat.object$cell.centers[[1]])), srt = 45)
-  mtext(side = 1, "Cell Coordinate (1st Dimension)", line = 4, cex = par("cex"))
-  axis(2, at = seq_len(blocks[2]), labels = rep("", blocks[2]))
-  text(y = seq_len(blocks[2]), x = 0.35, pos = 2, xpd = TRUE,
-    sprintf("%.2e", unique(feat.object$cell.centers[[2]])), srt = 45)
-  mtext(side = 2, "Cell Coordinate (2nd Dimension)", line = 4, cex = par("cex"))
-  mtext(side = 3, "Cell ID (1st Dimension)", line = 2.5)
-  axis(side = 3, at = seq_len(blocks[1]))
-  mtext(side = 4, "Cell ID (2nd Dimension)", line = 2.5)
-  axis(side = 4, at = seq_len(blocks[2]), las = 1)
+  xlab_coord = control_parameter(control, "gcm.label.x_coord",
+    "Cell Coordinate (1st Dimension)")
+  ylab_coord = control_parameter(control, "gcm.label.y_coord",
+    "Cell Coordinate (2nd Dimension)")
+  xlab_id = control_parameter(control, "gcm.label.x_id",
+    "Cell ID (1st Dimension)")
+  ylab_id = control_parameter(control, "gcm.label.y_id",
+    "Cell ID (2nd Dimension)")
+  if (control_parameter(control, "gcm.plot_coord_labels", TRUE)) {
+    axis(1, at = seq_len(blocks[1]), labels = rep("", blocks[1]))
+    text(x = seq_len(blocks[1]), y = 0.25, pos = 1, xpd = TRUE,
+      sprintf("%.2e", unique(feat.object$cell.centers[[1]])), srt = 45)
+    mtext(side = 1, xlab_coord, line = 4, cex = par("cex"))
+    axis(2, at = seq_len(blocks[2]), labels = rep("", blocks[2]))
+    text(y = seq_len(blocks[2]), x = 0.35, pos = 2, xpd = TRUE,
+      sprintf("%.2e", unique(feat.object$cell.centers[[2]])), srt = 45)
+    mtext(side = 2, ylab_coord, line = 4, cex = par("cex"))  
+  }
+  if (control_parameter(control, "gcm.plot_id_labels", TRUE)) {
+    mtext(side = 3, xlab_id, line = 2.5)
+    axis(side = 3, at = seq_len(blocks[1]))
+    mtext(side = 4, ylab_id, line = 2.5)
+    axis(side = 4, at = seq_len(blocks[2]), las = 1)
+  }
 }
