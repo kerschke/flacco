@@ -5,6 +5,41 @@ calculateLevelsetFeatures = function(feat.object, control) {
   if (missing(control))
     control = list()
   assertList(control)
+  parallelize = control_parameter(control, "ela_level.parallelize", FALSE)
+  assertLogical(parallelize, len = 1L)
+  if (parallelize) {
+    on.exit(parallelMap::parallelStop())
+    parallel.mode =
+      control_parameter(control, "ela_level.parallel.mode", "local")
+    if (Sys.info()["sysname"] == "Windows") {
+      assertChoice(parallel.mode, choices = c("local", "socket"))
+    } else {
+      assertChoice(parallel.mode,
+        choices = c("local", "multicore", "socket", "mpi", "BatchJobs"))
+    }
+    if (parallel.mode == "local") {
+      parallel.cpus = control_parameter(control, "ela_level.parallel.cpus", NA)
+    } else {
+      cpus = parallel::detectCores()
+      parallel.cpus = control_parameter(control, "ela_level.parallel.cpus", cpus)
+    }
+    assertInt(parallel.cpus, lower = 1L, na.ok = TRUE)
+    parallel.logging =
+      control_parameter(control, "ela_level.parallel.logging", FALSE)
+    assertLogical(parallel.logging, len = 1L)
+    parallel.level =
+      control_parameter(control, "ela_level.parallel.level", "mlr.resample")
+    lvls = as.character(unlist(parallelMap::parallelGetRegisteredLevels()))
+    assertChoice(parallel.level, choices = lvls)
+    parallel.info =
+      control_parameter(control, "ela_level.parallel.show_info", FALSE)
+    assertLogical(parallel.info, len = 1L)
+    parallelMap::parallelStart(
+      mode = parallel.mode, cpus = parallel.cpus,
+      logging = parallel.logging,
+      level = parallel.level,
+      show.info = parallel.info)
+  }
   measureTime(expression({
     probs = control_parameter(control, "ela_level.quantiles", 
       c(0.10, 0.25, 0.5))

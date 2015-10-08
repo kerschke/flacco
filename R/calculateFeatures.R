@@ -418,6 +418,24 @@
 #'       of the resampling method. The default is \code{10}.
 #'       \item{\code{ela_level.resample_info}}: Should information regarding
 #'       the resampling be printed? The default is \code{FALSE}.
+#'       \item{\code{ela_level.parallelize}}: Should the levelset features be
+#'       computed in parallel? The default is \code{FALSE}.
+#'       \item{\code{ela_level.parallel.mode}}: Which mode should be used for
+#'       the parallelized computation? Possible options are \code{"local"},
+#'       \code{"multicore"}, \code{"socket"} (default), \code{"mpi"} and
+#'       \code{"BatchJobs"}. Note that in case you are using a windows computer
+#'       you can only use the \code{"socket"} mode.
+#'       \item{\code{ela_level.parallel.cpus}}: On how many cpus do you want to
+#'       compute the features in parallel? Per default, all available cpus are
+#'       used.
+#'       \item{\code{ela_level.parallel.level}}: On which level should the
+#'       parallel computation be performed? The default is
+#'       \code{"mlr.resample"}, i.e. the internal resampling (performed using
+#'       \code{mlr}) will be done in parallel.
+#'       \item{\code{ela_level.parallel.logging}}: Should slave output be
+#'       logged? The default is \code{FALSE}.
+#'       \item{\code{ela_level.parallel.show_info}}: Should verbose output of
+#'       function calls be printed on the console? The default is \code{FALSE}.
 #'     }
 #'     \item{ELA local search features}: \itemize{
 #'       \item{\code{ela_local.local_searches}}: Number of local searches. The
