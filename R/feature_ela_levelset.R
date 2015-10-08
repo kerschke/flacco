@@ -11,18 +11,11 @@ calculateLevelsetFeatures = function(feat.object, control) {
     on.exit(parallelMap::parallelStop())
     parallel.mode =
       control_parameter(control, "ela_level.parallel.mode", "local")
-    if (Sys.info()["sysname"] == "Windows") {
-      assertChoice(parallel.mode, choices = c("local", "socket"))
-    } else {
-      assertChoice(parallel.mode,
-        choices = c("local", "multicore", "socket", "mpi", "BatchJobs"))
-    }
-    if (parallel.mode == "local") {
-      parallel.cpus = control_parameter(control, "ela_level.parallel.cpus", NA)
-    } else {
-      cpus = parallel::detectCores()
-      parallel.cpus = control_parameter(control, "ela_level.parallel.cpus", cpus)
-    }
+    assertChoice(parallel.mode,
+      choices = c("local", "multicore", "socket", "mpi", "BatchJobs"))
+    parallel.cpus = control_parameter(control, "ela_level.parallel.cpus",
+      parallel::detectCores())
+    parallel.cpus = ifelse(parallel.mode == "local", NA, parallel.cpus)
     assertInt(parallel.cpus, lower = 1L, na.ok = TRUE)
     parallel.logging =
       control_parameter(control, "ela_level.parallel.logging", FALSE)
