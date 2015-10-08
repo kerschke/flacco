@@ -55,6 +55,7 @@ test_that("Parallelization", {
   feat.object = createFeatureObject(X = X, y = y)
 
   # FIXME: Need to find out, why the checks fail, when using other modes
-  feats = calculateFeatureSet(feat.object, "ela_level", ela_level.parallelize = TRUE)
+  feats = calculateFeatureSet(feat.object, "ela_level",
+    control = list(ela_level.parallelize = TRUE))
   checkLevelOutput(feats)
 })
