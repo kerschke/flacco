@@ -10,6 +10,7 @@ calculateGCMFeatures = function (feat.object, control) {
 
   approaches = control_parameter(control, "gcm.approaches", c("min", "mean", "near"))
   cf.power = control_parameter(control, "gcm.cf_power", 256L)
+  assertInt(cf.power, lower = 1L, upper = Inf)
   gcm.control = list(cf.power = cf.power)
 
   result = lapply(approaches, function(approach) {
