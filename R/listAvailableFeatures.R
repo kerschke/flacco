@@ -50,8 +50,7 @@ listAllFeatureSets = function() {
   list(cm = c("cm_angle", "cm_conv", "cm_grad"),
     ela = c("ela_conv", "ela_curv", "ela_distr", "ela_level", "ela_local", "ela_meta"),
     misc = c("basic", "disp", "limo", "nbc", "pca"),
-    gcm = "gcm",
+    gcm = c("bt", "gcm"),
     ic = "ic"
-#     gcm = c("barrier_tree", "gcm"),
   )
 }

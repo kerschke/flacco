@@ -87,6 +87,7 @@ plotBarrierTree = function(feat.object, control) {
   gcm.control = list(cf.power = cf.power)
 
   yvals = getObjectivesByApproach(feat.object, approach)
+  yvals[is.infinite(yvals)] = max(yvals[is.finite(yvals)]) * 100
   sparse.matrix = calculateSparseMatrix(feat.object, yvals)
   canonical.list = computeCanonical(sparse.matrix)
   fundamental.list = computeFundamental(

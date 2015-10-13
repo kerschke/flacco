@@ -2,6 +2,8 @@ calculateBarrierTreeFeatures = function (feat.object, control) {
   assertClass(feat.object, "FeatureObject")
   if (!feat.object$allows.cellmapping)
     stop ("This feature object does not support cell mapping. You first need to define the number of cells per dimension before computing these features.")
+  if (feat.object$dim != 2)
+    stop("The barrier trees can currently only be computed for 2-dimensional problems!")
   X = extractFeatures(feat.object)
   y = extractObjective(feat.object)
   if (missing(control))
@@ -16,17 +18,18 @@ calculateBarrierTreeFeatures = function (feat.object, control) {
   result = lapply(approaches, function(approach) {
     measureTime(expression({
       yvals = getObjectivesByApproach(feat.object, approach)
+      yvals[is.infinite(yvals)] = max(yvals[is.finite(yvals)]) * 100
       sparse.matrix = calculateSparseMatrix(feat.object, yvals)
       canonical.list = computeCanonical(sparse.matrix)
       fundamental.list = computeFundamental(
         canonical.list = canonical.list,
         gcm.control = gcm.control)
       barrier.tree = createBarrierTree(feat.object, fundamental.list,
-        canonical.list, yvals)
+        canonical.list, yvals, control)
       feats = computeBarrierTreeFeats(yvals, fundamental.list, barrier.tree, feat.object)
-      names(feats) = sprintf("gcm.%s.%s", approach, names(feats))
+      names(feats) = sprintf("bt.%s.%s", approach, names(feats))
       return(feats)
-    }), sprintf("gcm.%s", approach))
+    }), sprintf("bt.%s", approach))
   })
   return(unlist(result, recursive = FALSE))
 }
@@ -38,6 +41,12 @@ createBarrierTree = function(feat.object, fundamental.list, canonical.list, yval
   permutation.index = fundamental.list$permutation.index
   seq.closed.classes = fundamental.list$seq.closed.classes
   canonical.form = canonical.list$canonical.form
+  finite.values = is.finite(yvals)
+
+  # remove invalid (infinite) values
+  canonical.form = canonical.form[finite.values, finite.values]
+  yvals = yvals[finite.values]
+  permutation.index = permutation.index[finite.values]
 
   # Probability of transient to transient state [Q = P(idx(sv+1:end),idx(sv+1:end));]
   Q = canonical.form[-seq.closed.classes, -seq.closed.classes]
@@ -50,10 +59,10 @@ createBarrierTree = function(feat.object, fundamental.list, canonical.list, yval
   decomp = Matrix::expand(Matrix::lu(diag(nrow(Q)) - Q)) 
 
   # L\R [Matlab] <--> solve(L, R) [R]
-  LdR = solve(decomp$P %*% decomp$L, R)
+  LdR = Matrix::solve(decomp$P %*% decomp$L, R)
 
   # U\(L\R) [Matlab] <--> solve(U, LdR) [R]
-  prob.absorb = as.matrix(solve(decomp$U, LdR))
+  prob.absorb = as.matrix(Matrix::solve(decomp$U, LdR))
   prob.absorb.orig = prob.absorb
 
   cells = seq_along(permutation.index)
@@ -100,7 +109,7 @@ createBarrierTree = function(feat.object, fundamental.list, canonical.list, yval
   keep = sort(permutation.index[length(seq.closed.classes) + which(!is.attr)])
   #  [ orig: fe([indexPermutation(1:closedClassIndex); indexPermutation(closedClassIndex+find(key ~= 0))]) = []; ]
   a1 = permutation.index[seq.closed.classes]
-  a2 = permutation.index[length(seq.closed.classes) + which(is.attr)]
+  a2 = na.omit(permutation.index[length(seq.closed.classes) + which(is.attr)])
   yvals = yvals[-unique(c(a1, a2))]
 
   # Update permutation.index 
@@ -242,85 +251,93 @@ computeBarrierTreeFeats = function(yvals, fundamental.list, barrier.tree, feat.o
   feats = vector(mode = "list", length = 0L)
   feats$levels = max(levels)
   feats$depth = depth
-  feats$ratio.depth_levels = depth / max(levels)
+  if (max(levels) != 0)
+    feats$depth_levels_ratio = depth / max(levels)
+  else
+    feats$depth_levels_ratio = NA_real_
 
-  # ratio levels/leaves
-  feats$ratio.levels_leaves = levels / length(seq.closed.classes)
+  # ratio levels/nodes
+  feats$levels_nodes_ratio = levels / length(seq.closed.classes)
 
-  # location and dispersion of 'weights' (diffs)
-  feats$diffs.min = min(diffs)
-  feats$diffs.mean = mean(diffs)
-  feats$diffs.median = median(diffs)
-  feats$diffs.max = max(diffs)
-  feats$diffs.sd = sd(diffs)
+  if (length(diffs) > 0) {
+    # location and dispersion of 'weights' (diffs)
+    feats$diffs.min = min(diffs)
+    feats$diffs.mean = mean(diffs)
+    feats$diffs.median = median(diffs)
+    feats$diffs.max = max(diffs)
+    feats$diffs.sd = sd(diffs)
+  
+    # average diff per level
+    avg.diffs = vapply(unique(levels)[-1], function(lvl) {
+      x = barrier.tree$tree.nodes[levels == lvl]
+      mean(barrier.tree$diffs[barrier.tree$cells %in% (x)])
+    }, double(1L))
+    feats$level_diffs.min = min(avg.diffs)
+    feats$level_diffs.mean = mean(avg.diffs)
+    feats$level_diffs.median = median(avg.diffs)
+    feats$level_diffs.max = max(avg.diffs)
+    feats$level_diffs.sd = sd(avg.diffs)  
+  } else {
+    x = as.list(rep(NA_real_, 10L))
+    x = setNames(x, sprintf("%s.%s", rep(c("diffs", "level_diffs"), each = 5),
+      rep(c("min", "mean", "median", "max", "sd"), 2)))
+    feats = c(feats, x)
+  }
 
-  # average diff per level
-  avg.diffs = vapply(unique(levels)[-1], function(lvl) {
-    x = barrier.tree$tree.nodes[levels == lvl]
-    mean(barrier.tree$diffs[barrier.tree$cells %in% (x)])
-  }, double(1L))
-  feats$level_diffs.min = min(avg.diffs)
-  feats$level_diffs.mean = mean(avg.diffs)
-  feats$level_diffs.median = median(avg.diffs)
-  feats$level_diffs.max = max(avg.diffs)
-  feats$level_diffs.sd = sd(avg.diffs)
-
-  # distances from (non-best) attractors to global best
+  # distances from local best to global best attractors
   index.ybest = selectMin(yvals)
   global.opt = ztox(z = celltoz(index.ybest, feat.object$blocks),
     cell.size = feat.object$cell.size, 
     lower = feat.object$lower
   )
-  seq.closed.classes.constrained =
-    seq.closed.classes[-which(permutation.index == index.ybest)]
-  distances = vapply(seq.closed.classes.constrained, function(i) {
+  distances = vapply(seq.closed.classes, function(i) {
     local.opt = ztox(z = celltoz(permutation.index[i], feat.object$blocks),
       cell.size = feat.object$cell.size, 
       lower = feat.object$lower
     )
     sqrt(sum((global.opt - local.opt)^2))
   }, double(1L))
-  feats$dist.min = min(distances)
-  feats$dist.mean = mean(distances)
-  feats$dist.median = median(distances)
-  feats$dist.max = max(distances)
-  feats$dist.sd = sd(distances)
+  feats$attractor_dists.min = min(distances)
+  feats$attractor_dists.mean = mean(distances)
+  feats$attractor_dists.median = median(distances)
+  feats$attractor_dists.max = max(distances)
+  feats$attractor_dists.sd = sd(distances)  
 
   # Basins size ratio
   basin.uncertain = vapply(seq.closed.classes, function(i) {
-    sum(prob.absorb[, i] != 0)
+    sum(prob.absorb[, i] > 1e-15) + 1L
   }, integer(1L))
   basin.certain = vapply(seq.closed.classes, function(i) {
-    sum(prob.absorb[, i] == 1)
+    sum(abs(prob.absorb[, i] - 1) < 1e-15) + 1L
   }, integer(1L))
 
   # b1 stores, which attractor is most likely
   b1 = apply(prob.absorb, 1, selectMax)
   basin.max = vapply(seq.closed.classes,
-    function(i) sum(b1 == i), integer(1L))
-  feats$basin.ratio.uncertain = max(basin.uncertain) / min(basin.uncertain)
-  feats$basin.ratio.certain = max(basin.certain) / min(basin.certain)
-  feats$basin.ratio.max = max(basin.max) / min(basin.certain)
+    function(i) sum(b1 == i) + 1L, integer(1L))
+  feats$basin_ratio.uncertain = max(basin.uncertain) / min(basin.uncertain)
+  feats$basin_ratio.certain = max(basin.certain) / min(basin.certain)
+  feats$basin_ratio.most_likely = max(basin.max) / min(basin.max)
 
   # Intersection of (global with local) basins
-  ## FIXME: The dimensions of permutation.index and prob.absorb do not match!
-  global.basin = which(prob.absorb[ , which(permutation.index == index.ybest)] !=0 )
-  basin.intersection.count = vapply(seq.closed.classes.constrained, function(i) {
-    local.basin = which(prob.absorb[ , i] != 0)
-    length(intersect(global.basin, local.basin))
+  global.basin = which(prob.absorb[ , which(permutation.index == index.ybest)] > 1e-15)
+  basin.intersection.count = vapply(seq.closed.classes, function(i) {
+    local.basin = which(prob.absorb[ , i] > 1e-15)
+    length(intersect(global.basin, local.basin)) + 1L
   }, integer(1L))
 
-  feats$basin_intersect.min  = min(basin.intersection.count)
-  feats$basin_intersect.mean  = mean(basin.intersection.count)
-  feats$basin_intersect.median  = median(basin.intersection.count)
-  feats$basin_intersect.max  = max(basin.intersection.count)
-  feats$basin_intersect.sd  = sd(basin.intersection.count)
+  total.cells = feat.object$total.cells
+  feats$basin_intersection.min = min(basin.intersection.count) / total.cells
+  feats$basin_intersection.mean = mean(basin.intersection.count) / total.cells
+  feats$basin_intersection.median = median(basin.intersection.count) / total.cells
+  feats$basin_intersection.max = max(basin.intersection.count) / total.cells
+  feats$basin_intersection.sd = sd(basin.intersection.count) / total.cells
 
-  #range of basin
+  # range of basin
   coord = vapply(seq_along(global.basin), function(i) {
     celltoz(global.basin[i], feat.object$blocks)
   }, integer(feat.object$dim))
-  feats$range = sqrt(sum((apply(coord, 1, function(x) diff(range(x))))^2))
+  feats$basin_range = sqrt(sum((apply(coord, 1, function(x) diff(range(x))))^2))
   return(feats)
 }
 

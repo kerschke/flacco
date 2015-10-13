@@ -87,9 +87,35 @@ test_that("Cellmapping Objects", {
   expect_true(assertInteger(features$basic.cells_filled))
   expect_true(features$basic.allows_cm)
 
-  # (4) test, whether an incorrect input causes an error:
+  # (3) test, whether an incorrect input causes an error:
   expect_error(calculateFeatures(feat.object,
     control = list(subset = c("test123"), allow_costs = FALSE, allow_cellmapping = FALSE)))
+
+  # (4) create a 2d-feature object:
+  X = t(replicate(n = 2000L, expr = runif(n = 2L, min = -10L, max = 10L)))
+  y = rowSums(X^2)
+  feat.object = createFeatureObject(X = X, y = y, blocks = c(4, 3))
+  
+  # (5) compute the non-expensive features
+  features = calculateFeatures(feat.object, control = list(allow_costs = FALSE,
+    show_progress = FALSE, cm_angle.show_warnings = FALSE))
+  
+  # test return value types and ranges
+  expect_identical(length(features), 293L)
+  expect_list(features)
+  
+  # all objects are either NA, logical or a number
+  expect_true(all(sapply(features, function(x) is.na(x) || is.logical(x) || assertNumber(x))))
+  
+  # all features were computed without additional function evaluations
+  expect_true(all(unlist(features[grep("costs_fun_evals", names(features))]) == 0))
+  
+  # as the feature object was a cellmapping feature object, the following tests should pass
+  expect_true(assertInteger(features$basic.blocks_min))
+  expect_true(assertInteger(features$basic.blocks_max))
+  expect_true(assertInteger(features$basic.cells_total))
+  expect_true(assertInteger(features$basic.cells_filled))
+  expect_true(features$basic.allows_cm)
 })
 
 test_that("Underlying Functions Available (non-cellmapping)", {
@@ -139,7 +165,8 @@ test_that("Underlying Functions Available (cellmapping)", {
   feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2), blocks = 3L)
 
   # (2) compute all non-cm features:
-  features = calculateFeatures(feat.object, control = list(show_progress = FALSE))
+  features = calculateFeatures(feat.object,
+    control = list(show_progress = FALSE))
 
   # test return value types and ranges
   expect_identical(length(features), 248L)

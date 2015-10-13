@@ -208,6 +208,40 @@ computation of the ELA local search features) or \code{\link{density}}
       function evaluations and runtime (in seconds), which were needed for
       the computation of these features
     }
+    \item{\code{bt} -- barrier tree features (90)}:\cr
+    Computes barrier tree features on 2D (!) problems, based on a
+    Generalized Cell Mapping (GCM) approach. Computations are performed
+    based on three different approaches: taking the best (\code{min}) or
+    average (\code{mean}) objective value of a cell or the closest
+    observation (\code{near}) to a cell as representative. For each of these
+    approaches the following 30 features are computed:\cr
+    \itemize{
+      \item{\code{levels}}: absolute number of levels of the barrier tree
+      \item{\code{depth}}: range between highest and lowest node of the tree
+      \item{\code{depth_levels_ratio}}: ratio of depth and levels
+      \item{\code{levels_nodes_ratio}}: ratio of number of levels and number
+      of (non-root) nodes of the tree
+      \item{\code{diffs.{min, mean, median, max, sd}}}:
+      aggregations of the height differences between a node and its
+      predecessor
+      \item{\code{level_diffs.{min, mean, median, max, sd}}}:
+      aggregations of the average height differences per level
+      \item{\code{attractor_dists.{min, mean, median, max, sd}}}:
+      aggregations of the (euclidean) distances between the local and global
+      best cells (attractors)
+      \item{\code{basin_ratio.{uncertain, certain, most_likely}}}:
+      ratios of maximum and minimum size of the basins of attractions; here,
+      a cell might belong to different attractors (uncertain), exactly one
+      attractor (certain) or the attractor with the highest probability
+      \item{\code{basin_intersection.{min, mean, median, max, sd}}}:
+      aggregations of the intersection between the basin of the global best
+      value and the basins of all local best values
+      \item{\code{basin_range}}:
+      range of a basin (euclidean distance of widest range per dimension)
+      \item{\code{costs_{fun_evals, runtime}}}: number of (additional)
+      function evaluations and runtime (in seconds), which were needed for
+      the computation of these features
+    }
     \item{\code{ic} -- information content features (7)}:\cr
     Computes features based on the Information Content of Fitness Sequences
     (ICoFiS) approach (cf. Munoz et al., 2015). In this approach, the
@@ -328,6 +362,7 @@ Performs an Exploratory Landscape Analysis of a continuous function and
     \code{"ela_curv"}, \code{"ela_distr"}, \code{"ela_level"},
     \code{"ela_local"}, \code{"ela_meta"})
     \item{GCM}: general cell mapping features (\code{"gcm"})
+    \item{BT}: barrier tree features (\code{"bt"})
     \item{IC}: information content features (\code{"ic"})
     \item{Basic}: basic features (\code{"basic"})
     \item{Disp}: dispersion features (\code{"disp"})
@@ -482,6 +517,18 @@ Note that if you want to speed up the runtime of the features, you might
       \item{\code{gcm.cf_power}}: Theoretically, we need to compute the
       canonical form to the power of infinity. However, we use this value
       as approximation of infinity. The default is \code{256}.
+    }
+    \item{barrier tree features}: \itemize{
+      \item{\code{gcm.approaches}}: Which approach(es) should be used when
+      computing the representatives of a cell. The default are all three
+      approaches, i.e. \code{c("min", "mean", "near")}.
+      \item{\code{gcm.cf_power}}: Theoretically, we need to compute the
+      canonical form to the power of infinity. However, we use this value
+      as approximation of infinity. The default is \code{256}.
+      \item{\code{bt.base}}: Maximum number of basins, which are joined at a
+      single breakpoint. The default is \code{4L}.
+      \item{\code{bt.max_depth}}: Maximum number of levels of the barrier
+      tree. The default is \code{16L}.
     }
     \item{information content features}: \itemize{
       \item{\code{ic.epsilon}}: Epsilon values as described in section V.A

@@ -22,7 +22,7 @@ calculateFeatureSet = function(feat.object, set, control, ...) {
     limo = calculateLinearModelFeatures(feat.object),
     nbc = calculateNearestBetterFeatures(feat.object, control),
     pca = calculatePrincipalComponentFeatures(feat.object, control),
-#     barrier_tree = calculateBarrierTreeFeatures(feat.object, control),
+    bt = calculateBarrierTreeFeatures(feat.object, control),
     gcm = calculateGCMFeatures(feat.object, control),
     ic = calculateInformationContentFeatures(feat.object, control)
   )
