@@ -1,12 +1,13 @@
-context("Plot: Barrier Tree Plot")
+context("Plot: Barrier Tree 3D")
 
 test_that("Default BarrierTree-Plot", {
   set.seed(2015*03*25)
-  X = t(replicate(1000, runif(2, -1000, 1000)))
-  y = apply(X, 1, function(x) {x[1]^4 + 1000*(x[1]-3)^3 + 1000*x[1] + x[2]})
+  X = replicate(2, runif(1000, -1000, 1000))
+  f = function(x) {x[1]^4 + 1000 * (x[1] - 3)^3 + 1000 * x[1] + x[2]}
+  y = apply(X, 1, f)
   feat.object = createFeatureObject(X = X, y = y, 
     lower = -1000, upper = 1000, blocks = 5)  
-  plotBarrierTree(feat.object)
+  plotBarrierTree3D(feat.object)
 
   # this can only happen if no error has forced the execution to stop
   expect_true(TRUE) 
@@ -18,13 +19,13 @@ test_that("Vary Block Sizes", {
   y = apply(X, 1, f)
 
   feat.object = createFeatureObject(X = X, y = y, fun = f, blocks = c(4, 6))
-  plotBarrierTree(feat.object)
+  plotBarrierTree3D(feat.object)
 
   feat.object = createFeatureObject(X = X, y = y, fun = f, blocks = c(8, 3))
-  plotBarrierTree(feat.object)
+  plotBarrierTree3D(feat.object)
 
   feat.object = createFeatureObject(X = X, y = y, fun = f, blocks = c(10, 10))
-  plotBarrierTree(feat.object)
+  plotBarrierTree3D(feat.object)
 
   # this can only happen if no error has forced the execution to stop
   expect_true(TRUE) 
@@ -38,7 +39,7 @@ test_that("Changing Control Arguments", {
   feat.object = createFeatureObject(X = X, y = y, 
     lower = -1000, upper = 1000, blocks = c(10, 10))  
 
-  plotBarrierTree(feat.object,
+  plotBarrierTree3D(feat.object,
     control = list(
       gcm.approach = "near", gcm.cf_power = 512L,
       bt.color_surface = "hotpink",

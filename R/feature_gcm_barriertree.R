@@ -155,7 +155,7 @@ createBarrierTree = function(feat.object, fundamental.list, canonical.list, yval
       break
   }
 
-  root = buffer # the last element in buffer becomes the root of the barrier tree
+  root = buffer[1] # the last element in buffer becomes the root of the barrier tree
 
   # clean up vectors: only remaining elements are those cells which are part of the tree
   if (sum(predecessors == 0) > 0) {

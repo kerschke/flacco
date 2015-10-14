@@ -1,4 +1,4 @@
-#' @title Plot Barrier Tree
+#' @title Plot Barrier Tree in 3D
 #'
 #' @description
 #' Creates a 3D surface plot containing the barrier tree of this cell mapping.
@@ -51,14 +51,6 @@
 #' @return [\code{plot}].\cr
 #'   A 3D-surface plot, visualizing the barrier tree of this cell mapping.
 #' @examples
-#' # (1) create a feature object:
-#' X = t(replicate(n = 2000, expr = runif(n = 5, min = -10, max = 10)))
-#' feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
-#' 
-#' # (2) plot its information content features:
-#' plotInformationContent(feat.object)
-#' 
-#' @examples
 #' # create a feature object
 #' X = createInitialDesign(n.obs = 900, dim = 2)
 #' f = smoof::makeAckleyFunction(dimensions = 2)
@@ -66,9 +58,9 @@
 #' feat.object = createFeatureObject(X = X, y = y, fun = f, blocks = c(4, 6))
 #' 
 #' # plot the corresponing barrier tree
-#' plotBarrierTree(feat.object)
+#' plotBarrierTree3D(feat.object)
 #' @export
-plotBarrierTree = function(feat.object, control) {
+plotBarrierTree3D = function(feat.object, control) {
   assertClass(feat.object, "FeatureObject")
   if (!feat.object$allows.cellmapping)
     stop("This feature object does not support cell mapping. You first need to define the number of cells per dimension before computing these features.")

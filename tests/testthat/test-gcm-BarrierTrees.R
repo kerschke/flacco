@@ -4,6 +4,7 @@ test_that("GCM-based Barrier Tree features are computed", {
   set.seed(2015 * 03 * 25)
   X = replicate(2, runif(1000, -10, 10))
   f = smoof::makeAckleyFunction(dimensions = 2)
+  f = smoof::makeBBOBFunction(dimension = 2, fid = 23, iid = 1)
   y = apply(X, 1, f)
   feat.object = createFeatureObject(X = X, y = y, 
     lower = -10, upper = 10, blocks = c(4, 6))
@@ -44,12 +45,13 @@ test_that("Barrier Trees require 2D-cellmapping objects", {
 
 test_that("Dealing with plateaus", {
   set.seed(2015*03*26)
-  
+
   # (1) create a feature object:
   X = expand.grid(1:4, 1:3)
   y = c(1, 1, 3, 2, 1, 1, 4, 2.5, 1.5, 2.5, 3.5, 0)
-  feat.object = createFeatureObject(X = X, y = y, blocks = c(3, 4))
-  
+  feat.object = createFeatureObject(X = X, y = y, blocks = c(4, 3),
+    lower = c(0.5, 0.5), upper = c(4.5, 3.5))
+
   # (2) compute all non-cm features:
   features = calculateFeatureSet(feat.object, "bt")
 })
