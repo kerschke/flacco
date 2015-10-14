@@ -167,7 +167,6 @@ createBarrierTree = function(feat.object, fundamental.list, canonical.list, yval
   # remove root from cells (otherwise we might have loops)
   cell.ind = which(cells == root)
   if (length(cell.ind) > 0) {
-    print("bla")
     cells = cells[-cell.ind]
     predecessors = predecessors[-cell.ind]
     diffs = diffs[-cell.ind]  
@@ -176,8 +175,7 @@ createBarrierTree = function(feat.object, fundamental.list, canonical.list, yval
   # initialise BFS
   next.level = cells[which(predecessors == root)] #children(root)
 
-  # FIXME: this is a work-around to compute barrier trees for big
-#   base = min(length(seq.closed.classes), 8)
+  # ugly work-around
   base = control_parameter(control, "bt.base", 4L)
   max.depth = control_parameter(control, "bt.max_depth", 16L)
   max.depth.possible = 1 + floor(length(unique(predecessors)) / 2)

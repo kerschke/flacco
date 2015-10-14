@@ -41,3 +41,15 @@ test_that("Barrier Trees require 2D-cellmapping objects", {
   feat.object = createFeatureObject(X = X, y = y, lower = -10, upper = 10, blocks = 4)
   expect_error(calculateFeatureSet(feat.object, "bt"))
 })
+
+test_that("Dealing with plateaus", {
+  set.seed(2015*03*26)
+  
+  # (1) create a feature object:
+  X = expand.grid(1:4, 1:3)
+  y = c(1, 1, 3, 2, 1, 1, 4, 2.5, 1.5, 2.5, 3.5, 0)
+  feat.object = createFeatureObject(X = X, y = y, blocks = c(3, 4))
+  
+  # (2) compute all non-cm features:
+  features = calculateFeatureSet(feat.object, "bt")
+})
