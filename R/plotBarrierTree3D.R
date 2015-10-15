@@ -38,6 +38,8 @@
 #'       be shown in detail (\code{"detailed"}) or just via \code{"simple"}
 #'       arrows in direction of increasement along the axes? The default is
 #'       \code{"detailed"}.
+#'       \item{\code{bt.col_root}}: Color of the root symbol. The default is
+#'       \code{"red"}.
 #'       \item{\code{bt.pch_root}}: Symbol used for plotting the root.
 #'       The default is \code{1}.
 #'       \item{\code{bt.pch_breakpoint}}: Symbol used for plotting a
@@ -122,26 +124,20 @@ plotBarrierTree3D = function(feat.object, control) {
     theta = theta, phi = phi, border = border, xlab = xlab, ylab = ylab,
     zlab = zlab, col = col.surface, ticktype = ticktype, shade = shade)
 
-  pch.root = control_parameter(control, "bt.pch_root", 1)
+  pch.root = control_parameter(control, "bt.pch_root", 17)
   pch.break = control_parameter(control, "bt.pch_breakpoint", 1)
   pch.basin = control_parameter(control, "bt.pch_basin", 19)
+  col.root = control_parameter(control, "bt.col_root", "red")
   checkPch(pch.root)
   checkPch(pch.break)
   checkPch(pch.basin)
   lwd.branches = control_parameter(control, "bt.lwd", 2)
   assertNumber(lwd.branches, lower = 0.1, upper = 10)
 
-  # draw root
-  root = barrier.tree$root
-  root.coord = celltoz(root, blocks)
-  root.point = trans3d(root.coord[1], root.coord[2], yvals[root], persp.plot)
-  points(root.point, pch = pch.root)
-  text(root.point, labels = sprintf("%i (root)", root), pos = 1)
-
   indices = barrier.tree$tree.index
   nodes = barrier.tree$tree.nodes
 
-  for (i in seq_along(indices)[-1]) {
+  for (i in rev(seq_along(indices)[-1])) {
     level = levels[i]
     cur.node = nodes[i]
     cur.coord = celltoz(cur.node, blocks)
@@ -151,8 +147,9 @@ plotBarrierTree3D = function(feat.object, control) {
     prev.coord = celltoz(prev.node, blocks)
     prev.point = trans3d(prev.coord[1], prev.coord[2],
       yvals[prev.node], persp.plot)
-    cur.node.pch = ifelse(any(indices == (2 * indices[i])),
-      pch.break, pch.basin)
+    successor.index = sum(base^(0:level)) +
+      base * (indices[i] - 1 - sum(base^(0:(level - 1)))) + seq_len(base)
+    cur.node.pch = ifelse(any(indices %in% successor.index), pch.break, pch.basin)
     break.point = trans3d(cur.coord[1], cur.coord[2],
       yvals[prev.node], persp.plot)
     points(cur.point$x, cur.point$y,
@@ -166,4 +163,11 @@ plotBarrierTree3D = function(feat.object, control) {
     lines(rbind(prev.point, break.point), lwd = lwd.branches,
       col = col.branches[level])
   }
+
+  # draw root
+  root = barrier.tree$root
+  root.coord = celltoz(root, blocks)
+  root.point = trans3d(root.coord[1], root.coord[2], yvals[root], persp.plot)
+  points(root.point, pch = pch.root, col = col.root)
+  text(root.point, labels = sprintf("%i (root)", root), pos = 1, col = col.root)
 }

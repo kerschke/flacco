@@ -54,6 +54,8 @@ Possible \code{control} arguments are:
       be shown in detail (\code{"detailed"}) or just via \code{"simple"}
       arrows in direction of increasement along the axes? The default is
       \code{"detailed"}.
+      \item{\code{bt.col_root}}: Color of the root symbol. The default is
+      \code{"red"}.
       \item{\code{bt.pch_root}}: Symbol used for plotting the root.
       The default is \code{1}.
       \item{\code{bt.pch_breakpoint}}: Symbol used for plotting a

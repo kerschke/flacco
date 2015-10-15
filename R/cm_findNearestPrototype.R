@@ -46,7 +46,8 @@ findNearestPrototype = function(feat.object, dist_meth, mink_p, fast_k, ...) {
     fast_k = 0.05
   assertNumber(fast_k)
   if (fast_k < 1)
-    fast_k = ceiling(fast_k * feat.object$n.obs) 
+    fast_k = ceiling(fast_k * feat.object$n.obs)
+  fast_k = max(2L, fast_k)
   assertInt(fast_k, lower = 0L, upper = feat.object$n.obs)
   if ((dist_meth == "euclidean") || ((dist_meth == "minkowski") & (mink_p == 2))) {
     findNearestPrototypeQuick(feat.object, fast_k = fast_k, ...)
@@ -77,8 +78,11 @@ findNearestPrototypeQuick = function(feat.object, fast_k,...) {
   dims = feat.object$dim
   n.cells = nrow(cell.centers)
   nn = RANN::nn2(rbind(cell.centers[, 1:dims], X), k = fast_k)$nn.idx
-  nn = nn[seq_len(n.cells), -1] - n.cells
-  nearest.grid = init.grid[apply(nn, 1, function(x) (x[x > 0])[1]), ]
+  nn = nn[seq_len(n.cells), ] - n.cells
+  nearest.grid = init.grid[vapply(seq_len(n.cells), function(i) {
+    x = setdiff(nn[i,], i - n.cells)
+    (x[x > 0])[1]
+  }, integer(1L)), ]
 
   ## in case none of the nearest observations is a non-cell-center
   all_centers = apply(nn, 1, function(x) all(x <= 0))
@@ -89,7 +93,7 @@ findNearestPrototypeQuick = function(feat.object, fast_k,...) {
     nearest.grid[all_centers, ] = init.grid[apply(nn_backup, 1, function(x) (x[x > 0])[1]), ]
   }
 
-  rownames(nearest.grid) = 1:n.cells
+  rownames(nearest.grid) = seq_len(n.cells)
   nearest.grid$represented.cell = cell.centers$cell.ID
   nearest.grid
 }

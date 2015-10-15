@@ -54,4 +54,24 @@ test_that("Dealing with plateaus", {
 
   # (2) compute all non-cm features:
   features = calculateFeatureSet(feat.object, "bt")
+
+  # (3) check for correct y-diff computation
+  ydiffs = c(2, 0.5, 0.5, 2.5)
+  expect_equal(features$bt.min.diffs.min, min(ydiffs))
+  expect_equal(features$bt.min.diffs.mean, mean(ydiffs))
+  expect_equal(features$bt.min.diffs.median, median(ydiffs))
+  expect_equal(features$bt.min.diffs.max, max(ydiffs))
+  expect_equal(features$bt.min.diffs.sd, sd(ydiffs))
+
+  expect_equal(features$bt.mean.diffs.min, min(ydiffs))
+  expect_equal(features$bt.mean.diffs.mean, mean(ydiffs))
+  expect_equal(features$bt.mean.diffs.median, median(ydiffs))
+  expect_equal(features$bt.mean.diffs.max, max(ydiffs))
+  expect_equal(features$bt.mean.diffs.sd, sd(ydiffs))
+
+  expect_equal(features$bt.near.diffs.min, min(ydiffs))
+  expect_equal(features$bt.near.diffs.mean, mean(ydiffs))
+  expect_equal(features$bt.near.diffs.median, median(ydiffs))
+  expect_equal(features$bt.near.diffs.max, max(ydiffs))
+  expect_equal(features$bt.near.diffs.sd, sd(ydiffs))
 })
