@@ -33,13 +33,17 @@ Furthermore, the package provides a unified interface for all features -- using 
 
 In addition to the features themselves, this package also provides visualizations, e.g. of the cell mappings, barrier trees or information content:
 
-3D-Barrier Tree:
+- 3D-Barrier Tree:
+
 ![Examplary Barrier Tree](https://raw.githubusercontent.com/kerschke/flacco/master/images/example_bt_3d.png)
 
-Cell Mapping:
+
+- Cell Mapping:
+
 ![Examplary Cell Mapping](https://raw.githubusercontent.com/kerschke/flacco/master/images/example_cm.png)
 
-Information Content Plot:
+- Information Content Plot:
+
 ![Examplary Info Content](https://raw.githubusercontent.com/kerschke/flacco/master/images/example_info.png)
 
 If you want to get started quickly, have a look at the [flacco tutorial](http://kerschke.github.io/flacco-tutorial/site/)
@@ -50,7 +54,7 @@ If you want to get started quickly, have a look at the [flacco tutorial](http://
 News
 ----
 
-Working on the package, so it can be released on CRAN in the near future.
+Fixing the last minor issues before submitting version 1.0 to CRAN.
 
 
 Contact
