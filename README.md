@@ -20,6 +20,7 @@ flacco: Feature-Based Landscape Analysis of Continuous and Constraint Optimizati
 
 * [Further installation instructions](https://githubkagesInfo/wiki/Installation-Information)
 
+* *If you like our package, please [star](https://github.com/blog/1204-notifications-stars) it on Github.*
 
 Introduction
 ------------
@@ -46,9 +47,32 @@ In addition to the features themselves, this package also provides visualization
 
 ![Examplary Info Content](https://raw.githubusercontent.com/kerschke/flacco/master/images/example_info.png)
 
-If you want to get started quickly, have a look at the [flacco tutorial](http://kerschke.github.io/flacco-tutorial/site/)
 
-**If you like our package, please [star](https://github.com/blog/1204-notifications-stars) it on Github.**
+Quickstart
+----------
+
+If you want to get started quickly, have a look at the [flacco tutorial](http://kerschke.github.io/flacco-tutorial/site/).
+
+```{r}
+library(flacco)
+
+## (1) Create some example-data
+X = createInitialDesign(n.obs = 500, dim = 2)
+f = function(x) sum(sin(x) * x^2 + (x - 0.5)^3)
+y = apply(X, 1, f)
+
+## (2) Compute the feature object
+feat.object = createFeatureObject(X = X, y = y)
+
+## (3) Have a look at feat.object
+print(feat.object)
+
+## (4) Check, which feature sets are available
+listAvailableFeatureSets()
+
+## (5) Calculate a specific feature set, e.g. the ELA meta model
+featureSet = calculateFeatureSet(feat.object, set = "ela_meta")
+```
 
 
 News
