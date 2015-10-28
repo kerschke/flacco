@@ -197,16 +197,11 @@ plotCellMapping = function (feat.object, control) {
     })  
   }
 
-  # additional axes that represent values of original feature dimensions
-  xlab_coord = control_parameter(control, "gcm.label.x_coord",
-    "Cell Coordinate (1st Dimension)")
-  ylab_coord = control_parameter(control, "gcm.label.y_coord",
-    "Cell Coordinate (2nd Dimension)")
-  xlab_id = control_parameter(control, "gcm.label.x_id",
-    "Cell ID (1st Dimension)")
-  ylab_id = control_parameter(control, "gcm.label.y_id",
-    "Cell ID (2nd Dimension)")
   if (control_parameter(control, "gcm.plot_coord_labels", TRUE)) {
+    xlab_coord = control_parameter(control, "gcm.label.x_coord",
+      "Cell Coordinate (1st Dimension)")
+    ylab_coord = control_parameter(control, "gcm.label.y_coord",
+      "Cell Coordinate (2nd Dimension)")
     axis(1, at = seq_len(blocks[1]), labels = rep("", blocks[1]))
     text(x = seq_len(blocks[1]), y = 0.25, pos = 1, xpd = TRUE,
       sprintf("%.1e", unique(feat.object$cell.centers[[1]])), srt = 45)
@@ -217,6 +212,10 @@ plotCellMapping = function (feat.object, control) {
     mtext(side = 2, ylab_coord, line = 4, cex = par("cex"))  
   }
   if (control_parameter(control, "gcm.plot_id_labels", TRUE)) {
+    xlab_id = control_parameter(control, "gcm.label.x_id",
+      "Cell ID (1st Dimension)")
+    ylab_id = control_parameter(control, "gcm.label.y_id",
+      "Cell ID (2nd Dimension)")
     mtext(side = 3, xlab_id, line = 2.5)
     axis(side = 3, at = seq_len(blocks[1]))
     mtext(side = 4, ylab_id, line = 2.5)

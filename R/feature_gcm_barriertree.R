@@ -134,7 +134,6 @@ createBarrierTree = function(feat.object, fundamental.list, canonical.list, yval
 
     g1 = rowSums(canonical.form[, key3] != 0) > 0 # [ orig: g1 = sum(I(:, key3) ~= 0, 2) > 0; ]
     g2 = rowSums(prob.absorb[, key3] != 0) > 0 # [ orig: g2 = sum(Apr(:, key3) ~= 0, 2) > 0; ]
-    # FIXME: rename g
     g  = c(permutation.index[seq_along(g1)][g1], keep[g2])
 
     # build intersection to join columns

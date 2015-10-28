@@ -63,7 +63,6 @@ getObjectivesByApproach = function(feat.object, approach) {
 calculateSparseMatrix = function(feat.object, yvals) {
   valid.cells = setdiff(seq_len(feat.object$total.cells), which(!is.finite(yvals)))
   transitions = lapply(seq_len(feat.object$total.cells), function(i) {
-    # FIXME: currently, we ignore cells with infinite yvals (resulting in diffcells)
     if (is.infinite(yvals[i])) {
       return(NULL)
     }

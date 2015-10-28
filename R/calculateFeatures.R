@@ -359,8 +359,6 @@
 #'   consider running your feature computation parallelized. For more
 #'   information, please refer to the \code{parallelMap} package or to
 #'   \url{http://mlr-org.github.io/mlr-tutorial/release/html/parallelization/index.html}.
-#'   Especially the runtime of the ELA fevelset features can be reduced
-#'   significantly.\cr
 #'
 #'   Furthermore, please consider adapting the feature computation to your
 #'   needs. Possible \code{control} arguments are:

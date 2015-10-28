@@ -1,11 +1,12 @@
 Package: flacco
 Title: Feature-Based Landscape Analysis of Continuous and Constraint Optimization Problems
-Description: Contains tools and features, which can be used for an exploratory landscape
-    analysis of continuous optimization problems. Those are able to quantify rather complex
-    properties of optimization problems, such as the global structure, separability, etc.
+Description: Contains tools and features, which can be used for an exploratory
+    landscape analysis of continuous optimization problems. Those are able to
+    quantify rather complex properties, such as the global structure,
+    separability, etc., of continuous optimization problems.
 Authors@R: c(person("Pascal", "Kerschke", role = c("aut", "cre"),
     email = "kerschke@uni-muenster.de"),
-    person("Jan", "Dagefoerde", role = "aut"))
+    person("Jan", "Dagefoerde", role = "ctb"))
 URL: https://github.com/kerschke/flacco
 BugReports: https://github.com/kerschke/flacco/issues
 License: BSD_3_clause + file LICENSE
@@ -37,3 +38,4 @@ Suggests:
 LazyData: yes
 ByteCompile: yes
 Version: 1.0
+Date: 2015-10-28
