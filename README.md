@@ -31,9 +31,15 @@ Features, which used to be spread over different packages and platforms (R, Matl
 
 Furthermore, the package provides a unified interface for all features -- using a so-called *feature object* and (if required) *control* arguments. In total, the current release (1.0) consists of 17 different feature sets, which sum up to approximately 300 features.
 
-In addition to the features themselves, this package also provides visualizations, e.g. of the cell mappings, barrier trees or information content.
+In addition to the features themselves, this package also provides visualizations, e.g. of the cell mappings, barrier trees or information content:
+
+3D-Barrier Tree:
 ![Examplary Barrier Tree](https://raw.githubusercontent.com/kerschke/flacco/master/images/example_bt_3d.png)
+
+Cell Mapping:
 ![Examplary Cell Mapping](https://raw.githubusercontent.com/kerschke/flacco/master/images/example_cm.png)
+
+Information Content Plot:
 ![Examplary Info Content](https://raw.githubusercontent.com/kerschke/flacco/master/images/example_info.png)
 
 If you want to get started quickly, have a look at the [flacco tutorial](http://kerschke.github.io/flacco-tutorial/site/)
