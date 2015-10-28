@@ -24,7 +24,17 @@ flacco: Feature-Based Landscape Analysis of Continuous and Constraint Optimizati
 Introduction
 ------------
 
-To be continued..
+**flacco** is a collection of features for *Explorative Landscape Analysis (ELA)* of *(Black-Box-)Optimization Problems*.
+It allows the user to quantify characteristics of an (unknown) optimization problem's landscape.
+
+Features, which used to be spread over different packages and platforms (R, Matlab, python, etc.), are now combined within this single package. Amongst others, this package contains feature sets, such as *ELA*, *Information Content*, *Dispersion*, *(General) Cell Mapping* or *Barrier Trees*.
+
+Furthermore, the package provides a unified interface for all features -- using a so-called *feature object* and (if required) *control* arguments. In total, the current release (1.0) consists of 17 different feature sets, which sum up to approximately 300 features.
+
+In addition to the features themselves, this package also provides visualizations, e.g. of the cell mappings, barrier trees or information content.
+![Examplary Barrier Tree](https://raw.githubusercontent.com/kerschke/flacco/master/images/example_bt_3d.svg)
+![Examplary Cell Mapping](https://raw.githubusercontent.com/kerschke/flacco/master/images/example_cm.svg)
+![Examplary Info Content](https://raw.githubusercontent.com/kerschke/flacco/master/images/example_info.svg)
 
 If you want to get started quickly, have a look at the [flacco tutorial](http://kerschke.github.io/flacco-tutorial/site/)
 

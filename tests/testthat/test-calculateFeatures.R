@@ -12,7 +12,7 @@ test_that("Non-Cellmapping Objects", {
     control = list(allow_cellmapping = FALSE, allow_costs = FALSE))
 
   # test return value types and ranges
-  expect_equal(length(features), 122L)
+  expect_identical(length(features), 122L)
   expect_list(features)
 
   # all objects are either NA, logical or a number
