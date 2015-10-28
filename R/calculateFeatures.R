@@ -629,18 +629,18 @@
 #' @examples
 #' # (1) create a feature object:
 #' X = t(replicate(n = 2000, expr = runif(n = 5, min = -10, max = 10)))
-#' feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
+#' \dontrun{feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))}
 #'
 #' # (2) compute all non-cellmapping features
 #' ctrl = list(allow_cellmapping = FALSE)
-#' features = calculateFeatures(feat.object, control = ctrl)
+#' \dontrun{features = calculateFeatures(feat.object, control = ctrl)}
 #'
 #' # (3) in order to allow the computation of the cell mapping features, one
 #' # has to provide a feature object that has knowledge about the number of
 #' # cells per dimension:
 #' f = function(x) sum(x^2)
 #' feat.object = createFeatureObject(X = X, fun = f, blocks = 3)
-#' features = calculateFeatures(feat.object)
+#' \dontrun{features = calculateFeatures(feat.object)}
 #'
 #' # (4) if you want to compute a specific feature set, you can use
 #' # calculateFeatureSet:
