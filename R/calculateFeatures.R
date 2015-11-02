@@ -217,9 +217,11 @@
 #'     based on three different approaches: taking the best (\code{min}) or
 #'     average (\code{mean}) objective value of a cell or the closest
 #'     observation (\code{near}) to a cell as representative. For each of these
-#'     approaches the following 30 features are computed:\cr
+#'     approaches the following 31 features are computed:\cr
 #'     \itemize{
 #'       \item{\code{levels}}: absolute number of levels of the barrier tree
+#'       \item{\code{leaves}}: absolute number of leaves (i.e. local optima)
+#'       of the barrier tree
 #'       \item{\code{depth}}: range between highest and lowest node of the tree
 #'       \item{\code{depth_levels_ratio}}: ratio of depth and levels
 #'       \item{\code{levels_nodes_ratio}}: ratio of number of levels and number

@@ -101,7 +101,8 @@ test_that("Cellmapping Objects", {
     show_progress = FALSE, cm_angle.show_warnings = FALSE))
   
   # test return value types and ranges
-  expect_identical(length(features), 293L)
+  expect_identical(length(features), 296L)
+  expect_true(all(vapply(features, length, integer(1L)) ==  1L))
   expect_list(features)
   
   # all objects are either NA, logical or a number

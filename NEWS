@@ -1,0 +1,7 @@
+flacco_1.1:
+- barrier trees:
+-- fixed a bug in feature computation: ratio of levels and nodes should only be taken for the maximum number of levels
+-- added number of leaves as a feature
+
+flacco_1.0:
+- Initial release to CRAN

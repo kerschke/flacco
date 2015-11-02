@@ -247,6 +247,7 @@ computeBarrierTreeFeats = function(yvals, fundamental.list, barrier.tree, feat.o
   # storing depth-features
   feats = vector(mode = "list", length = 0L)
   feats$levels = max(levels)
+  feats$leaves = length(seq.closed.classes)
   feats$depth = depth
   if (max(levels) != 0)
     feats$depth_levels_ratio = depth / max(levels)
@@ -254,7 +255,7 @@ computeBarrierTreeFeats = function(yvals, fundamental.list, barrier.tree, feat.o
     feats$depth_levels_ratio = NA_real_
 
   # ratio levels/nodes
-  feats$levels_nodes_ratio = levels / length(seq.closed.classes)
+  feats$levels_nodes_ratio = max(levels) / length(seq.closed.classes)
 
   if (length(diffs) > 0) {
     # location and dispersion of 'weights' (diffs)

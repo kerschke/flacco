@@ -1,5 +1,6 @@
 Package: flacco
-Title: Feature-Based Landscape Analysis of Continuous and Constraint Optimization Problems
+Title: Feature-Based Landscape Analysis of Continuous and Constraint
+    Optimization Problems
 Description: Contains tools and features, which can be used for an exploratory
     landscape analysis of continuous optimization problems. Those are able to
     quantify rather complex properties, such as the global structure,
@@ -23,7 +24,7 @@ Suggests:
     lhs,
     MASS,
     Matrix,
-    mda, 
+    mda,
     mlbench,
     mlr,
     numDeriv,
@@ -39,3 +40,4 @@ LazyData: yes
 ByteCompile: yes
 Version: 1.0
 Date: 2015-10-28
+RoxygenNote: 5.0.0

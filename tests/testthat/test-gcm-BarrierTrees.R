@@ -10,7 +10,8 @@ test_that("GCM-based Barrier Tree features are computed", {
     lower = -10, upper = 10, blocks = c(4, 6))
   features = calculateFeatureSet(feat.object, "bt")
   expect_list(features)
-  expect_identical(length(features), 90L)
+  expect_true(all(vapply(features, length, integer(1L)) ==  1L))
+  expect_identical(length(features), 93L)
 })
 
 test_that("GCM-based Barrier Tree fallback is computed for boring barrier trees", {
@@ -27,6 +28,7 @@ test_that("GCM-based Barrier Tree fallback is computed for boring barrier trees"
   expect_true(all(unlist(fts0) == 0))
   ftsNA = features[grep("depth_levels_ratio|diffs|.sd", nm)]
   expect_true(all(is.na(unlist(ftsNA))))
+  expect_true(all(vapply(features, length, integer(1L)) ==  1L))
 })
 
 test_that("Barrier Trees require 2D-cellmapping objects", {
