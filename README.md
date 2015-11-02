@@ -10,16 +10,6 @@ flacco: Feature-Based Landscape Analysis of Continuous and Constraint Optimizati
 [![Coverage Status](https://coveralls.io/repos/kerschke/flacco/badge.svg?branch=master)](https://coveralls.io/r/kerschke/flacco?branch=master)
 [![codecov.io](http://codecov.io/github/kerschke/flacco/coverage.svg?branch=master)](http://codecov.io/github/kerschke/flacco?branch=master)
 
-**ATTENTION: This package is not yet ready for release.**
-
-* Install the development version
-
-    ```splus
-    devtools::install_github("kerschke/flacco")
-    ```
-
-* [Further installation instructions](https://githubkagesInfo/wiki/Installation-Information)
-
 * *If you like our package, please [star](https://github.com/blog/1204-notifications-stars) it on Github.*
 
 Introduction
@@ -74,11 +64,24 @@ listAvailableFeatureSets()
 featureSet = calculateFeatureSet(feat.object, set = "ela_meta")
 ```
 
+Installation Instructions
+-------------------------
+
+* If you want to use the version from CRAN, you should download it from [here](https://cran.r-project.org/web/packages/flacco/).
+* However, if you want to use the development version, you can download it with the following command:
+
+    ```splus
+    devtools::install_github("kerschke/flacco")
+    ```
+
+* [Further installation instructions](https://githubkagesInfo/wiki/Installation-Information)
+
 
 News
 ----
 
-Fixing the last minor issues before submitting version 1.0 to CRAN.
+* October 28, 2015: It is done! flacco 1.0 is released on CRAN!
+* September 2015: Fixing the last minor issues before submitting version 1.0 to CRAN.
 
 
 Contact
