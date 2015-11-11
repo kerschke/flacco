@@ -45,8 +45,8 @@
 #'
 #' # (4) What kind of feature selection approach should be used? Here, we use a
 #' # sequential backward strategy, i.e. starting from a model with all features,
-#' in each step the feature decreasing the performance measure the least is
-#' removed from the model:
+#' # in each step the feature decreasing the performance measure the least is
+#' # removed from the model:
 #' ctrl = makeFeatSelControlSequential(method = "sbs")
 #'
 #' # (5) Wrap the original model (see (2)) in order to allow feature selection:

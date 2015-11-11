@@ -187,8 +187,12 @@ print.FeatureObject = function(x, ...) {
   catf("- Optimization Problem: %s %s", 
        ifelse(x$minimize, "minimize", "maximize"), x$objective.name)
   if (!is.null(x$fun)) {
-    fun = as.character(enquote(x$fun))[2]
-    fun = paste(unlist(strsplit(fun, "\n")), collapse = "")
+    if (inherits(x$fun, "smoof_function")) {
+      fun = sprintf("smoof-function (%s)", attr(x$fun, "name"))
+    } else {
+      fun = as.character(enquote(x$fun))[2]
+      fun = paste(unlist(strsplit(fun, "\n")), collapse = "")    
+    }
     catf("- Function to be Optimized: %s", fun)
   }
   if (x$allows.cellmapping) {

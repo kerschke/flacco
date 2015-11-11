@@ -82,7 +82,7 @@ Possible \code{control} arguments are:
       Type, size and colour of the line and point referring to the
       \dQuote{Initial Partial Information} \eqn{M[0]} and the
       \dQuote{Partial Information Content} \eqn{M(\epsilon)}.
-      \item{\code{ic.plot.half_partial.{pch, cex, pch_col, }}}:
+      \item{\code{ic.plot.half_partial.{pch, cex, pch_col}}}:
       Type, size and colour of the point referring to the
       \dQuote{Relative Partial Information Sensitivity} \eqn{\epsilon[ratio]}.
       \item{\code{ic.plot.half_partial.{lty, line_col, lwd}_{h, v}}}:

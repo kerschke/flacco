@@ -62,3 +62,36 @@ test_that("FeatureObject Output with cellmapping and dim >= 5", {
       sep="\\r?\\n")
   )
 })
+
+test_that("Usage of regular and smoof functions", {
+  X = createInitialDesign(n.obs = 200, dim = 2)
+  f1 = smoof::makeBBOBFunction(dimension = 2, fid = 23, iid = 1)
+  f2 = function(x) sum(x^2 * sin(x^3))
+  y1 = apply(X, 1, f1)
+  y2 = apply(X, 1, f2)
+  
+  feat.object1 = createFeatureObject(X = X, y = y1, fun = f1)
+  feat.object2 = createFeatureObject(X = X, y = y2, fun = f2)
+  expect_output(print(feat.object1), regexp = paste(
+    "^Feature Object:",
+    "- Number of Observations:\\s\\d+",
+    "- Number of Features:\\s\\d+",
+    "- Lower Boundaries: [0-9e+.-]+(, [0-9e+-.]+)*",
+    "- Upper Boundaries: [0-9e+.-]+(, [0-9e+-.]+)*",
+    "- Name of Features: [^,\\s]*(, [^,\\s]*)*",
+    "- Optimization Problem: (minimize|maximize) [^\\s]+?",
+    "- Function to be Optimized: smoof-function [(BBOB)]+?",
+    sep="\\r?\\n")
+  )
+  expect_output(print(feat.object2), regexp = paste(
+    "^Feature Object:",
+    "- Number of Observations:\\s\\d+",
+    "- Number of Features:\\s\\d+",
+    "- Lower Boundaries: [0-9e+.-]+(, [0-9e+-.]+)*",
+    "- Upper Boundaries: [0-9e+.-]+(, [0-9e+-.]+)*",
+    "- Name of Features: [^,\\s]*(, [^,\\s]*)*",
+    "- Optimization Problem: (minimize|maximize) [^\\s]+?",
+    "- Function to be Optimized: function [\\s]*",
+    sep="\\r?\\n")
+  )
+})
