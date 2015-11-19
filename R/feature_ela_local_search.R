@@ -31,7 +31,7 @@ calculateLocalSearchFeatures = function(feat.object, control, ...) {
       set.seed(id.seed)
       ids = sample(nrow(X), N) 
     } else
-      stop("Error in local_search_feature: More startpoints than Design Points.")
+      stop("Requesting more starting points than observations in the initial design.")
     
     fn = initializeCounter(f)
     result = lapply(ids, function(i) calcOptim(drop(X[i,])))

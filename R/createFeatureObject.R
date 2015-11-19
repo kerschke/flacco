@@ -6,11 +6,11 @@
 #'
 #' @param init [\code{\link{data.frame}}]\cr
 #'   A \code{data.frame}, which can be used as initial design. If not provided,
-#'   it will be created either based on \code{X} and \code{y} or \code{X} and
-#'   \code{fun}.
+#'   it will be created either based on the initial sample \code{X} and the
+#'   objective values \code{y} or \code{X} and the function definition \code{fun}.
 #' @param X [\code{\link{data.frame}} or \code{\link{matrix}}]\cr
-#'   A \code{data.frame} or \code{matrix} containing the features of the
-#'   initial design. If not provided, it will be extracted from \code{init}.
+#'   A \code{data.frame} or \code{matrix} containing the initial sample. If not
+#'   provided, it will be extracted from \code{init}.
 #' @param y [\code{\link{numeric}} or \code{\link{integer}}]\cr
 #'   A vector containing the objective values of the initial design.
 #'   If not provided, it will be extracted from \code{init}.
@@ -32,7 +32,8 @@
 #' @rdname FeatureObject
 #' @examples
 #' # (1a) create a feature object using X and y:
-#' X = t(replicate(n = 500, expr = runif(n = 3, min = -10, max = 10)))
+#' X = createInitialSample(n.obs = 500, dim = 3,
+#'   control = list(init_sample.lower = -10, init_sample.upper = 10))
 #' y = apply(X, 1, function(x) sum(x^2))
 #' feat.object1 = createFeatureObject(X = X, y = y, 
 #'   lower = -10, upper = 10, blocks = c(5, 10, 4))
@@ -60,113 +61,128 @@
 #' @export 
 createFeatureObject = function(init, X, y, fun, minimize, 
   lower, upper, blocks, objective) {
-    if (missing(init) && (missing(X) || (missing(y) && missing(fun)) ))
-      stop("The initial design has to be provided either by init or by X and y or by X and f.")
-    if (!missing(X) && !missing(y)) {
-      if (length(y) != nrow(X))
-        stop("The number of rows in X has to be identical to the length of y!")
+
+  if (missing(init) && (missing(X) || (missing(y) && missing(fun)) ))
+    stop("The initial design has to be provided either by init or by X and y or by X and f.")
+  if (!missing(X) && !missing(y)) {
+    if (length(y) != nrow(X))
+      stop("The number of rows in X has to be identical to the length of y!")
+  }
+  ## extract information on lower and upper bounds from initial sample
+  if (!missing(X)) {
+    provided.lower = attr(X, "lower")
+    provided.upper = attr(X, "upper")
+  } else {
+    provided.lower = provided.upper = NULL
+  }
+  ## if the initial data is missing, it will be generated based on X and y (or
+  ## fun if the latter is not available)
+  if (missing(init)) {
+    feat.names = colnames(X)
+    if (is.null(feat.names)) {
+      feat.names = sprintf("x%i", 1:ncol(X))
     }
-    ## if the initial data is missing, it will be generated based on X and y (or
-    ## fun if the latter is not available)
-    if (missing(init)) {
-      feat.names = colnames(X)
-      if (is.null(feat.names)) {
-        feat.names = sprintf("x%i", 1:ncol(X))
-      }
-      if (missing(objective))
-        objective = "y"
-      if (class(X) != "data.frame") {
-        X = as.data.frame(X)
-        colnames(X) = feat.names
-      }
-      init = X
-      if (missing(y))
-        y = apply(X, 1, fun)
-      init[[objective]] = y
-    } else {
-      if (missing(objective))
-        objective = "y"
-      feat.names = colnames(init)
-      if (!(objective %in% feat.names))
-        stop("The initial design has to include a column with the name of the objective.")
-      feat.names = setdiff(feat.names, objective)
-      if (missing(y)) {
-        y = init[, objective]
-      }
-      if (missing(X)) {
-        X = as.data.frame(init[, feat.names])
-      }
-      init = as.data.frame(init[, c(feat.names, objective)])
+    if (missing(objective))
+      objective = "y"
+    if (!inherits(X, "data.frame")) {
+      X = as.data.frame(X)
+      colnames(X) = feat.names
     }
-    if (missing(minimize)) {
-      minimize = TRUE
-    } 
-    d = ncol(X)
-    if (missing(lower)) {
+    init = X
+    if (missing(y))
+      y = apply(X, 1, fun)
+    init[[objective]] = y
+  } else {
+    if (missing(objective))
+      objective = "y"
+    feat.names = colnames(init)
+    if (!(objective %in% feat.names))
+      stop("The initial design has to include a column with the name of the objective.")
+    feat.names = setdiff(feat.names, objective)
+    if (missing(y)) {
+      y = init[, objective]
+    }
+    if (missing(X)) {
+      X = as.data.frame(init[, feat.names])
+    }
+    init = as.data.frame(init[, c(feat.names, objective)])
+  }
+  if (missing(minimize)) {
+    minimize = TRUE
+  }
+  d = ncol(X)
+  if (missing(lower)) {
+    if (!is.null(provided.lower))
+      lower = provided.lower
+    else
       lower = vapply(X, min, double(1))
-    }
-    if (missing(upper)) {
+  }
+  if (missing(upper)) {
+    if (!is.null(provided.upper)) {
+      upper = provided.upper
+    } else {
       upper = vapply(X, max, double(1))
     }
-    if (length(lower) != d) {
-      if (length(lower) == 1L) {
-        lower = rep(lower, d)
-      } else {
-        stop("The size of 'lower' does not fit to the dimension of the initial design.")
-      }
-    }
-    if (length(upper) != d) {
-      if (length(upper) == 1L) {
-        upper = rep(upper, d)
-      } else {
-        stop("The size of 'upper' does not fit to the dimension of the initial design.")
-      }
-    }
-    if (any(lower > vapply(X, min, double(1)))) {
-      stop("The initial data set contains values that are lower than the given lower limits.")
-    }
-    if (any(upper < vapply(X, max, double(1)))) {
-      stop("The initial data set contains values that are bigger than the given upper limits.")
-    }
-    allows.cellmapping = TRUE
-    if (missing(blocks)) {
-      blocks = rep(1L, d)
-      allows.cellmapping = FALSE
+  }
+  if (length(lower) != d) {
+    if (length(lower) == 1L) {
+      lower = rep(lower, d)
     } else {
-      blocks = as.integer(blocks)
+      stop("The size of 'lower' does not fit to the dimension of the initial design.")
     }
-    if (length(blocks) != d) {
-      if (length(blocks) == 1L) {
-        blocks = rep(blocks, d)
-      } else {
-        stop("The size of 'blocks' does not fit to the dimension of the initial design.")
-      }
+  }
+  if (length(upper) != d) {
+    if (length(upper) == 1L) {
+      upper = rep(upper, d)
+    } else {
+      stop("The size of 'upper' does not fit to the dimension of the initial design.")
     }
-    if (missing(fun))
-      fun = NULL
-    env = new.env(parent = emptyenv())
-    env$init = init
-    init.grid = convertInitDesignToGrid(init = init, 
-      lower = lower, upper = upper, blocks = blocks)
-    centers = computeGridCenters(lower = lower, upper = upper, blocks = blocks)
-    colnames(centers)[1:d] = feat.names    
-    res =  makeS3Obj("FeatureObject", env = env, 
-      minimize = minimize, fun = fun,
-      lower = lower, upper = upper, 
-      dim = length(lower), n.obs = length(y),
-      feature.names = feat.names, 
-      objective.name = objective,
-      blocks = blocks,
-      total.cells = prod(blocks),
-      allows.cellmapping = allows.cellmapping,
-      init.grid = init.grid,
-      cell.centers = centers,
-      cell.size = (upper - lower) / blocks)
-    if (allows.cellmapping) {
-      res$env$gcm.representatives = list() # to be filled on first call to gcm_init()
-      res$env$gcm.canonicalForm = list()   # to be filled on first call to gcm_init()
+  }
+  if (any(lower > vapply(X, min, double(1)))) {
+    stop("The initial data set contains values that are lower than the given lower limits.")
+  }
+  if (any(upper < vapply(X, max, double(1)))) {
+    stop("The initial data set contains values that are bigger than the given upper limits.")
+  }
+  allows.cellmapping = TRUE
+  if (missing(blocks)) {
+    blocks = rep(1L, d)
+    allows.cellmapping = FALSE
+  } else {
+    blocks = as.integer(blocks)
+  }
+  if (length(blocks) != d) {
+    if (length(blocks) == 1L) {
+      blocks = rep(blocks, d)
+    } else {
+      stop("The size of 'blocks' does not fit to the dimension of the initial design.")
     }
-    return(res)
+  }
+  if (missing(fun))
+    fun = NULL
+  env = new.env(parent = emptyenv())
+  env$init = init
+  init.grid = convertInitDesignToGrid(init = init,
+    lower = lower, upper = upper, blocks = blocks)
+  centers = computeGridCenters(lower = lower, upper = upper, blocks = blocks)
+  colnames(centers)[1:d] = feat.names
+  res =  makeS3Obj("FeatureObject", env = env,
+    minimize = minimize, fun = fun,
+    lower = lower, upper = upper,
+    dim = length(lower), n.obs = length(y),
+    feature.names = feat.names,
+    objective.name = objective,
+    blocks = blocks,
+    total.cells = prod(blocks),
+    allows.cellmapping = allows.cellmapping,
+    init.grid = init.grid,
+    cell.centers = centers,
+    cell.size = (upper - lower) / blocks)
+  if (allows.cellmapping) {
+    res$env$gcm.representatives = list() # to be filled on first call to gcm_init()
+    res$env$gcm.canonicalForm = list()   # to be filled on first call to gcm_init()
+  }
+  return(res)
 }
 
 #' @export

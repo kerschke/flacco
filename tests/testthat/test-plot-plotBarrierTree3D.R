@@ -14,7 +14,7 @@ test_that("Default BarrierTree-Plot", {
 })
 
 test_that("Vary Block Sizes", {
-  X = createInitialDesign(n.obs = 900, dim = 2)
+  X = createInitialSample(n.obs = 900, dim = 2)
   f = smoof::makeAckleyFunction(dimensions = 2)
   y = apply(X, 1, f)
 

@@ -209,16 +209,16 @@ plotCellMapping = function (feat.object, control) {
     axis(2, at = seq_len(blocks[2]), labels = rep("", blocks[2]))
     text(y = seq_len(blocks[2]), x = 0.45, pos = 2, xpd = TRUE,
       sprintf("%.1e", unique(feat.object$cell.centers[[2]])), srt = 45)
-    mtext(side = 2, ylab_coord, line = 4, cex = par("cex"))  
+    mtext(side = 2, ylab_coord, line = 4, cex = par("cex"))
   }
   if (control_parameter(control, "gcm.plot_id_labels", TRUE)) {
     xlab_id = control_parameter(control, "gcm.label.x_id",
       "Cell ID (1st Dimension)")
     ylab_id = control_parameter(control, "gcm.label.y_id",
       "Cell ID (2nd Dimension)")
-    mtext(side = 3, xlab_id, line = 2.5)
+    mtext(side = 3, xlab_id, line = 2.5, cex = par("cex"))
     axis(side = 3, at = seq_len(blocks[1]))
-    mtext(side = 4, ylab_id, line = 2.5)
+    mtext(side = 4, ylab_id, line = 2.5, cex = par("cex"))
     axis(side = 4, at = seq_len(blocks[2]), las = 1)
   }
 }

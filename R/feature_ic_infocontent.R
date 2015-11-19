@@ -143,8 +143,8 @@ computeInfoContentStatistics = function(feat.object, control) {
     M0 = M0, Hmax = max(H)))
 }
 
-## initialization of Latin-Hypercube-Design:
-## generates a LHD on [0,1]^dims and transforms it according
+## initialization of Latin-Hypercube-Sample:
+## generates a LHS on [0,1]^dims and transforms it according
 ## to the constraints
 initializeLHD = function(points, dims, lower, upper) {
   X = lhs::improvedLHS(n = points, k = dims)

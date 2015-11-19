@@ -26,15 +26,14 @@
 #'   cell ID of the cell, which it represents.
 #'
 #' @examples
-#' # (1) create the initial design:
-#' X = t(replicate(1000, runif(2, -10, 10)))
+#' # (1) create the initial sample and feature object:
+#' X = createInitialSample(n.obs = 1000, dim = 2,
+#'   control = list(init_sample.lower = -10, init_sample.upper = 10))
 #' feat.object = createFeatureObject(X = X, 
-#'   fun = function(x) sum(x^2), 
-#'   lower = -10, upper = 10, blocks = 10)
+#'   fun = function(x) sum(x^2), blocks = 10)
 #'
 #' # (2) find the nearest prototypes of all cells:
 #' findNearestPrototype(feat.object)
-#'
 #' @export 
 findNearestPrototype = function(feat.object, dist_meth, mink_p, fast_k, ...) {
   assertClass(feat.object, "FeatureObject")

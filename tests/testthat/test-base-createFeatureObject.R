@@ -89,3 +89,23 @@ test_that("Objective values can be computed from X and fun", {
   y = extractObjective(feat.object)
   expect_true(all(y == 11L))
 })
+
+test_that("Derive Boundaries from Initial Sample", {
+  ctrl = list(
+    init_sample.lower = c(-4, 2, 1),
+    init_sample.upper = c(10, 12, 2)
+  )
+  X = createInitialSample(n.obs = 400, dim = 3, control = ctrl)
+  y = rnorm(400)
+  feat.object = createFeatureObject(X = X, y = y)
+  expect_identical(feat.object$lower, ctrl$init_sample.lower)
+  expect_identical(feat.object$upper, ctrl$init_sample.upper)
+
+  feat.object2 = createFeatureObject(X = X, y = y, lower = -10)
+  expect_true(any(feat.object2$lower != ctrl$init_sample.lower))
+  expect_identical(feat.object2$upper, ctrl$init_sample.upper)
+
+  feat.object3 = createFeatureObject(X = X, y = y, lower = c(-5, 2, 1), upper = 13)
+  expect_true(any(feat.object3$lower != ctrl$init_sample.lower))
+  expect_true(any(feat.object3$upper != ctrl$init_sample.upper))
+})

@@ -47,7 +47,7 @@
 #'   A 2D image, visualizing the barrier tree of this cell mapping.
 #' @examples
 #' # create a feature object
-#' X = createInitialDesign(n.obs = 900, dim = 2)
+#' X = createInitialSample(n.obs = 900, dim = 2)
 #' f = smoof::makeAckleyFunction(dimensions = 2)
 #' y = apply(X, 1, f)
 #' feat.object = createFeatureObject(X = X, y = y, fun = f, blocks = c(4, 6))
@@ -128,12 +128,12 @@ plotBarrierTree2D = function(feat.object, control) {
       axis(2, at = seq_len(blocks[2]), labels = rep("", blocks[2]))
       text(y = seq_len(blocks[2]), x = 0.45, pos = 2, xpd = TRUE,
         sprintf("%.1e", unique(feat.object$cell.centers[[2]])), srt = 45)
-      mtext(side = 2, ylab_coord, line = 4, cex = par("cex"))  
+      mtext(side = 2, ylab_coord, line = 4, cex = par("cex"))
     }
     if (control_parameter(control, "gcm.plot_id_labels", TRUE)) {
-      mtext(side = 3, xlab_id, line = 2.5)
+      mtext(side = 3, xlab_id, line = 2.5, cex = par("cex"))
       axis(side = 3, at = seq_len(blocks[1]))
-      mtext(side = 4, ylab_id, line = 2.5)
+      mtext(side = 4, ylab_id, line = 2.5, cex = par("cex"))
       axis(side = 4, at = seq_len(blocks[2]), las = 1)
     } 
   }

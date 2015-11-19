@@ -40,4 +40,4 @@ LazyData: yes
 ByteCompile: yes
 Version: 1.1
 Date: 2015-10-28
-RoxygenNote: 5.0.0
+RoxygenNote: 5.0.1

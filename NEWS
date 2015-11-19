@@ -2,6 +2,8 @@ flacco_1.1:
 - barrier trees:
 -- fixed a bug in feature computation: ratio of levels and nodes should only be taken for the maximum number of levels
 -- added number of leaves as a feature
+- replace createInitialDesign by createInitialSample as that name should be more intuitive and less misleading
+- createInitialSample stores the attributes lower and upper, which will be used by createFeatureObject
 
 flacco_1.0:
 - Initial release to CRAN

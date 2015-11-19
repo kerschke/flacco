@@ -10,12 +10,12 @@ createFeatureObject(init, X, y, fun, minimize, lower, upper, blocks, objective)
 \arguments{
 \item{init}{[\code{\link{data.frame}}]\cr
 A \code{data.frame}, which can be used as initial design. If not provided,
-it will be created either based on \code{X} and \code{y} or \code{X} and
-\code{fun}.}
+it will be created either based on the initial sample \code{X} and the
+objective values \code{y} or \code{X} and the function definition \code{fun}.}
 
 \item{X}{[\code{\link{data.frame}} or \code{\link{matrix}}]\cr
-A \code{data.frame} or \code{matrix} containing the features of the
-initial design. If not provided, it will be extracted from \code{init}.}
+A \code{data.frame} or \code{matrix} containing the initial sample. If not
+provided, it will be extracted from \code{init}.}
 
 \item{y}{[\code{\link{numeric}} or \code{\link{integer}}]\cr
 A vector containing the objective values of the initial design.
@@ -51,7 +51,8 @@ Create a \code{\link{FeatureObject}}, which will be used as input for all
 }
 \examples{
 # (1a) create a feature object using X and y:
-X = t(replicate(n = 500, expr = runif(n = 3, min = -10, max = 10)))
+X = createInitialSample(n.obs = 500, dim = 3,
+  control = list(init_sample.lower = -10, init_sample.upper = 10))
 y = apply(X, 1, function(x) sum(x^2))
 feat.object1 = createFeatureObject(X = X, y = y, 
   lower = -10, upper = 10, blocks = c(5, 10, 4))

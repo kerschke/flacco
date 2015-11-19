@@ -34,13 +34,13 @@ Possible \code{control} arguments are:
       \item{\code{ic.sample.generate}}: Should the initial design be created
       using a LHS? The default is \code{FALSE}, i.e. the initial design from
       the feature object will be used.
-      \item{\code{ic.sample.dimensions}}: Dimensions of the initial design,
+      \item{\code{ic.sample.dimensions}}: Dimensions of the initial sample,
       if created using a LHS. The default is \code{feat.object$dimension}.
-      \item{\code{ic.sample.size}}: Size of the initial design, if created
+      \item{\code{ic.sample.size}}: Size of the initial sample, if created
       using a LHS. The default is \code{100 * feat.object$dimension}.
-      \item{\code{ic.sample.lower}}: Lower bounds of the initial design, if
+      \item{\code{ic.sample.lower}}: Lower bounds of the initial sample, if
       created with a LHS. The default is \code{100 * feat.object$lower}.
-      \item{\code{ic.sample.upper}}: Upper bounds of the initial design, if
+      \item{\code{ic.sample.upper}}: Upper bounds of the initial sample, if
       created with a LHS. The default is \code{100 * feat.object$upper}.
       \item{\code{ic.show_warnings}}: Should warnings be shown, when
       possible duplicates are removed? The default is \code{FALSE}.

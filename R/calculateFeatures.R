@@ -85,7 +85,7 @@
 #'     \item{\code{ela_conv} -- ELA convexity features (6)}:\cr
 #'     Two observations are chosen randomly from the initial design. Then, a
 #'     linear (convex) combination of those observations is calculated -- based
-#'     on a random weight from [0, 1]. The corresponding function value will be
+#'     on a random weight from [0, 1]. The corresponding objective value will be
 #'     compared to the linear combination of the objectives from the two
 #'     original observations. This process is replicated \code{convex.nsample}
 #'     (per default \code{1000}) times and will then be aggregated:\cr
@@ -276,7 +276,7 @@
 #'     any computational efforts):\cr
 #'     \itemize{
 #'       \item{\code{{dim, observations}}}: number of features / dimensions and
-#'       observations within the initial design
+#'       observations within the initial sample
 #'       \item{\code{{lower, upper, objective, blocks}_{min, max}}}: minimum
 #'       and maximum value of all lower and upper bounds, the objective values
 #'       and the number of blocks / cells (per dimension)
@@ -290,8 +290,8 @@
 #'       the computation of these features
 #'     }
 #'     \item{\code{disp} -- dispersion features (18)}:\cr
-#'     Computes features based on the comparison of the dispersion of distances
-#'     among the 'best' elements and the entire initial design:\cr
+#'     Computes features based on the comparison of the dispersion of pairwise
+#'     distances among the 'best' elements and the entire initial design:\cr
 #'     \itemize{
 #'       \item{\code{{ratio, diff}_{mean, median}_{02, 05, 10, 25}}}: ratio
 #'       and difference of the mean / median distances of the distances of the

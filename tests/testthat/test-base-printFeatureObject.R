@@ -64,7 +64,7 @@ test_that("FeatureObject Output with cellmapping and dim >= 5", {
 })
 
 test_that("Usage of regular and smoof functions", {
-  X = createInitialDesign(n.obs = 200, dim = 2)
+  X = createInitialSample(n.obs = 200, dim = 2)
   f1 = smoof::makeBBOBFunction(dimension = 2, fid = 23, iid = 1)
   f2 = function(x) sum(x^2 * sin(x^3))
   y1 = apply(X, 1, f1)

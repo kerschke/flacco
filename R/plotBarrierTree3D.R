@@ -54,7 +54,7 @@
 #'   A 3D-surface plot, visualizing the barrier tree of this cell mapping.
 #' @examples
 #' # create a feature object
-#' X = createInitialDesign(n.obs = 900, dim = 2)
+#' X = createInitialSample(n.obs = 900, dim = 2)
 #' f = smoof::makeAckleyFunction(dimensions = 2)
 #' y = apply(X, 1, f)
 #' feat.object = createFeatureObject(X = X, y = y, fun = f, blocks = c(4, 6))
