@@ -1,7 +1,0 @@
-.svn
-.DS_Store
-.git
-.Rhistory
-Rplots*.pdf
-^Benchmark
-^todos
