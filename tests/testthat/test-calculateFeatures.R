@@ -16,7 +16,7 @@ test_that("Non-Cellmapping Objects", {
   expect_list(features)
 
   # all objects are either NA, logical or a number
-  expect_true(all(sapply(features, function(x) is.na(x) || is.logical(x) || assertNumber(x))))
+  expect_true(all(sapply(features, function(x) is.na(x) || is.logical(x) || testNumber(x))))
 
   # all features were computed without additional function evaluations
   expect_true(all(unlist(features[grep("costs_fun_evals", names(features))]) == 0L))
@@ -38,7 +38,7 @@ test_that("Non-Cellmapping Objects", {
   expect_list(features)
 
   # all objects are either NA, logical or a number
-  expect_true(all(sapply(features, function(x) is.na(x) || is.logical(x) || assertNumber(x))))
+  expect_true(all(sapply(features, function(x) is.na(x) || is.logical(x) || testNumber(x))))
 
   # all features were computed without additional function evaluations
   expect_true(all(unlist(features[grep("costs_fun_evals", names(features))]) == 0))
@@ -75,16 +75,16 @@ test_that("Cellmapping Objects", {
   expect_list(features)
 
   # all objects are either NA, logical or a number
-  expect_true(all(sapply(features, function(x) is.na(x) || is.logical(x) || assertNumber(x))))
+  expect_true(all(sapply(features, function(x) is.na(x) || is.logical(x) || testNumber(x))))
 
   # all features were computed without additional function evaluations
   expect_true(all(unlist(features[grep("costs_fun_evals", names(features))]) == 0))
 
   # as the feature object was a cellmapping feature object, the following tests should pass
-  expect_true(assertInteger(features$basic.blocks_min))
-  expect_true(assertInteger(features$basic.blocks_max))
-  expect_true(assertInteger(features$basic.cells_total))
-  expect_true(assertInteger(features$basic.cells_filled))
+  expect_true(testInteger(features$basic.blocks_min))
+  expect_true(testInteger(features$basic.blocks_max))
+  expect_true(testInteger(features$basic.cells_total))
+  expect_true(testInteger(features$basic.cells_filled))
   expect_true(features$basic.allows_cm)
 
   # (3) test, whether an incorrect input causes an error:
@@ -106,16 +106,16 @@ test_that("Cellmapping Objects", {
   expect_list(features)
   
   # all objects are either NA, logical or a number
-  expect_true(all(sapply(features, function(x) is.na(x) || is.logical(x) || assertNumber(x))))
+  expect_true(all(sapply(features, function(x) is.na(x) || is.logical(x) || testNumber(x))))
   
   # all features were computed without additional function evaluations
   expect_true(all(unlist(features[grep("costs_fun_evals", names(features))]) == 0))
   
   # as the feature object was a cellmapping feature object, the following tests should pass
-  expect_true(assertInteger(features$basic.blocks_min))
-  expect_true(assertInteger(features$basic.blocks_max))
-  expect_true(assertInteger(features$basic.cells_total))
-  expect_true(assertInteger(features$basic.cells_filled))
+  expect_true(testInteger(features$basic.blocks_min))
+  expect_true(testInteger(features$basic.blocks_max))
+  expect_true(testInteger(features$basic.cells_total))
+  expect_true(testInteger(features$basic.cells_filled))
   expect_true(features$basic.allows_cm)
 })
 
@@ -135,7 +135,7 @@ test_that("Underlying Functions Available (non-cellmapping)", {
   expect_list(features)
 
   # all objects are either NA, logical or a number
-  expect_true(all(sapply(features, function(x) is.na(x) || is.logical(x) || assertNumber(x))))
+  expect_true(all(sapply(features, function(x) is.na(x) || is.logical(x) || testNumber(x))))
 
   # additional function evaluations
   x = unlist(features[grep("costs_fun_evals", names(features))])
@@ -174,7 +174,7 @@ test_that("Underlying Functions Available (cellmapping)", {
   expect_list(features)
 
   # all objects are either NA, logical or a number
-  expect_true(all(sapply(features, function(x) is.na(x) || is.logical(x) || assertNumber(x))))
+  expect_true(all(sapply(features, function(x) is.na(x) || is.logical(x) || testNumber(x))))
 
   # additional function evaluations
   x = unlist(features[grep("costs_fun_evals", names(features))])
@@ -184,10 +184,10 @@ test_that("Underlying Functions Available (cellmapping)", {
   expect_true(all(x[setdiff(names(x), names(expensive))] == 0))
 
   # as the feature object was a cellmapping feature object, the following tests should pass
-  expect_true(assertInteger(features$basic.blocks_min))
-  expect_true(assertInteger(features$basic.blocks_max))
-  expect_true(assertInteger(features$basic.cells_total))
-  expect_true(assertInteger(features$basic.cells_filled))
+  expect_true(testInteger(features$basic.blocks_min))
+  expect_true(testInteger(features$basic.blocks_max))
+  expect_true(testInteger(features$basic.cells_total))
+  expect_true(testInteger(features$basic.cells_filled))
   expect_true(features$basic.allows_cm)
 
   # (4) test, whether an incorrect input causes an error:
