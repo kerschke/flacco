@@ -1,3 +1,6 @@
+flacco_1.2:
+- converted assert* into test* - due to update of checkmate
+
 flacco_1.1:
 - barrier trees:
 -- fixed a bug in feature computation: ratio of levels and nodes should only be taken for the maximum number of levels
