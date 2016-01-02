@@ -23,7 +23,7 @@ calculateLocalSearchFeatures = function(feat.object, control, ...) {
       function(cl) as.numeric(quantile(cl$height, 0.1)))
     
     calcOptim = function(par) {
-      res = optim(par, fn, method = opt.algo, control = opt.algo.control, ...)
+      res = optim(as.numeric(par), fn, method = opt.algo, control = opt.algo.control, ...)
       return(list(par = res$par, counts = resetCounter(fn)))
     }
     

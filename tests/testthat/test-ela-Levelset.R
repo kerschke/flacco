@@ -50,7 +50,7 @@ test_that("Expect Warning", {
 
 test_that("Parallelization", {
   X = replicate(5, runif(2000))
-  f = smoof::makeTrecanniFunction()
+  f = smoof::makeBBOBFunction(dimension = 5, fid = 20, iid = 1)
   y = apply(X, 1, f)
   feat.object = createFeatureObject(X = X, y = y)
 
