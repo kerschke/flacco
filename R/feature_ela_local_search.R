@@ -22,7 +22,7 @@ calculateLocalSearchFeatures = function(feat.object, control, ...) {
     clust.cutfun = control_parameter(control, "ela_local.clust_cut_function", 
       function(cl) as.numeric(quantile(cl$height, 0.1)))
     
-    calcOptim = function(par) {
+    calcOptim = function(par, ...) {
       res = optim(as.numeric(par), fn, method = opt.algo, control = opt.algo.control, ...)
       return(list(par = res$par, counts = resetCounter(fn)))
     }
@@ -34,7 +34,7 @@ calculateLocalSearchFeatures = function(feat.object, control, ...) {
       stop("Requesting more starting points than observations in the initial design.")
     
     fn = initializeCounter(f)
-    result = lapply(ids, function(i) calcOptim(drop(X[i,])))
+    result = lapply(ids, function(i) calcOptim(drop(X[i,]), ...))
     pars = t(vapply(result, function(i) i$par, double(d)))
     fun.evals = vapply(result, function(i) i$counts, integer(1))
     
