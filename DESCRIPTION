@@ -39,5 +39,5 @@ Suggests:
 LazyData: yes
 ByteCompile: yes
 Version: 1.2
-Date: 2015-10-28
+Date: 2016-01-22
 RoxygenNote: 5.0.1
