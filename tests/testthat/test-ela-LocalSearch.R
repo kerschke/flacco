@@ -57,7 +57,7 @@ test_that("Expected output - maximization", {
 
   # (1) create a feature object:
   X = t(replicate(n = 2000L, expr = runif(n = 5L, min = -10L, max = 10L)))
-  feat.object = createFeatureObject(X = X, fun = function(x) -sum(x^2))
+  feat.object = createFeatureObject(X = X, fun = function(x) -sum(x^2), minimize = FALSE)
 
   # (2) compute the meta model features
   features = calculateFeatureSet(feat.object, "ela_local")
