@@ -4,10 +4,13 @@ language: r
 
 sudo: required
 
+os:
+  - linux
+  - osx
+
 r_github_packages:
   - jimhester/robustr
   - jimhester/covr
-  - hadley/testthat
   
 after_success:
   - Rscript -e 'library(covr);coveralls()'

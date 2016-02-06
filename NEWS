@@ -2,6 +2,7 @@ flacco_1.3:
 - ela_local:
 -- made L-BFGS-B the default local optimizer
 -- use lower / upper bounds of the feature object as bounds of the L-BFGS-B
+-- local search algorithm used to maximize the problems (it's fixed now)
 
 flacco_1.2:
 - converted assert* into test* - due to update of checkmate
