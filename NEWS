@@ -1,3 +1,8 @@
+flacco_1.3:
+- ela_local:
+-- made L-BFGS-B the default local optimizer
+-- use lower / upper bounds of the feature object as bounds of the L-BFGS-B
+
 flacco_1.2:
 - converted assert* into test* - due to update of checkmate
 
@@ -9,4 +14,4 @@ flacco_1.1:
 - createInitialSample stores the attributes lower and upper, which will be used by createFeatureObject
 
 flacco_1.0:
-- Initial release to CRAN
+- initial release to CRAN

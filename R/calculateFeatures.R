@@ -476,7 +476,11 @@
 #'       default is \code{50 * d} with \code{d} being the number of features
 #'       (i.e. the dimension).
 #'       \item{\code{ela_local.optim_method}}: Local search algorithm. The
-#'       default is \code{"BFGS"}.
+#'       default is \code{"L-BFGS-B"}.
+#'       \item{\code{ela_local.optim.{lower, upper}}}: Lower and upper bounds
+#'       to be considered by the local search algorithm. Per default, the
+#'       boundaries are the same as defined within the feature object
+#'       (in case of \code{"L-BFGS-B"}) or infinity (for all others).
 #'       \item{\code{ela_local.optim_method_control}}: Control settings of the
 #'       local search algorithm. The default is an empty list.
 #'       \item{\code{ela_local.sample_seed}}: Seed, which will be set before

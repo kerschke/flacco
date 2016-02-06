@@ -13,17 +13,19 @@ calculateLocalSearchFeatures = function(feat.object, control, ...) {
       control = list()
     assertList(control)
     N = control_parameter(control, "ela_local.local_searches", 50L * d)
-    opt.algo = control_parameter(control, "ela_local.optim_method", "BFGS")
+    opt.algo = control_parameter(control, "ela_local.optim_method", "L-BFGS-B")
     opt.algo.control = control_parameter(control, "ela_local.optim_method_control", 
       list())
     opt.algo.control$fnscale = -1
+    low = control_parameter(control, "ela_local.optim.lower", ifelse(opt.algo == "L-BFGS-B", feat.object$lower, -Inf))
+    upp = control_parameter(control, "ela_local.optim.upper", ifelse(opt.algo == "L-BFGS-B", feat.object$upper, Inf))
     id.seed = control_parameter(control, "ela_local.sample_seed", sample(1:1e6, 1))
     clust.method = control_parameter(control, "ela_local.clust_method", "single")
     clust.cutfun = control_parameter(control, "ela_local.clust_cut_function", 
       function(cl) as.numeric(quantile(cl$height, 0.1)))
     
     calcOptim = function(par, ...) {
-      res = optim(as.numeric(par), fn, method = opt.algo, control = opt.algo.control, ...)
+      res = optim(as.numeric(par), fn, method = opt.algo, control = opt.algo.control, lower = low, upper = upp, ...)
       return(list(par = res$par, counts = resetCounter(fn)))
     }
     
