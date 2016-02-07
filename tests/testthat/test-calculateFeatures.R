@@ -131,7 +131,7 @@ test_that("Underlying Functions Available (non-cellmapping)", {
     control = list(allow_cellmapping = FALSE, show_progress = FALSE))
 
   # test return value types and ranges
-  expect_identical(length(features), 167L)
+  expect_identical(length(features), 170L)
   expect_list(features)
 
   # all objects are either NA, logical or a number
@@ -170,7 +170,7 @@ test_that("Underlying Functions Available (cellmapping)", {
     control = list(show_progress = FALSE))
 
   # test return value types and ranges
-  expect_identical(length(features), 248L)
+  expect_identical(length(features), 251L)
   expect_list(features)
 
   # all objects are either NA, logical or a number

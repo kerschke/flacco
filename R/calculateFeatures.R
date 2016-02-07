@@ -98,19 +98,20 @@
 #'       function evaluations and runtime (in seconds), which were needed for
 #'       the computation of these features
 #'     }
-#'     \item{\code{ela_curv} -- ELA curvature features (23)}:\cr
+#'     \item{\code{ela_curv} -- ELA curvature features (26)}:\cr
 #'     Given a feature object, \code{curv.sample_size} samples (per default
 #'     \code{100 * d} with \code{d} being the number of features) are randomly
 #'     chosen. Then, the gradient and hessian of the function are estimated
 #'     based on those points and the following features are computed:\cr
 #'     \itemize{
-#'       \item{\code{grad_norm.{min, lq, mean, median, uq, max, sd}}}:
+#'       \item{\code{grad_norm.{min, lq, mean, median, uq, max, sd, nas}}}:
 #'       aggregations (minimum, lower quartile, arithmetic mean, median, upper
-#'       quartile, maximum and standard deviation) of the gradients' lengths
-#'       \item{\code{grad_scale.{min, lq, mean, median, uq, max, sd}}}:
+#'       quartile, maximum, standard deviation and percentage of NAs) of the
+#'       gradients' lengths
+#'       \item{\code{grad_scale.{min, lq, mean, median, uq, max, sd, nas}}}:
 #'       aggregations of the ratios between biggest and smallest (absolute)
 #'       gradient directions
-#'       \item{\code{hessian_cond.{min, lq, mean, median, uq, max, sd}}}:
+#'       \item{\code{hessian_cond.{min, lq, mean, median, uq, max, sd, nas}}}:
 #'       aggregations of the ratios of biggest and smallest eigenvalue of the
 #'       hessian matrices
 #'       \item{\code{costs_{fun_evals, runtime}}}: number of (additional)
@@ -425,6 +426,10 @@
 #'     \item{ELA curvature features}: \itemize{
 #'       \item{\code{ela_curv.sample_size}}: Number of samples used for
 #'       calculating the curvature features. The default is \code{100*d}.
+#'       \item{\code{ela_curv.{delta, eps, zero_tol, r, v}}}: Parameters used
+#'       by \code{\link[numDeriv]{grad}} and \code{\link[numDeriv]{hessian}} within the
+#'       approximation of the gradient and hessian. The default values are
+#'       identical to the ones from the corresponding functions.
 #'     }
 #'     \item{ELA distribution features}: \itemize{
 #'       \item{\code{ela_distr.smoothing_bandwidth}}: The smoothing bandwidth,
