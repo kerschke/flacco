@@ -1,13 +1,20 @@
 # travis config, based on https://github.com/craigcitro/r-travis
 
 language: r
+sudo: false
+cache: packages
 
-sudo: required
+r:
+  - release
+  - devel
+
+r_packages:
+  - covr
 
 r_github_packages:
-  - jimhester/robustr
-  - jimhester/covr
-  
+  - mllg/checkmate
+  - hadley/testthat
+
 after_success:
   - Rscript -e 'library(covr);coveralls()'
   - Rscript -e 'library(covr);codecov()'
@@ -15,6 +22,6 @@ after_success:
 notifications:
   email:
     recipients:
-        - kerschke@uni-muenster.de
+      - kerschke@uni-muenster.de
     on_success: change
     on_failure: always
