@@ -12,8 +12,8 @@ r_packages:
   - covr
 
 after_success:
-  - Rscript -e 'Sys.setenv(R_EXPENSIVE_TEST_OK="true");library(covr);coveralls()'
-  - Rscript -e 'Sys.setenv(R_EXPENSIVE_TEST_OK="true");library(covr);codecov()'
+  - Rscript -e 'library(covr);coveralls()'
+  - Rscript -e 'library(covr);codecov()'
 
 notifications:
   email:
