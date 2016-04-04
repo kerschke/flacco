@@ -11,10 +11,6 @@ r:
 r_packages:
   - covr
 
-r_github_packages:
-  - mllg/checkmate
-  - hadley/testthat
-
 after_success:
   - Rscript -e 'Sys.setenv(R_EXPENSIVE_TEST_OK="true");library(covr);coveralls()'
   - Rscript -e 'Sys.setenv(R_EXPENSIVE_TEST_OK="true");library(covr);codecov()'
