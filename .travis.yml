@@ -16,8 +16,8 @@ r_github_packages:
   - hadley/testthat
 
 after_success:
-  - Rscript -e 'library(covr);coveralls()'
-  - Rscript -e 'library(covr);codecov()'
+  - Rscript -e 'Sys.setenv(R_EXPENSIVE_TEST_OK="true");library(covr);coveralls()'
+  - Rscript -e 'Sys.setenv(R_EXPENSIVE_TEST_OK="true");library(covr);codecov()'
 
 notifications:
   email:
