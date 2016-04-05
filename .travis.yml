@@ -8,8 +8,10 @@ r:
   - release
   - devel
 
-r_packages:
-  - covr
+#r_packages:
+#  - covr
+r_github_packages:
+  - jimhester/covr
 
 after_success:
   - Rscript -e 'library(covr);coveralls()'
