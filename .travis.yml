@@ -10,8 +10,8 @@ r:
 
 #r_packages:
 #  - covr
-r_github_packages:
-  - jimhester/covr
+#r_github_packages:
+#  - jimhester/covr
 
 #after_success:
 #  - Rscript -e 'library(covr);coveralls()'
@@ -19,7 +19,7 @@ r_github_packages:
 #  - Rscript -e 'covr::coveralls()'
 #  - Rscript -e 'covr::codecov()'
 after_success:
-  - Rscript -e '(cov <- covr::package_coverage())' -e 'covr::codecov(coverage = cov)' -e 'covr::coveralls(coverage = cov)'
+  - Rscript -e 'devtools::install_github(c("jimhester/covr"), force = TRUE)' -e '(cov <- covr::package_coverage())' -e 'covr::codecov(coverage = cov)' -e 'covr::coveralls(coverage = cov)'
 
 notifications:
   email:
