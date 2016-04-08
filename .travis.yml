@@ -12,7 +12,8 @@ r_packages:
   - covr
 
 after_success:
-  - Rscript -e 'installed.packages()[,"Version"];(cov <- covr::package_coverage());covr::codecov(coverage = cov);covr::coveralls(coverage = cov)'
+  - Rscript -e 'pkgs = installed.packages(); pkgs[pkgs[,1] %in% devtools::loaded_packages()[,1], "Version"]'
+  - Rscript -e '(cov = covr::package_coverage());covr::codecov(coverage = cov);covr::coveralls(coverage = cov)'
 
 notifications:
   email:
