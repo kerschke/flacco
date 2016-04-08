@@ -8,18 +8,11 @@ r:
   - release
   - devel
 
-#r_packages:
-#  - covr
-#r_github_packages:
-#  - jimhester/covr
+r_packages:
+  - covr
 
-#after_success:
-#  - Rscript -e 'library(covr);coveralls()'
-#  - Rscript -e 'library(covr);codecov()'
-#  - Rscript -e 'covr::coveralls()'
-#  - Rscript -e 'covr::codecov()'
 after_success:
-  - Rscript -e 'devtools::install_github(c("jimhester/covr"), force = TRUE)' -e '(cov <- covr::package_coverage())' -e 'covr::codecov(coverage = cov)' -e 'covr::coveralls(coverage = cov)'
+  - Rscript -e 'installed.packages()[,"Version"];(cov <- covr::package_coverage());covr::codecov(coverage = cov);covr::coveralls(coverage = cov)'
 
 notifications:
   email:
