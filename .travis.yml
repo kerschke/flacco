@@ -12,7 +12,7 @@ r_packages:
   - covr
 
 after_success:
-  - Rscript -e 'library(covr);library(testthat);library(checkmate);library(flacco)'
+  - Rscript -e 'library(covr);library(testthat);library(checkmate)'
   - Rscript -e 'pkgs = installed.packages(); pkgs[pkgs[,1] %in% devtools::loaded_packages()[,1], "Version"]'
   - Rscript -e '(cov = covr::package_coverage());covr::codecov(coverage = cov);covr::coveralls(coverage = cov)'
 
