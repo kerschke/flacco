@@ -81,6 +81,7 @@ Installation Instructions
 News
 ----
 
+* April 15, 2016: flacco 1.3 has been submitted to CRAN.
 * January 22, 2016: flacco 1.2 has been submitted to CRAN.
 * November 26, 2015: flacco 1.1 has been submitted to CRAN.
 * October 28, 2015: It is done! flacco 1.0 is released on CRAN!
