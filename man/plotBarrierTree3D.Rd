@@ -57,11 +57,11 @@ Possible \code{control} arguments are:
       \item{\code{bt.col_root}}: Color of the root symbol. The default is
       \code{"red"}.
       \item{\code{bt.pch_root}}: Symbol used for plotting the root.
-      The default is \code{1}.
+      The default is \code{17} (filled triangle).
       \item{\code{bt.pch_breakpoint}}: Symbol used for plotting a
-      breakpoint. The default is \code{1}.
+      breakpoint. The default is \code{5} (non-filled diamond).
       \item{\code{bt.pch_basin}}: Symbol used for plotting the leaf (i.e. a
-      basin) of the barrier tree. The default is \code{19}.
+      basin) of the barrier tree. The default is \code{19} (filled circle).
       \item{\code{bt.lwd}}: Width of the lines used for plotting the
       branches of a barrier tree. The default is \code{2}.
     }

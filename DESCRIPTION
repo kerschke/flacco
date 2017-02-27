@@ -16,7 +16,8 @@ Roxygen: list(wrap = FALSE)
 Depends:
     R (>= 3.0.0),
     BBmisc,
-    checkmate
+    checkmate,
+    mlr
 Suggests:
     devtools,
     e1071,
@@ -26,7 +27,6 @@ Suggests:
     Matrix,
     mda,
     mlbench,
-    mlr,
     numDeriv,
     parallel,
     parallelMap,

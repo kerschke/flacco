@@ -202,7 +202,8 @@ plotInformationContent = function (feat.object, control) {
   }
 
   # axis labels
-  xlab = control_parameter(control, "ic.plot.xlab", expression(log[10](epsilon)))
+  # xlab = control_parameter(control, "ic.plot.xlab", expression(log[10](epsilon)))
+  xlab = control_parameter(control, "ic.plot.xlab", expression(paste(log[10], (epsilon))))
   xlab_line = control_parameter(control, "ic.plot.xlab_line", 3)
   assertNumber(xlab_line)
   mtext(text = xlab, side = 1, line = xlab_line)

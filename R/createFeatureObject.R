@@ -162,10 +162,14 @@ createFeatureObject = function(init, X, y, fun, minimize,
     fun = NULL
   env = new.env(parent = emptyenv())
   env$init = init
-  init.grid = convertInitDesignToGrid(init = init,
-    lower = lower, upper = upper, blocks = blocks)
-  centers = computeGridCenters(lower = lower, upper = upper, blocks = blocks)
-  colnames(centers)[1:d] = feat.names
+  if (allows.cellmapping) {
+    init.grid = convertInitDesignToGrid(init = init,
+      lower = lower, upper = upper, blocks = blocks)
+    centers = computeGridCenters(lower = lower, upper = upper, blocks = blocks)
+    colnames(centers)[1:d] = feat.names
+  } else {
+    init.grid = centers = NULL
+  }
   res =  makeS3Obj("FeatureObject", env = env,
     minimize = minimize, fun = fun,
     lower = lower, upper = upper,
@@ -190,15 +194,15 @@ print.FeatureObject = function(x, ...) {
   cat("Feature Object:\n")
 
   catf("- Number of Observations: %i", x$n.obs)
-  catf("- Number of Features: %i", x$dim)
+  catf("- Number of Variables: %i", x$dim)
   if (x$dim < 5L) {
     catf("- Lower Boundaries: %s", collapse(sprintf("%.2e", x$lower), sep=", "))
     catf("- Upper Boundaries: %s", collapse(sprintf("%.2e", x$upper), sep=", "))
-    catf("- Name of Features: %s", collapse(x$feature.names, sep = ", "))
+    catf("- Name of Variables: %s", collapse(x$feature.names, sep = ", "))
   } else {
     catf("- Lower Boundaries: %s, ...", collapse(sprintf("%.2e", x$lower[1:4]), sep=", "))
     catf("- Upper Boundaries: %s, ...", collapse(sprintf("%.2e", x$upper[1:4]), sep=", "))
-    catf("- Name of Features: %s, ...", collapse(x$feature.names[1:4], sep = ", "))
+    catf("- Name of Variables: %s, ...", collapse(x$feature.names[1:4], sep = ", "))
   }
   catf("- Optimization Problem: %s %s", 
        ifelse(x$minimize, "minimize", "maximize"), x$objective.name)

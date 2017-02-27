@@ -40,7 +40,7 @@ Possible \code{control} arguments are:
       default is \code{"#cccccc"}, i.e. grey.
       \item{\code{gcm.color_basin}}: Color of the basins of attraction. This
       has to be a function, which computes the colors, depending on the
-      number of attractors. The default is \code{function(n) topo.colors(n)}.
+      number of attractors. The default is the color scheme from \code{ggplot2}.
       \item{\code{gcm.plot_arrows}}: Should arrows be plotted? The default
       is \code{TRUE}.
       \item{\code{gcm.arrow.length_{x, y}}}: Scaling factor of the arrow

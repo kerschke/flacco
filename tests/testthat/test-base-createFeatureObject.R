@@ -11,10 +11,8 @@ test_that("Basic FeatureObject ", {
   expect_equal(feat.object$objective.name, "Species")
   expect_equal(feat.object$blocks, rep(1L, ncol(iris) - 1L))
   expect_false(feat.object$allows.cellmapping)
-  expect_identical(feat.object$init.grid, data.frame(iris, cell.ID = 1L))
-  expect_identical(feat.object$cell.centers, 
-    data.frame(t(colMeans(rbind(apply(iris[, -5L], 2L, max), 
-      apply(iris[, -5L], 2L, min)))), cell.ID = 1L))
+  expect_null(feat.object$init.grid)
+  expect_null(feat.object$cell.centers)
   expect_identical(feat.object$cell.size, 
     apply(iris[, -5L], 2L, function(x) diff(range(x))))
   expect_equal(feat.object$env$init, iris)

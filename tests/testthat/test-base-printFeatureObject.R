@@ -5,10 +5,10 @@ test_that("FeatureObject Output", {
   expect_output(print(feat.object), regexp = paste(
     "^Feature Object:",
     "- Number of Observations:\\s\\d+",
-    "- Number of Features:\\s\\d+",
+    "- Number of Variables:\\s\\d+",
     "- Lower Boundaries: [0-9e+.-]+(, [0-9e+-.]+)*",
     "- Upper Boundaries: [0-9e+.-]+(, [0-9e+-.]+)*",
-    "- Name of Features: [^,\\s]*(, [^,\\s]*)*",
+    "- Name of Variables: [^,\\s]*(, [^,\\s]*)*",
     "- Optimization Problem: (minimize|maximize) [^\\s]+?",
     sep="\\r?\\n")
   )
@@ -21,7 +21,7 @@ test_that("FeatureObject Output with more than 5 feature dims", {
   expect_output(print(feat.object), regexp = paste(
     "- Lower Boundaries: [0-9e+.-]+(, [0-9e+-.]+)*, ...",
     "- Upper Boundaries: [0-9e+.-]+(, [0-9e+-.]+)*, ...",
-    "- Name of Features: [^,\\s]*(, [^,\\s]*)*, ...",
+    "- Name of Variables: [^,\\s]*(, [^,\\s]*)*, ...",
     sep="\\r?\\n")
   )
 })
@@ -75,10 +75,10 @@ test_that("Usage of regular and smoof functions", {
   expect_output(print(feat.object1), regexp = paste(
     "^Feature Object:",
     "- Number of Observations:\\s\\d+",
-    "- Number of Features:\\s\\d+",
+    "- Number of Variables:\\s\\d+",
     "- Lower Boundaries: [0-9e+.-]+(, [0-9e+-.]+)*",
     "- Upper Boundaries: [0-9e+.-]+(, [0-9e+-.]+)*",
-    "- Name of Features: [^,\\s]*(, [^,\\s]*)*",
+    "- Name of Variables: [^,\\s]*(, [^,\\s]*)*",
     "- Optimization Problem: (minimize|maximize) [^\\s]+?",
     "- Function to be Optimized: smoof-function [(BBOB)]+?",
     sep="\\r?\\n")
@@ -86,10 +86,10 @@ test_that("Usage of regular and smoof functions", {
   expect_output(print(feat.object2), regexp = paste(
     "^Feature Object:",
     "- Number of Observations:\\s\\d+",
-    "- Number of Features:\\s\\d+",
+    "- Number of Variables:\\s\\d+",
     "- Lower Boundaries: [0-9e+.-]+(, [0-9e+-.]+)*",
     "- Upper Boundaries: [0-9e+.-]+(, [0-9e+-.]+)*",
-    "- Name of Features: [^,\\s]*(, [^,\\s]*)*",
+    "- Name of Variables: [^,\\s]*(, [^,\\s]*)*",
     "- Optimization Problem: (minimize|maximize) [^\\s]+?",
     "- Function to be Optimized: function [\\s]*",
     sep="\\r?\\n")

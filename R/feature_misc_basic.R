@@ -7,7 +7,10 @@ calculateBasicFeatures = function(feat.object) {
     no.cells = as.integer(prod(feat.object$blocks))
     min.blocks = as.integer(min(blocks))
     max.blocks = as.integer(max(blocks))
-    filled.cells = length(unique(feat.object$init.grid$cell.ID))
+    if (feat.object$allows.cellmapping)
+      filled.cells = length(unique(feat.object$init.grid$cell.ID))
+    else
+      filled.cells = 1L
     return(list(basic.dim = feat.object$dim,
       basic.observations = feat.object$n.obs,
       basic.lower_min = min(feat.object$lower),

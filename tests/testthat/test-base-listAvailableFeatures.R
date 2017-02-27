@@ -9,11 +9,11 @@ test_that("listAvailableFeatures", {
   x = c("bt", "limo", "ela_curv")
   expect_equal(listAvailableFeatureSets(subset = x), x)
   expect_equal(listAvailableFeatureSets(
-    subset = x, allow.cellmapping = FALSE), c("limo", "ela_curv"))
+    subset = x, allow.cellmapping = FALSE), "ela_curv")
   expect_equal(listAvailableFeatureSets(
     subset = x, allow.additional_costs = FALSE), c("bt", "limo"))
   expect_equal(listAvailableFeatureSets(subset = x, 
-    allow.cellmapping = FALSE, allow.additional_costs = FALSE), "limo")
+    allow.cellmapping = FALSE, allow.additional_costs = FALSE), character(0))
   expect_equal(listAvailableFeatureSets(subset = x, allow.cellmapping = FALSE, 
     blacklist = c("ela_curv", "ela_meta", "limo")), character())
 })

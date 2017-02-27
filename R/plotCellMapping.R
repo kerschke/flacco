@@ -25,7 +25,7 @@
 #'       default is \code{"#cccccc"}, i.e. grey.
 #'       \item{\code{gcm.color_basin}}: Color of the basins of attraction. This
 #'       has to be a function, which computes the colors, depending on the
-#'       number of attractors. The default is \code{function(n) topo.colors(n)}.
+#'       number of attractors. The default is the color scheme from \code{ggplot2}.
 #'       \item{\code{gcm.plot_arrows}}: Should arrows be plotted? The default
 #'       is \code{TRUE}.
 #'       \item{\code{gcm.arrow.length_{x, y}}}: Scaling factor of the arrow
@@ -151,7 +151,11 @@ plotCellMapping = function (feat.object, control) {
   # prepare colour palette
   col.attr = control_parameter(control, "gcm.color_attractor", "#333333")
   col.uncert = control_parameter(control, "gcm.color_uncertain", "#cccccc")
-  col.basin = control_parameter(control, "gcm.color_basin", function(n) topo.colors(n))
+  ## use ggplot2-colors
+  col.basin = control_parameter(control, "gcm.color_basin", function(n) {
+    hues = seq(15, 375, length = n + 1)
+    hcl(h = hues, l = 65, c = 100)[1:n]
+  })
   palette = c(col.uncert, col.attr, col.basin(length(attractors)))
 
   # cell information

@@ -28,11 +28,11 @@
 #'       \item{\code{bt.color_branches}}: Color used for the branches of the
 #'       barrier tree. Per default there will be one color per level.
 #'       \item{\code{bt.pch_root}}: Symbol used for plotting the root.
-#'       The default is \code{17}.
+#'       The default is \code{17} (filled triangle).
 #'       \item{\code{bt.pch_breakpoint}}: Symbol used for plotting a
-#'       breakpoint. The default is \code{1}.
+#'       breakpoint. The default is \code{5} (non-filled diamond).
 #'       \item{\code{bt.pch_basin}}: Symbol used for plotting the leaf (i.e. a
-#'       basin) of the barrier tree. The default is \code{19}.
+#'       basin) of the barrier tree. The default is \code{19} (filled circle).
 #'       \item{\code{bt.col_root}}: Color of the root symbol. The default is
 #'       \code{"red"}.
 #'       \item{\code{bt.lwd}}: Width of the lines used for plotting the
@@ -141,7 +141,7 @@ plotBarrierTree2D = function(feat.object, control) {
     "bt.color_branches", topo.colors(max(levels)))
 
   pch.root = control_parameter(control, "bt.pch_root", 17)
-  pch.break = control_parameter(control, "bt.pch_breakpoint", 1)
+  pch.break = control_parameter(control, "bt.pch_breakpoint", 5)
   pch.basin = control_parameter(control, "bt.pch_basin", 19)
   col.root = control_parameter(control, "bt.col_root", "red")
   checkPch(pch.root)

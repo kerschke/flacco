@@ -26,7 +26,6 @@ showEvals = function(fn) {
 ## resets the evaluation counter to 0 and returns the number of calls
 resetCounter = function (fn) {
   counts = environment(fn)$count
-  last_count = environment(fn)$count
   environment(fn)$count = 0L
   counts
 }

@@ -12,7 +12,7 @@ test_that("Non-Cellmapping Objects", {
     control = list(allow_cellmapping = FALSE, allow_costs = FALSE))
 
   # test return value types and ranges
-  expect_identical(length(features), 122L)
+  expect_identical(length(features), 94L)
   expect_list(features)
 
   # all objects are either NA, logical or a number
@@ -34,7 +34,7 @@ test_that("Non-Cellmapping Objects", {
     blacklist = c("ela_local", "ela_curv", "ela_conv")))
 
   # test return value types and ranges
-  expect_identical(length(features), 122L)
+  expect_identical(length(features), 94L)
   expect_list(features)
 
   # all objects are either NA, logical or a number
@@ -131,7 +131,7 @@ test_that("Underlying Functions Available (non-cellmapping)", {
     control = list(allow_cellmapping = FALSE, show_progress = FALSE))
 
   # test return value types and ranges
-  expect_identical(length(features), 170L)
+  expect_identical(length(features), 142L)
   expect_list(features)
 
   # all objects are either NA, logical or a number
