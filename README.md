@@ -8,7 +8,7 @@ flacco: Feature-Based Landscape Analysis of Continuous and Constraint Optimizati
 
 [![Build Status](https://travis-ci.org/kerschke/flacco.svg?branch=master)](https://travis-ci.org/kerschke/flacco)
 [![Build status](https://ci.appveyor.com/api/projects/status/cd170v2xlpw8db47/branch/master?svg=true)](https://ci.appveyor.com/project/kerschke/flacco/branch/master)
-[![Coverage Status](https://coveralls.io/repos/kerschke/flacco/badge.svg?branch=master)](https://coveralls.io/r/kerschke/flacco?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/kerschke/flacco/badge.svg?branch=master)](https://coveralls.io/r/kerschke/flacco?branch=master)
 [![codecov.io](http://codecov.io/github/kerschke/flacco/coverage.svg?branch=master)](http://codecov.io/github/kerschke/flacco?branch=master)
 
 * *If you like our package, please [star](https://github.com/blog/1204-notifications-stars) it on Github.*
