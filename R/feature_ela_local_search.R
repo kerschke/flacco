@@ -1,9 +1,12 @@
 calculateLocalSearchFeatures = function(feat.object, control, ...) {
   assertClass(feat.object, "FeatureObject")
-  f = initializeCounter(feat.object$fun)
-  if (is.null(f))
+  if (is.null(feat.object$fun))
     stop("The local search features require the exact function!")
+  allow.costs = control_parameter(control, "allow_costs", TRUE)
+  if (!allow.costs)
+    stop("You can not prohibit additional costs and still try to compute these features!")
   measureTime(expression({
+    f = initializeCounter(feat.object$fun)
     X = extractFeatures(feat.object)
     y = extractObjective(feat.object)
     d = feat.object$dim

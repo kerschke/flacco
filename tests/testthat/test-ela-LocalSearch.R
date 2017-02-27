@@ -92,3 +92,13 @@ test_that("Expected output - maximization", {
   x = unlist(fun_eval_features[grep("min|mean|max|costs", names(fun_eval_features))])
   expect_true(all(diff(x) >= 0))
 })
+
+test_that("Show Error", {
+  feat.object = createFeatureObject(init = iris[, -5], 
+    objective = "Sepal.Length")
+  expect_error(calculateFeatureSet(feat.object, "ela_local"))
+  feat.object = createFeatureObject(init = iris[, -5], 
+    objective = "Sepal.Length", fun = function(x) sum(x^2))
+  expect_error(calculateFeatureSet(feat.object, "ela_local",
+    control = list(allow_costs = FALSE)))
+})

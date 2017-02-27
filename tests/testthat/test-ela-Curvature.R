@@ -145,3 +145,13 @@ test_that("Expected Output on Bounds", {
   x = unlist(grad_scale_features[grep("min|mean|max", names(grad_scale_features))])
   expect_true(all(diff(x) >= 0L))
 })
+
+test_that("Show Error", {
+  feat.object = createFeatureObject(init = iris[, -5], 
+    objective = "Sepal.Length")
+  expect_error(calculateFeatureSet(feat.object, "ela_curv"))
+  feat.object = createFeatureObject(init = iris[, -5], 
+    objective = "Sepal.Length", fun = function(x) sum(x^2))
+  expect_error(calculateFeatureSet(feat.object, "ela_curv",
+    control = list(allow_costs = FALSE)))
+})

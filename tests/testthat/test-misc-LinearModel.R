@@ -44,3 +44,13 @@ test_that("Using X and y", {
   expect_identical(features$limo.sd_mean.reg, NA_real_)
   expect_identical(features$limo.sd_mean.norm, NA_real_)
 })
+
+test_that("Show Error", {
+  feat.object = createFeatureObject(init = iris[, -5], 
+    objective = "Sepal.Length")
+  expect_error(calculateFeatureSet(feat.object, "limo"))
+  feat.object = createFeatureObject(init = iris[, -5], 
+    objective = "Sepal.Length", blocks = 3L)
+  expect_error(calculateFeatureSet(feat.object, "limo",
+    control = list(allow_cellmapping = FALSE)))
+})

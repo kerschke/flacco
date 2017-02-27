@@ -1,10 +1,13 @@
 calculateConvexityFeatures = function(feat.object, control) {
   assertClass(feat.object, "FeatureObject")
+  if (is.null(feat.object$fun))
+    stop("The convexity features require the exact function!")
   if (missing(control))
     control = list()
   assertList(control)
-  if (is.null(feat.object$fun))
-    stop("The convexity features require the exact function!")
+  allow.costs = control_parameter(control, "allow_costs", TRUE)
+  if (!allow.costs)
+    stop("You can not prohibit additional costs and still try to compute these features!")
   measureTime(expression({
     f = initializeCounter(feat.object$fun)
     X = extractFeatures(feat.object)

@@ -106,3 +106,13 @@ test_that("Using Manhattan Distance", {
   expect_true(features$cm_conv.convex.hard <= features$cm_conv.convex.soft)
   expect_true(features$cm_conv.concave.hard <= features$cm_conv.concave.soft)
 })
+
+test_that("Show Error", {
+  feat.object = createFeatureObject(init = iris[, -5], 
+    objective = "Sepal.Length")
+  expect_error(calculateFeatureSet(feat.object, "cm_conv"))
+  feat.object = createFeatureObject(init = iris[, -5], 
+    objective = "Sepal.Length", blocks = 3L)
+  expect_error(calculateFeatureSet(feat.object, "cm_conv",
+    control = list(allow_cellmapping = FALSE)))
+})

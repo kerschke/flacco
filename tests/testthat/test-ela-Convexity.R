@@ -37,3 +37,13 @@ test_that("Expected Output", {
   expect_true(testNumber(features$ela_conv.costs_fun_evals, lower = 0L))
   expect_true(testNumber(features$ela_conv.costs_runtime, lower = 0L))
 })
+
+test_that("Show Error", {
+  feat.object = createFeatureObject(init = iris[, -5], 
+    objective = "Sepal.Length")
+  expect_error(calculateFeatureSet(feat.object, "ela_conv"))
+  feat.object = createFeatureObject(init = iris[, -5], 
+    objective = "Sepal.Length", fun = function(x) sum(x^2))
+  expect_error(calculateFeatureSet(feat.object, "ela_conv",
+    control = list(allow_costs = FALSE)))
+})
