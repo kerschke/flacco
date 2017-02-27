@@ -7,6 +7,9 @@ calculateGCMFeatures = function (feat.object, control) {
   if (missing(control))
     control = list()
   assertList(control)
+  allows.cellmapping = control_parameter(control, "allow_cellmapping", TRUE)
+  if (!allows.cellmapping)
+    stop("You can not prohibit cell-mapping features and still try to compute them!")
 
   approaches = control_parameter(control, "gcm.approaches", c("min", "mean", "near"))
   cf.power = control_parameter(control, "gcm.cf_power", 256L)

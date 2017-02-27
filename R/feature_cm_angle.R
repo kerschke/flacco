@@ -3,6 +3,11 @@ calculateAngleFeatures = function(feat.object, control) {
   if (missing(control))
     control = list()
   assertList(control)
+  if (!feat.object$allows.cellmapping)
+    stop ("This feature object does not support cell mapping. You first need to define the number of cells per dimension before computing these features.")
+  allows.cellmapping = control_parameter(control, "allow_cellmapping", TRUE)
+  if (!allows.cellmapping)
+    stop("You can not prohibit cell-mapping features and still try to compute them!")
   measureTime(expression({
     show.warnings = control_parameter(control, "cm_angle.show_warnings", FALSE)
     init.grid = feat.object$init.grid
