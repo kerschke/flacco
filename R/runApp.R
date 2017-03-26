@@ -1,6 +1,6 @@
 #' @export
 runFlaccoGUI <- function() {
-  appDir <- system.file("shiny-app", package = "flaccogui")
+  appDir <- system.file("flaccogui", package = "flacco")
   if (appDir == "") {
     stop("Could not find example directory. Try re-installing `mypackage`.", call. = FALSE)
   }

@@ -1,6 +1,5 @@
 library(shiny)
 library(smoof)
-library(flaccogui)
 #dependencies for shinyapps.io follow
 library(expm)
 library(RANN)

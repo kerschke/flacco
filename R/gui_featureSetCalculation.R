@@ -1,4 +1,3 @@
-library(flacco)
 library(shiny)
 `%then%` <- shiny:::`%OR%`
 
