@@ -3,12 +3,13 @@ library(shiny)
 `%then%` <- shiny:::`%OR%`
 
 
-#' Shiny component for Calculating and displaying flacco FeatureSets
+#' Shiny ui-module for calculating and displaying flacco FeatureSets
 #'
-#' \code{FeatureSetCalculationComponent} is a shiny component which can be added to your shiny app
+#' \code{FeatureSetCalculationComponent} is a shiny ui-component which can be added to your shiny app
 #' so that you can calculate and display different Feature Sets.
 #'
-#' It will get a flacco feature.object for the next steps
+#' The component integrates a select-Input for choosing the FeatureSet, which should be calculated and displayed in a table.
+#' With the download button the calculated features can be exported as CSV-file
 #'
 #'@param id ID for the shiny component
 #'@export
@@ -28,11 +29,14 @@ FeatureSetCalculationComponent <- function(id) {
 #'
 #' \code{FeatureSetCalculation} is a Shiny server function which will control all aspects
 #' of the FeatureSetCalculationComponent UI Module. Will be called with \code{callModule()}
+#' 
+#' It will take the user input and calculate the selected featureSet. To calculate a featureSet the function needs a flacco featureObject.
 #'
 #' @param input Shiny input variable for the specific UI module
 #' @param output Shiny output variable for the specific UI module
 #' @param session Shiny session variable for the specific UI module
 #' @param stringAsFactors
+#' @param feat.object The featureObject which will be used to calculate the featureSets. 
 #'
 #' @export
 #'

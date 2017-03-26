@@ -3,9 +3,9 @@ library(shiny)
 `%then%` <- shiny:::`%OR%`
 
 
-#' Shiny component for Smoof Batch import
+#' Shiny ui-module for Smoof Batch import
 #'
-#' \code{SmoofImportPage} is a shiny component which can be added to your shiny app
+#' \code{SmoofImportPage} is a shiny ui-component which can be added to your shiny app
 #' so that you get a Batch import for a specific Smoof function but different parameters
 #'
 #' It will load a CSV-file with parameters for the smoof function and calculate the selected features

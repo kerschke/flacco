@@ -3,7 +3,7 @@ library(shiny)
 `%then%` <- shiny:::`%OR%`
 
 
-#' Shiny component for BBOB Batch import
+#' Shiny UI-module for BBOB Batch import
 #'
 #' \code{BBOBImportPage} is a shiny component which can be added to your shiny app
 #' so that you get a Batch import for several BBOB functions.

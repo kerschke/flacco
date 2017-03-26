@@ -8,7 +8,7 @@ library(shiny)
 #' \code{FeatureSetVisualizationComponent} is a shiny component which can be added to your shiny app
 #' so that you can display different Feature Set Graphs.
 #'
-#' It will get a flacco feature.object for the next steps
+#' It integrates a select input where the user can select the plot which should be created. 
 #'
 #'@param id ID for the shiny component
 #'@export
@@ -28,10 +28,13 @@ FeatureSetVisualizationComponent <- function(id) {
 #' \code{FeatureSetVisualization} is a Shiny server function which will control all aspects
 #' of the FeatureSetVisualizationComponent UI Module. Will be called with \code{callModule()}
 #'
+#'It will take the user input and plot the selected visualization. To create a flacco plot, function needs a flacco featureObject.
+#'
 #' @param input Shiny input variable for the specific UI module
 #' @param output Shiny output variable for the specific UI module
 #' @param session Shiny session variable for the specific UI module
 #' @param stringAsFactors
+#' @param feat.object The featureObject which will be used to generate the flacco plots.
 #'
 #' @export
 #'

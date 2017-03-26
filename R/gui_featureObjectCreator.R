@@ -3,9 +3,9 @@ library(shiny)
 `%then%` <- shiny:::`%OR%`
 
 
-#' Shiny component for Function Input
+#' Shiny ui-module for Function Input
 #'
-#' \code{featObject_sidebar} is a shiny component which can be added to your shiny app
+#' \code{featObject_sidebar} is a shiny ui-component which can be added to your shiny app
 #' so that you can easily generate a feature object by putting in all relevant information
 #'
 #'
