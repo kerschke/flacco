@@ -1,4 +1,3 @@
-library(shiny)
 `%then%` <- shiny:::`%OR%`
 
 
@@ -14,25 +13,25 @@ library(shiny)
 #'@export
 BBOBImportPage <- function(id) {
   # Create a namespace function using the provided id
-  ns <- NS(id)
+  ns <- shiny::NS(id)
 
   # Sidebar with a slider input for the number of bins
-  sidebarLayout(
-    sidebarPanel(
-      fileInput(ns("BBOB_import_file"), label = "File to import"),
-      numericInput(ns("BBOB_import_replication"), label="Replications", value=1),
-      selectInput(ns("BBOB_import_featureSet"),label="Feature Set",choices=listAvailableFeatureSets()),
-      textInput(ns("BBOB_block_input"), label="Blocks (comma sperated per dimension)"),
-      sliderInput(ns("BBOB_ssize"),
+  shiny::sidebarLayout(
+    shiny::sidebarPanel(
+      shiny::fileInput(ns("BBOB_import_file"), label = "File to import"),
+      shiny::numericInput(ns("BBOB_import_replication"), label="Replications", value=1),
+      shiny::selectInput(ns("BBOB_import_featureSet"),label="Feature Set",choices=listAvailableFeatureSets()),
+      shiny::textInput(ns("BBOB_block_input"), label="Blocks (comma sperated per dimension)"),
+      shiny::sliderInput(ns("BBOB_ssize"),
                   "Sample size",
                   min = 100,
                   max = 10000,
                   value = 30),
-      downloadButton(ns('BBOB_import_downloadData'), 'Download')
+      shiny::downloadButton(ns('BBOB_import_downloadData'), 'Download')
     ),
     # Show a table with the generated features
-    mainPanel(
-      tableOutput(ns("BBOB_import_FeatureTable"))
+    shiny::mainPanel(
+      shiny::tableOutput(ns("BBOB_import_FeatureTable"))
     )
   )
 }
@@ -58,13 +57,13 @@ BBOBImport <- function(input, output, session, stringsAsFactors) {
   }
 
   #function for controlling the file input app
-  BBOB_import_createFeatures <- reactive({
+  BBOB_import_createFeatures <- shiny::reactive({
     if (!requireNamespace("smoof", quietly = TRUE)) {
       stop("smoof needed for this function to work. Please install it.",
            call. = FALSE)
     }
-    features<-data.frame()
-    importdata=read.csv(input$BBOB_import_file$datapath,sep = ",",header=TRUE) #load values from uploaded file
+    features <- data.frame()
+    importdata <- read.csv(input$BBOB_import_file$datapath,sep = ",",header=TRUE) #load values from uploaded file
     # calculate features for all rows of input file
     for (i in 1:nrow(importdata))
     {
@@ -76,9 +75,9 @@ BBOBImport <- function(input, output, session, stringsAsFactors) {
         y <- apply(X, 1, f)
         if (input$BBOB_block_input!=""){ #check if input for blocks is available
           #validate the input for block
-          validate(
-            need(try( blocks <- eval(parse(text=paste("c(",input$BBOB_block_input,")")))), "Please insert valid block defintion") %then%
-              need(try(feat.object <- flacco::createFeatureObject(X = X, y = y, fun = f, blocks=blocks)), "Please insert valid funciton values")
+          shiny::validate(
+            shiny::need(try( blocks <- eval(parse(text=paste("c(",input$BBOB_block_input,")")))), "Please insert valid block defintion") %then%
+              shiny::need(try(feat.object <- flacco::createFeatureObject(X = X, y = y, fun = f, blocks=blocks)), "Please insert valid funciton values")
           )
         } else {
           feat.object <- flacco::createFeatureObject(X = X, y = y, fun = f)
@@ -90,12 +89,12 @@ BBOBImport <- function(input, output, session, stringsAsFactors) {
     features
   })
 
-  output$BBOB_import_FeatureTable <- renderTable({
+  output$BBOB_import_FeatureTable <- shiny::renderTable({
     features<- BBOB_import_createFeatures()
   },rownames = FALSE, colnames=TRUE)
 
 
-  output$BBOB_import_downloadData <- downloadHandler(
+  output$BBOB_import_downloadData <- shiny::downloadHandler(
     filename = function() { paste(input$BBOB_import_featureSet, '.csv', sep='') },
     content = function(file) {
       write.csv(BBOB_import_createFeatures(), file)

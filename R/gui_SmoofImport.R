@@ -1,4 +1,3 @@
-library(shiny)
 `%then%` <- shiny:::`%OR%`
 
 
@@ -14,19 +13,19 @@ library(shiny)
 #'@export
 SmoofImportPage <- function(id) {
   # Create a namespace function using the provided id
-  ns <- NS(id)
+  ns <- shiny::NS(id)
 
   # Sidebar with a slider input for the number of bins
-  sidebarLayout(
-    sidebarPanel(
-      fileInput(ns("smoof_import_file"), label = "File to import"),
-      selectInput(ns("smoof_import_function"),label="Function name",choices=filterFunctionsByTags("single-objective")),
-      selectInput(ns("smoof_import_featureSet"),label="Feature Set",choices=listAvailableFeatureSets()),
-      downloadButton(ns('smoof_import_downloadData'), 'Download')
+  shiny::sidebarLayout(
+    shiny::sidebarPanel(
+      shiny::fileInput(ns("smoof_import_file"), label = "File to import"),
+      shiny::selectInput(ns("smoof_import_function"),label="Function name",choices=filterFunctionsByTags("single-objective")),
+      shiny::selectInput(ns("smoof_import_featureSet"),label="Feature Set",choices=listAvailableFeatureSets()),
+      shiny::downloadButton(ns('smoof_import_downloadData'), 'Download')
     ),
     # Show a table with the generated features
-    mainPanel(
-      tableOutput(ns("smoof_import_FeatureTable"))
+    shiny::mainPanel(
+      shiny::tableOutput(ns("smoof_import_FeatureTable"))
     )
   )
 }
@@ -52,7 +51,7 @@ SmoofImport <- function(input, output, session, stringsAsFactors) {
   }
 
   #function for controlling the file input app
-  smoof_import_createFeatures <- reactive({
+  smoof_import_createFeatures <- shiny::reactive({
 
     features<-data.frame()
     importdata=read.csv(input$smoof_import_file$datapath,sep = ",",header=TRUE) #load values from uploaded file
@@ -70,12 +69,12 @@ SmoofImport <- function(input, output, session, stringsAsFactors) {
     features
   })
 
-  output$smoof_import_FeatureTable <- renderTable({
+  output$smoof_import_FeatureTable <- shiny::renderTable({
     features<- smoof_import_createFeatures()
   },rownames = TRUE,colnames=TRUE)
 
 
-  output$smoof_import_downloadData <- downloadHandler(
+  output$smoof_import_downloadData <- shiny::downloadHandler(
     filename = function() { paste(input$smoof_import_featureSet, '.csv', sep='') },
     content = function(file) {
       write.csv(smoof_import_createFeatures(), file)
