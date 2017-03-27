@@ -32,7 +32,7 @@ FeatureSetCalculationComponent <- function(id) {
 #' @param input Shiny input variable for the specific UI module
 #' @param output Shiny output variable for the specific UI module
 #' @param session Shiny session variable for the specific UI module
-#' @param stringAsFactors
+#' @param stringAsFactors How to treat strings in application (for shiny internally)
 #' @param feat.object The featureObject which will be used to calculate the featureSets. 
 #'
 #' @export

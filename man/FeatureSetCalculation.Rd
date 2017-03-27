@@ -14,6 +14,8 @@ FeatureSetCalculation(input, output, session, stringsAsFactors, feat.object)
 \item{session}{Shiny session variable for the specific UI module}
 
 \item{feat.object}{The featureObject which will be used to calculate the featureSets.}
+
+\item{stringAsFactors}{How to treat strings in application (for shiny internally)}
 }
 \description{
 \code{FeatureSetCalculation} is a Shiny server function which will control all aspects

@@ -13,7 +13,7 @@ SmoofImport(input, output, session, stringsAsFactors)
 
 \item{session}{Shiny session variable for the specific UI module}
 
-\item{stringAsFactors}{}
+\item{stringAsFactors}{How to treat strings in application (for shiny internally)}
 }
 \description{
 \code{SmoofImport} is a Shiny server function which will control all aspects

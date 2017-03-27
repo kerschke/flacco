@@ -1,4 +1,10 @@
-#' @export
+#' Run the flacco-GUI based on shiny
+#'
+#' \code{runFlaccoGUI} starts a shiny application integrating the features of flacco. 
+#'
+#' A shiny application is a web-app which can be accessed through an browser. 
+#'
+#'@export
 runFlaccoGUI <- function() {
   appDir <- system.file("flaccogui", package = "flacco")
   if (appDir == "") {

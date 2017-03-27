@@ -14,6 +14,8 @@ FeatureSetVisualization(input, output, session, stringsAsFactors, feat.object)
 \item{session}{Shiny session variable for the specific UI module}
 
 \item{feat.object}{The featureObject which will be used to generate the flacco plots.}
+
+\item{stringAsFactors}{How to treat strings in application (for shiny internally)}
 }
 \description{
 \code{FeatureSetVisualization} is a Shiny server function which will control all aspects

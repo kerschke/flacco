@@ -1,6 +1,7 @@
 library(shiny)
 library(smoof)
 #dependencies for shinyapps.io follow
+library(flacco)
 library(expm)
 library(RANN)
 library(plyr)
