@@ -32,7 +32,7 @@ FeatureSetCalculationComponent <- function(id) {
 #' @param input Shiny input variable for the specific UI module
 #' @param output Shiny output variable for the specific UI module
 #' @param session Shiny session variable for the specific UI module
-#' @param stringAsFactors How to treat strings in application (for shiny internally)
+#' @param stringsAsFactors How to treat strings in application (for shiny internally)
 #' @param feat.object The featureObject which will be used to calculate the featureSets. 
 #'
 #' @export
@@ -63,7 +63,7 @@ FeatureSetCalculation <- function(input, output, session, stringsAsFactors, feat
   output$downloadData_function <- shiny::downloadHandler(
     filename = function() { paste(input$FeatureSet_function, '.csv', sep='') },
     content = function(file) {
-      write.csv(features(), file)
+      utils::write.csv(features(), file)
     }
   )
 }

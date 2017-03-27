@@ -18,7 +18,7 @@ SmoofImportPage <- function(id) {
   shiny::sidebarLayout(
     shiny::sidebarPanel(
       shiny::fileInput(ns("smoof_import_file"), label = "File to import"),
-      shiny::selectInput(ns("smoof_import_function"),label="Function name",choices=filterFunctionsByTags("single-objective")),
+      shiny::selectInput(ns("smoof_import_function"),label="Function name",choices=smoof::filterFunctionsByTags("single-objective")),
       shiny::selectInput(ns("smoof_import_featureSet"),label="Feature Set",choices=listAvailableFeatureSets()),
       shiny::downloadButton(ns('smoof_import_downloadData'), 'Download')
     ),
@@ -38,7 +38,7 @@ SmoofImportPage <- function(id) {
 #' @param input Shiny input variable for the specific UI module
 #' @param output Shiny output variable for the specific UI module
 #' @param session Shiny session variable for the specific UI module
-#' @param stringAsFactors How to treat strings in application (for shiny internally)
+#' @param stringsAsFactors How to treat strings in application (for shiny internally)
 #'
 #' @export
 #'
@@ -52,9 +52,8 @@ SmoofImport <- function(input, output, session, stringsAsFactors) {
 
   #function for controlling the file input app
   smoof_import_createFeatures <- shiny::reactive({
-
-    features<-data.frame()
-    importdata=read.csv(input$smoof_import_file$datapath,sep = ",",header=TRUE) #load values from uploaded file
+    features <- data.frame()
+    importdata <- utils::read.csv(input$smoof_import_file$datapath,sep = ",",header=TRUE) #load values from uploaded file
     # calculate features for all rows of input file
     for (i in 1:nrow(importdata))
     {
@@ -77,7 +76,7 @@ SmoofImport <- function(input, output, session, stringsAsFactors) {
   output$smoof_import_downloadData <- shiny::downloadHandler(
     filename = function() { paste(input$smoof_import_featureSet, '.csv', sep='') },
     content = function(file) {
-      write.csv(smoof_import_createFeatures(), file)
+      utils::write.csv(smoof_import_createFeatures(), file)
     }
   )
 }

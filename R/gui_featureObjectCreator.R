@@ -67,7 +67,7 @@ featureObject_sidebar <- function(id) {
 #' @param input Shiny input variable for the specific UI module
 #' @param output Shiny output variable for the specific UI module
 #' @param session Shiny session variable for the specific UI module
-#' @param stringAsFactors How to treat strings in application (for shiny internally)
+#' @param stringsAsFactors How to treat strings in application (for shiny internally)
 #'
 #' @export
 #'
@@ -166,7 +166,7 @@ functionInput <- function(input, output, session, stringsAsFactors) {
 
     #function for controlling the file input app
     createFeatures_import <- shiny::reactive({
-      importdata=read.csv(input$import_file$datapath) #load values from uploaded file
+      importdata <- utils::read.csv(input$import_file$datapath) #load values from uploaded file
       #y <- apply(X, 1, eval(parse(text=paste("function(x) ",input$function_input))))
       if (input$block_input!=""){ #check if input for blocks is available
         #validate the input for block

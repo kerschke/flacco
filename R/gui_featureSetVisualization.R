@@ -31,7 +31,7 @@ FeatureSetVisualizationComponent <- function(id) {
 #' @param input Shiny input variable for the specific UI module
 #' @param output Shiny output variable for the specific UI module
 #' @param session Shiny session variable for the specific UI module
-#' @param stringAsFactors How to treat strings in application (for shiny internally)
+#' @param stringsAsFactors How to treat strings in application (for shiny internally)
 #' @param feat.object The featureObject which will be used to generate the flacco plots.
 #'
 #' @export
@@ -69,8 +69,8 @@ FeatureSetVisualization <- function(input, output, session, stringsAsFactors, fe
   output$visualization_downloadBt <- shiny::downloadHandler(
     filename = function() { paste("flacco_plot", '.png', sep='') },
     content = function(file) {
-      png(file)
+      grDevices::png(file)
       plotflaccoVisualization()
-      dev.off()
+      grDevices::dev.off()
     })
 }

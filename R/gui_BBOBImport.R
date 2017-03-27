@@ -63,7 +63,7 @@ BBOBImport <- function(input, output, session, stringsAsFactors) {
            call. = FALSE)
     }
     features <- data.frame()
-    importdata <- read.csv(input$BBOB_import_file$datapath,sep = ",",header=TRUE) #load values from uploaded file
+    importdata <- utils::read.csv(input$BBOB_import_file$datapath,sep = ",",header=TRUE) #load values from uploaded file
     # calculate features for all rows of input file
     for (i in 1:nrow(importdata))
     {
@@ -77,7 +77,7 @@ BBOBImport <- function(input, output, session, stringsAsFactors) {
           #validate the input for block
           shiny::validate(
             shiny::need(try( blocks <- eval(parse(text=paste("c(",input$BBOB_block_input,")")))), "Please insert valid block defintion") %then%
-              shiny::need(try(feat.object <- flacco::createFeatureObject(X = X, y = y, fun = f, blocks=blocks)), "Please insert valid funciton values")
+            shiny::need(try(feat.object <- flacco::createFeatureObject(X = X, y = y, fun = f, blocks=blocks)), "Please insert valid funciton values")
           )
         } else {
           feat.object <- flacco::createFeatureObject(X = X, y = y, fun = f)
@@ -97,7 +97,7 @@ BBOBImport <- function(input, output, session, stringsAsFactors) {
   output$BBOB_import_downloadData <- shiny::downloadHandler(
     filename = function() { paste(input$BBOB_import_featureSet, '.csv', sep='') },
     content = function(file) {
-      write.csv(BBOB_import_createFeatures(), file)
+      utils::write.csv(BBOB_import_createFeatures(), file)
     }
   )
 }
