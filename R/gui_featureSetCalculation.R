@@ -1,4 +1,3 @@
-`%then%` <- shiny:::`%OR%`
 
 
 #' Shiny ui-module for calculating and displaying flacco FeatureSets
@@ -39,7 +38,8 @@ FeatureSetCalculationComponent <- function(id) {
 #' @export
 #'
 FeatureSetCalculation <- function(input, output, session, stringsAsFactors, feat.object) {
-
+  `%then%` <- shiny:::`%OR%`
+  
   # wrap the feature calculation in a reactive so it will only recalculated, when user input has changed
   features <- shiny::reactive({
     if (input$FeatureSet_function == "all Features")

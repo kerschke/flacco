@@ -1,4 +1,3 @@
-`%then%` <- shiny:::`%OR%`
 
 
 #' Shiny component for visualizing flacco FeatureSets
@@ -17,7 +16,8 @@ FeatureSetVisualizationComponent <- function(id) {
   # Sidebar with a slider input for the number of bins
   shiny::div(
     shiny::uiOutput(ns("visualization_select_output")),
-    shiny::plotOutput(ns("visualization_plotOutput")))
+    shiny::plotOutput(ns("visualization_plotOutput")),
+    shiny::downloadButton(ns("visualization_downloadBt"), "Download Graphic"))
 }
 
 
@@ -37,6 +37,7 @@ FeatureSetVisualizationComponent <- function(id) {
 #' @export
 #'
 FeatureSetVisualization <- function(input, output, session, stringsAsFactors, feat.object) {
+  `%then%` <- shiny:::`%OR%`
   ns <- session$ns #in modules use module's namespace for UI components
   output$visualization_select_output <- shiny::renderUI({
     userSelection <- input$visualization_method #retrieve selected value so that user will see same plot again when function has changed
@@ -47,16 +48,29 @@ FeatureSetVisualization <- function(input, output, session, stringsAsFactors, fe
       shiny::selectInput(ns("visualization_method"), label = "Visualization method", choices = c("Information Content" = 4))
     }}
   )
-  output$visualization_plotOutput <- shiny::renderPlot({
+  
+  plotflaccoVisualization <- function() {
     if (input$visualization_method == 1)
     {
-      plotCellMapping(feat.object(), control = list(gcm.approach = "near"))
+      return(plotCellMapping(feat.object(), control = list(gcm.approach = "near")))
     } else if (input$visualization_method == 2) {
-      plotBarrierTree2D(feat.object(), control = list(gcm.approach = "near", bt.cm_surface = FALSE))
+      return(plotBarrierTree2D(feat.object(), control = list(gcm.approach = "near", bt.cm_surface = FALSE)))
     } else if (input$visualization_method == 3) {
-      plotBarrierTree3D(feat.object(), control = list(gcm.approach = "near"))
+      return(plotBarrierTree3D(feat.object(), control = list(gcm.approach = "near")))
     } else if (input$visualization_method == 4) {
-      plotInformationContent(feat.object())
+      return(plotInformationContent(feat.object()))
     }
+  }
+  
+  output$visualization_plotOutput <- shiny::renderPlot({
+    plotflaccoVisualization()
   })
+  
+  output$visualization_downloadBt <- shiny::downloadHandler(
+    filename = function() { paste("flacco_plot", '.png', sep='') },
+    content = function(file) {
+      png(file)
+      plotflaccoVisualization()
+      dev.off()
+    })
 }

@@ -1,4 +1,3 @@
-`%then%` <- shiny:::`%OR%`
 
 
 #' Shiny ui-module for Smoof Batch import
@@ -44,6 +43,7 @@ SmoofImportPage <- function(id) {
 #' @export
 #'
 SmoofImport <- function(input, output, session, stringsAsFactors) {
+  `%then%` <- shiny:::`%OR%`
   # BBOB functions is using the smoof package for implementing them
   if (!requireNamespace("smoof", quietly = TRUE)) {
     stop("smoof needed for this function to work. Please install it.",

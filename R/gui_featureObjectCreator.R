@@ -1,4 +1,3 @@
-`%then%` <- shiny:::`%OR%`
 
 
 #' Shiny ui-module for Function Input
@@ -10,51 +9,52 @@
 #'@param id ID for the shiny component
 #'@export
 featureObject_sidebar <- function(id) {
+  if (!requireNamespace("smoof", quietly = TRUE)) {
+    stop(" smoof needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
   # Create a namespace function using the provided id
   ns <- shiny::NS(id)
+  
 
   #sidebar for the configuration of different function parameters
   shiny::sidebarPanel(
     shiny::radioButtons(ns("function_option"), label = "Function input",
                    choices = list("User defined function" = 1, "smoof" = 2, "BBOB"=4, "File-Import" = 3),
                    selected = 1),
-
     shiny::conditionalPanel(
-      condition <- paste0("input['", ns("function_option"), "'] == 1"),
+      condition = paste0("input['", ns("function_option"), "'] == 1"),
       shiny::textInput(ns("function_input"), label="Function")
       ),
-      shiny::conditionalPanel(
-        condition = paste0("input['", ns("function_option"), "'] == 2"),
-        shiny::selectInput(ns("smoof_function_select"), label = "Function name", choices = filterFunctionsByTags("single-objective"))
-      ),
+    shiny::conditionalPanel(
+      condition = paste0("input['", ns("function_option"), "'] == 2"),
+      shiny::selectInput(ns("smoof_function_select"), label = "Function name", choices = smoof::filterFunctionsByTags("single-objective"))
+    ),
+    shiny::conditionalPanel(
+      condition = paste0("input['", ns("function_option"), "'] == 3"),
+      shiny::fileInput(ns("import_file"), label = "File to import")
+    ),
+    shiny::conditionalPanel(
+      condition = paste0("input['", ns("function_option"), "'] == 4"),
+      shiny::splitLayout(
+        shiny::numericInput(ns("BBOB_fid"),label="BBOB-FID", value = 1),
+        shiny::numericInput(ns("BBOB_iid"),label="BBOB-IID ", value = 1))
+    ),
+    shiny::conditionalPanel(
+      condition = paste0("input['", ns("function_option"), "'] != 3"),
+      shiny::splitLayout(
+        shiny::numericInput(ns("dimension_size"), label="Dimensions", value = 1),
+        shiny::selectInput(ns("sampletype"), label = "Sample type", choices = c("random","lhs"))),
 
-      conditionalPanel(
-        condition = paste0("input['", ns("function_option"), "'] == 3"),
-        shiny::fileInput(ns("import_file"), label = "File to import")
-      ),
-
-      conditionalPanel(
-        condition = paste0("input['", ns("function_option"), "'] == 4"),
-        shiny::splitLayout(
-          shiny::numericInput(ns("BBOB_fid"),label="BBOB-FID", value = 1),
-          shiny::numericInput(ns("BBOB_iid"),label="BBOB-IID ", value = 1))
-      ),
-
-      shiny::conditionalPanel(
-        condition = paste0("input['", ns("function_option"), "'] != 3"),
-        shiny::splitLayout(
-          shiny::numericInput(ns("dimension_size"), label="Dimensions", value = 1),
-          shiny::selectInput(ns("sampletype"), label = "Sample type", choices = c("random","lhs"))),
-
-        shiny::splitLayout( #put lower and upper bound in one line
-          shiny::textInput(ns("samplelow"), label="Lower bound", value = "0"),
-          shiny::textInput(ns("sampleup"), label="Upper bound", value = "1")),
-          shiny::sliderInput(ns("ssize"),
-                    "Sample size",
-                    min = 100,
-                    max = 10000,
-                    value = 30)
-      ),
+      shiny::splitLayout( #put lower and upper bound in one line
+        shiny::textInput(ns("samplelow"), label="Lower bound", value = "0"),
+        shiny::textInput(ns("sampleup"), label="Upper bound", value = "1")),
+        shiny::sliderInput(ns("ssize"),
+                  "Sample size",
+                  min = 100,
+                  max = 10000,
+                  value = 30)
+    ),
     shiny::textInput(ns("block_input"), label="Blocks (comma sperated per dimension)")
     )
 }
@@ -72,7 +72,7 @@ featureObject_sidebar <- function(id) {
 #' @export
 #'
 functionInput <- function(input, output, session, stringsAsFactors) {
-
+  `%then%` <- shiny:::`%OR%`
     #function to control the output data if smoof is selected for function input
     smoof_input_createFeatures <- shiny::reactive({
       # smoofFunctionPage  is using the smoof package for implementing them
