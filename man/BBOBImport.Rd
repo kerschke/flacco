@@ -13,7 +13,7 @@ BBOBImport(input, output, session, stringsAsFactors)
 
 \item{session}{Shiny session variable for the specific UI module}
 
-\item{stringAsFactors}{How to treat strings in application (for shiny internally)}
+\item{stringsAsFactors}{How to treat strings in application (for shiny internally)}
 }
 \description{
 \code{BBOBImport} is a Shiny server function which will control all aspects
