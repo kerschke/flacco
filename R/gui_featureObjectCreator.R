@@ -20,7 +20,7 @@ featureObject_sidebar <- function(id) {
   #sidebar for the configuration of different function parameters
   shiny::sidebarPanel(
     shiny::radioButtons(ns("function_option"), label = "Function input",
-                   choices = list("User defined function" = 1, "smoof" = 2, "BBOB"=4, "File-Import" = 3),
+                   choices = list("User defined function" = 1, "smoof" = 2, "BBOB"=4, "MPM2"=5, "File-Import" = 3),
                    selected = 1),
     shiny::conditionalPanel(
       condition = paste0("input['", ns("function_option"), "'] == 1"),
@@ -39,6 +39,13 @@ featureObject_sidebar <- function(id) {
       shiny::splitLayout(
         shiny::numericInput(ns("BBOB_fid"),label="BBOB-FID", value = 1),
         shiny::numericInput(ns("BBOB_iid"),label="BBOB-IID ", value = 1))
+    ),
+    shiny::conditionalPanel(
+      condition = paste0("input['", ns("function_option"), "'] == 5"),
+      shiny::splitLayout(
+        shiny::numericInput(ns("MPM2_npeaks"),label="MPM2-peaks", value = 1),
+        shiny::numericInput(ns("MPM2_seed"),label="MPM2-seed", value = 1)),
+      shiny::selectInput(ns("MPM2_topology"), label = "Topology", choices = c("random","funnel"))
     ),
     shiny::conditionalPanel(
       condition = paste0("input['", ns("function_option"), "'] != 3"),
@@ -133,7 +140,37 @@ functionInput <- function(input, output, session, stringsAsFactors) {
       feat.object
     })
 
-
+    #function to control the output data if smoof MPM2 is selected for function input
+    smoof_MPM2_input_createFeatures <- shiny::reactive({
+      # smoofFunctionPage  is using the smoof package for implementing them
+      if (!requireNamespace("smoof", quietly = TRUE)) {
+        stop("smoof needed for this function to work. Please install it.",
+             call. = FALSE)
+      }
+      # transform the text input for lower and upper bound to an vector with the respective values
+      shiny::validate(
+        shiny::need(try( lowerbound <- eval(parse(text = paste("c(",input$samplelow,")")))), "Please insert valid lowerbound defintion") %then%
+        shiny::need(try( upperbound <- eval(parse(text = paste("c(",input$sampleup,")")))), "Please insert valid upperbound defintion")
+      )
+      ctrl=list(init_sample.type = input$sampletype,
+                init_sample.lower = lowerbound,
+                init_sample.upper = upperbound) #get ctrl values for creation of initial Sample
+      X <- flacco::createInitialSample(n.obs = input$ssize, dim = input$dimension_size, control = ctrl)
+      f <- smoof::makeMPM2Function(dimensions = input$dimension_size, n.peaks = input$MPM2_npeaks, seed = input$MPM2_seed, topology = input$MPM2_topology)
+      y <- apply(X, 1, f)
+      if (input$block_input!=""){ #check if input for blocks is available
+        #validate the input for block
+        shiny::validate(
+          shiny::need(try( blocks <- eval(parse(text=paste("c(",input$block_input,")")))), "Please insert valid block defintion") %then%
+          shiny::need(try(feat.object <- flacco::createFeatureObject(X = X, y = y, fun = f, blocks=blocks)), "Please insert a valid function")
+        )
+      } else {
+        feat.object <- flacco::createFeatureObject(X = X, y = y, fun = f)
+      }
+      feat.object
+    })
+    
+    
     #reactive element which is called when function input is selected and which controlls the output of features
     createFeatures_function <- shiny::reactive({
       # transform the text input for lower and upper bound to an vector with the respective values
@@ -181,15 +218,17 @@ functionInput <- function(input, output, session, stringsAsFactors) {
     })
 
     featureObject <- shiny::reactive({
-      if (input$function_option==1)
+      if (input$function_option == 1)
       {
         createFeatures_function()
-      } else if (input$function_option==2) {
+      } else if (input$function_option == 2) {
         smoof_input_createFeatures()
-      } else if (input$function_option==3) {
+      } else if (input$function_option == 3) {
         createFeatures_import()
-      } else if (input$function_option==4) {
+      } else if (input$function_option == 4) {
         smoof_BBOB_input_createFeatures()
+      } else if (input$function_option == 5) {
+        smoof_MPM2_input_createFeatures()
       }
     })
 

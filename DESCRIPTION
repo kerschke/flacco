@@ -33,6 +33,7 @@ Suggests:
     plyr,
     RANN,
     rpart,
+    rPython,
     shape,
     shiny,
     smoof,
@@ -41,4 +42,4 @@ LazyData: yes
 ByteCompile: yes
 Version: 1.4
 Date: 2017-02-27
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
