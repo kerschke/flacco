@@ -43,9 +43,12 @@ featureObject_sidebar <- function(id) {
     shiny::conditionalPanel(
       condition = paste0("input['", ns("function_option"), "'] == 5"),
       shiny::splitLayout(
-        shiny::numericInput(ns("MPM2_npeaks"),label="MPM2-peaks", value = 1),
-        shiny::numericInput(ns("MPM2_seed"),label="MPM2-seed", value = 1)),
-      shiny::selectInput(ns("MPM2_topology"), label = "Topology", choices = c("random","funnel"))
+        shiny::numericInput(ns("MPM2_npeaks"),label="Peaks", value = 1),
+        shiny::numericInput(ns("MPM2_seed"),label="Seed", value = 1)),
+      shiny::splitLayout(
+        shiny::selectInput(ns("MPM2_topology"), label = "Topology", choices = c("random","funnel")),
+        shiny::selectInput(ns("MPM2_shape"),label = "Shape", choices = c("sphere","ellipse"))),
+      shiny::checkboxInput(ns("MPM2_rotated"), label = "Rotated")
     ),
     shiny::conditionalPanel(
       condition = paste0("input['", ns("function_option"), "'] != 3"),
@@ -156,7 +159,9 @@ functionInput <- function(input, output, session, stringsAsFactors) {
                 init_sample.lower = lowerbound,
                 init_sample.upper = upperbound) #get ctrl values for creation of initial Sample
       X <- flacco::createInitialSample(n.obs = input$ssize, dim = input$dimension_size, control = ctrl)
-      f <- smoof::makeMPM2Function(dimensions = input$dimension_size, n.peaks = input$MPM2_npeaks, seed = input$MPM2_seed, topology = input$MPM2_topology)
+      f <- smoof::makeMPM2Function(dimensions = input$dimension_size, n.peaks = input$MPM2_npeaks, 
+                                   seed = input$MPM2_seed, topology = input$MPM2_topology,
+                                   peak.shape = input$MPM2_shape, rotated = input$MPM2_rotated)
       y <- apply(X, 1, f)
       if (input$block_input!=""){ #check if input for blocks is available
         #validate the input for block
