@@ -14,6 +14,10 @@
   color: white;
 }
 
+.navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover {
+  color: rgb(200,156,166);
+}
+
 .well {
   background-color: rgb(135,151,163);
 }
