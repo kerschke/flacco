@@ -3,3 +3,29 @@
   vertical-align: top;
   box-sizing: border-box;
 }
+
+.navbar-default {
+  background-color: rgb(133,35,57);
+  color: white;
+}
+
+.navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a {
+  background-color: rgb(133,35,57);
+  color: white;
+}
+
+.well {
+  background-color: rgb(135,151,163);
+}
+
+body {
+  color: white;
+}
+
+.irs-grid-text, .irs-min, .irs-max {
+  color:white;
+}
+
+a {
+  color:rgb(67,92,139)
+}
