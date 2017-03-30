@@ -20,7 +20,9 @@ featureObject_sidebar <- function(id) {
   #sidebar for the configuration of different function parameters
   shiny::sidebarPanel(
     shiny::radioButtons(ns("function_option"), label = "Function input",
-                   choices = list("User defined function" = 1, "smoof" = 2, "BBOB"=4, "MPM2"=5, "File-Import" = 3),
+                   choices = list("User defined function" = 1, "smoof" = 2, "BBOB"=4, 
+                                  #"MPM2"=5, 
+                                  "File-Import" = 3),
                    selected = 1),
     shiny::conditionalPanel(
       condition = paste0("input['", ns("function_option"), "'] == 1"),
@@ -40,16 +42,16 @@ featureObject_sidebar <- function(id) {
         shiny::numericInput(ns("BBOB_fid"),label="BBOB-FID", value = 1),
         shiny::numericInput(ns("BBOB_iid"),label="BBOB-IID ", value = 1))
     ),
-    shiny::conditionalPanel(
-      condition = paste0("input['", ns("function_option"), "'] == 5"),
-      shiny::splitLayout(
-        shiny::numericInput(ns("MPM2_npeaks"),label="Peaks", value = 1),
-        shiny::numericInput(ns("MPM2_seed"),label="Seed", value = 1)),
-      shiny::splitLayout(
-        shiny::selectInput(ns("MPM2_topology"), label = "Topology", choices = c("random","funnel")),
-        shiny::selectInput(ns("MPM2_shape"),label = "Shape", choices = c("sphere","ellipse"))),
-      shiny::checkboxInput(ns("MPM2_rotated"), label = "Rotated")
-    ),
+    #shiny::conditionalPanel(
+    #  condition = paste0("input['", ns("function_option"), "'] == 5"),
+    #  shiny::splitLayout(
+    #    shiny::numericInput(ns("MPM2_npeaks"),label="Peaks", value = 1),
+    #    shiny::numericInput(ns("MPM2_seed"),label="Seed", value = 1)),
+    #  shiny::splitLayout(
+    #    shiny::selectInput(ns("MPM2_topology"), label = "Topology", choices = c("random","funnel")),
+    #    shiny::selectInput(ns("MPM2_shape"),label = "Shape", choices = c("sphere","ellipse"))),
+    #  shiny::checkboxInput(ns("MPM2_rotated"), label = "Rotated")
+    #),
     shiny::conditionalPanel(
       condition = paste0("input['", ns("function_option"), "'] != 3"),
       shiny::splitLayout(
@@ -160,8 +162,8 @@ functionInput <- function(input, output, session, stringsAsFactors) {
                 init_sample.upper = upperbound) #get ctrl values for creation of initial Sample
       X <- flacco::createInitialSample(n.obs = input$ssize, dim = input$dimension_size, control = ctrl)
       f <- smoof::makeMPM2Function(dimensions = input$dimension_size, n.peaks = input$MPM2_npeaks, 
-                                   seed = input$MPM2_seed, topology = input$MPM2_topology,
-                                   peak.shape = input$MPM2_shape, rotated = input$MPM2_rotated)
+                                   seed = input$MPM2_seed, topology = input$MPM2_topology)
+                                   #peak.shape = input$MPM2_shape, rotated = input$MPM2_rotated)
       y <- apply(X, 1, f)
       if (input$block_input!=""){ #check if input for blocks is available
         #validate the input for block
