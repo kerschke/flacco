@@ -27,8 +27,13 @@ body {
 }
 
 .irs-grid-text, .irs-min, .irs-max {
-  color:white;
+  color: white;
 }
+
+.irs-grid-pol {
+  background-color: white;
+}
+
 
 a {
   color:rgb(67,92,139)
