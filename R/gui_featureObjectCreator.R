@@ -21,7 +21,7 @@ featureObject_sidebar <- function(id) {
   shiny::sidebarPanel(
     shiny::radioButtons(ns("function_option"), label = "Function input",
                    choices = list("User defined function" = 1, "smoof" = 2, "BBOB"=4, 
-                                  #"MPM2"=5, 
+                                  "MPM2"=5, 
                                   "File-Import" = 3),
                    selected = 1),
     shiny::conditionalPanel(
@@ -42,16 +42,16 @@ featureObject_sidebar <- function(id) {
         shiny::numericInput(ns("BBOB_fid"),label="BBOB-FID", value = 1),
         shiny::numericInput(ns("BBOB_iid"),label="BBOB-IID ", value = 1))
     ),
-    #shiny::conditionalPanel(
-    #  condition = paste0("input['", ns("function_option"), "'] == 5"),
-    #  shiny::splitLayout(
-    #    shiny::numericInput(ns("MPM2_npeaks"),label="Peaks", value = 1),
-    #    shiny::numericInput(ns("MPM2_seed"),label="Seed", value = 1)),
-    #  shiny::splitLayout(
-    #    shiny::selectInput(ns("MPM2_topology"), label = "Topology", choices = c("random","funnel")),
-    #    shiny::selectInput(ns("MPM2_shape"),label = "Shape", choices = c("sphere","ellipse"))),
-    #  shiny::checkboxInput(ns("MPM2_rotated"), label = "Rotated")
-    #),
+    shiny::conditionalPanel(
+      condition = paste0("input['", ns("function_option"), "'] == 5"),
+      shiny::splitLayout(
+        shiny::numericInput(ns("MPM2_npeaks"),label="Peaks", value = 1),
+        shiny::numericInput(ns("MPM2_seed"),label="Seed", value = 1)),
+      shiny::splitLayout(
+        shiny::selectInput(ns("MPM2_topology"), label = "Topology", choices = c("random","funnel")),
+        shiny::selectInput(ns("MPM2_shape"),label = "Shape", choices = c("sphere","ellipse"))),
+      shiny::checkboxInput(ns("MPM2_rotated"), label = "Rotated")
+    ),
     shiny::conditionalPanel(
       condition = paste0("input['", ns("function_option"), "'] != 3"),
       shiny::splitLayout(
