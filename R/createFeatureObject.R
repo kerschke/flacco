@@ -144,12 +144,8 @@ createFeatureObject = function(init, X, y, fun, minimize,
   if (any(upper < vapply(X, max, double(1)))) {
     stop("The initial data set contains values that are bigger than the given upper limits.")
   }
-  allows.cellmapping = TRUE
   if (missing(blocks)) {
     blocks = rep(1L, d)
-    allows.cellmapping = FALSE
-  } else {
-    blocks = as.integer(blocks)
   }
   if (length(blocks) != d) {
     if (length(blocks) == 1L) {
@@ -158,18 +154,15 @@ createFeatureObject = function(init, X, y, fun, minimize,
       stop("The size of 'blocks' does not fit to the dimension of the initial design.")
     }
   }
+  assertIntegerish(blocks, len = d, lower = 1)
   if (missing(fun))
     fun = NULL
   env = new.env(parent = emptyenv())
   env$init = init
-  if (allows.cellmapping) {
-    init.grid = convertInitDesignToGrid(init = init,
-      lower = lower, upper = upper, blocks = blocks)
-    centers = computeGridCenters(lower = lower, upper = upper, blocks = blocks)
-    colnames(centers)[1:d] = feat.names
-  } else {
-    init.grid = centers = NULL
-  }
+  init.grid = convertInitDesignToGrid(init = init,
+    lower = lower, upper = upper, blocks = blocks)
+  centers = computeGridCenters(lower = lower, upper = upper, blocks = blocks)
+  colnames(centers)[1:d] = feat.names
   res =  makeS3Obj("FeatureObject", env = env,
     minimize = minimize, fun = fun,
     lower = lower, upper = upper,
@@ -178,14 +171,11 @@ createFeatureObject = function(init, X, y, fun, minimize,
     objective.name = objective,
     blocks = blocks,
     total.cells = prod(blocks),
-    allows.cellmapping = allows.cellmapping,
     init.grid = init.grid,
     cell.centers = centers,
     cell.size = (upper - lower) / blocks)
-  if (allows.cellmapping) {
-    res$env$gcm.representatives = list() # to be filled on first call to gcm_init()
-    res$env$gcm.canonicalForm = list()   # to be filled on first call to gcm_init()
-  }
+  res$env$gcm.representatives = list() # to be filled on first call to gcm_init()
+  res$env$gcm.canonicalForm = list()   # to be filled on first call to gcm_init()
   return(res)
 }
 
@@ -215,25 +205,23 @@ print.FeatureObject = function(x, ...) {
     }
     catf("- Function to be Optimized: %s", fun)
   }
-  if (x$allows.cellmapping) {
-    if (x$dim < 5L) {
-      catf("- Number of Cells per Dimension: %s", collapse(sprintf("%i", x$blocks), sep=", "))
-    } else {
-      catf("- Number of Cells per Dimension: %s, ...", collapse(sprintf("%i", x$blocks[1:4]), sep=", "))
-    }
-    if (x$dim < 5L) {
-      catf("- Size of Cells per Dimension: %s", collapse(sprintf("%.2f", x$cell.size), sep=", "))
-    } else {
-      catf("- Size of Cells per Dimension: %s, ...", collapse(sprintf("%.2f", x$cell.size[1:4]), sep=", "))
-    }
-    filled.cells = length(unique(x$init.grid$cell.ID))
-    cat("- Number of Cells:\n")
-    catf("  - total: %i", x$total.cells)
-    catf("  - non-empty: %i (%.2f%%)", filled.cells, 100 * filled.cells / x$total.cells)
-    catf("  - empty: %i (%.2f%%)", x$total.cells - filled.cells,
-      100 * (x$total.cells - filled.cells) / x$total.cells)
-    cat("- Average Number of Observations per Cell:\n")
-    catf("  - total: %.2f", x$n.obs / x$total.cells)
-    catf("  - non-empty: %.2f", x$n.obs / filled.cells)  
+  if (x$dim < 5L) {
+    catf("- Number of Cells per Dimension: %s", collapse(sprintf("%i", x$blocks), sep=", "))
+  } else {
+    catf("- Number of Cells per Dimension: %s, ...", collapse(sprintf("%i", x$blocks[1:4]), sep=", "))
   }
+  if (x$dim < 5L) {
+    catf("- Size of Cells per Dimension: %s", collapse(sprintf("%.2f", x$cell.size), sep=", "))
+  } else {
+    catf("- Size of Cells per Dimension: %s, ...", collapse(sprintf("%.2f", x$cell.size[1:4]), sep=", "))
+  }
+  filled.cells = length(unique(x$init.grid$cell.ID))
+  cat("- Number of Cells:\n")
+  catf("  - total: %i", x$total.cells)
+  catf("  - non-empty: %i (%.2f%%)", filled.cells, 100 * filled.cells / x$total.cells)
+  catf("  - empty: %i (%.2f%%)", x$total.cells - filled.cells,
+    100 * (x$total.cells - filled.cells) / x$total.cells)
+  cat("- Average Number of Observations per Cell:\n")
+  catf("  - total: %.2f", x$n.obs / x$total.cells)
+  catf("  - non-empty: %.2f", x$n.obs / filled.cells)  
 }

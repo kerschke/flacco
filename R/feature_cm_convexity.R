@@ -1,12 +1,8 @@
 calculateCellConvexityFeatures = function(feat.object, control, ...) {
   assertClass(feat.object, "FeatureObject")
-  if (!feat.object$allows.cellmapping)
-    stop ("This feature object does not support cell mapping. You first need to define the number of cells per dimension before computing these features.")
   if (missing(control))
     control = list()
   assertList(control)
-  if (!feat.object$allows.cellmapping)
-    stop("This feature object does not support the calculation of cell-mapping features.")
   allows.cellmapping = control_parameter(control, "allow_cellmapping", TRUE)
   if (!allows.cellmapping)
     stop("You can not prohibit cell-mapping features and still try to compute them!")

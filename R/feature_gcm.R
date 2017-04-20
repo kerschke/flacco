@@ -1,7 +1,5 @@
 calculateGCMFeatures = function (feat.object, control) {
   assertClass(feat.object, "FeatureObject")
-  if (!feat.object$allows.cellmapping)
-    stop ("This feature object does not support cell mapping. You first need to define the number of cells per dimension before computing these features.")
   X = extractFeatures(feat.object)
   y = extractObjective(feat.object)
   if (missing(control))

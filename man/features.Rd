@@ -269,7 +269,7 @@ computation of the ELA local search features) or \code{\link{density}}
      function evaluations and runtime (in seconds), which were needed for
      the computation of these features
     }
-    \item{\code{basic} -- basic features (16)}:\cr
+    \item{\code{basic} -- basic features (15)}:\cr
     Very simple features, which can be read from the feature object (without
     any computational efforts):\cr
     \itemize{
@@ -280,8 +280,7 @@ computation of the ELA local search features) or \code{\link{density}}
       and the number of blocks / cells (per dimension)
       \item{\code{cells_{filled, total}}}: number of filled (i.e. non-empty)
       cells and total number of cells
-      \item{\code{{allows_cm, minimize_fun}}}: logical values, indicating
-      whether this \code{\link{FeatureObject}} allows cell mapping and
+      \item{\code{{minimize_fun}}}: logical value, indicating
       whether the optimization function should be minimized
       \item{\code{costs_{fun_evals, runtime}}}: number of (additional)
       function evaluations and runtime (in seconds), which were needed for
@@ -650,7 +649,7 @@ features.angle = calculateFeatureSet(feat.object, "cm_angle")
 library(parallelMap)
 library(parallel)
 n.cores = detectCores()
-parallelStart(mode = "multicore", cpus = n.cores,
+parallelStart(mode = "socket", cpus = n.cores,
   logging = FALSE, show.info = FALSE)
 system.time((levelset.par = calculateFeatureSet(feat.object, "ela_level")))
 parallelStop()

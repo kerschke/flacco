@@ -12,7 +12,7 @@ test_that("Non-Cellmapping Objects", {
     control = list(allow_cellmapping = FALSE, allow_costs = FALSE))
 
   # test return value types and ranges
-  expect_identical(length(features), 94L)
+  expect_identical(length(features), 93L)
   expect_list(features)
 
   # all objects are either NA, logical or a number
@@ -26,15 +26,14 @@ test_that("Non-Cellmapping Objects", {
   expect_identical(features$basic.blocks_max, 1L)
   expect_identical(features$basic.cells_total, 1L)
   expect_identical(features$basic.cells_filled, 1L)
-  expect_identical(features$basic.allows_cm, FALSE)
-
+  
   # (3) do the same, but blacklist the expensive features
   features = calculateFeatures(feat.object, control = list(
     allow_cellmapping = FALSE, allow_costs = TRUE, show_progress = FALSE,
     blacklist = c("ela_local", "ela_curv", "ela_conv")))
 
   # test return value types and ranges
-  expect_identical(length(features), 94L)
+  expect_identical(length(features), 93L)
   expect_list(features)
 
   # all objects are either NA, logical or a number
@@ -48,12 +47,8 @@ test_that("Non-Cellmapping Objects", {
   expect_identical(features$basic.blocks_max, 1L)
   expect_identical(features$basic.cells_total, 1L)
   expect_identical(features$basic.cells_filled, 1L)
-  expect_identical(features$basic.allows_cm, FALSE)
-
+  
   # (4) test, whether an incorrect input causes an error:
-  expect_error(calculateFeatures(feat.object))
-  expect_error(calculateFeatures(feat.object, allow_costs = FALSE))
-  expect_error(calculateFeatures(feat.object, allow_cellmapping = FALSE))
   expect_error(calculateFeatures(feat.object, control = list(
     subset = c("test123"), allow_costs = FALSE, allow_cellmapping = FALSE)))
 })
@@ -71,7 +66,7 @@ test_that("Cellmapping Objects", {
     show_progress = FALSE, cm_angle.show_warnings = FALSE))
 
   # test return value types and ranges
-  expect_identical(length(features), 203L)
+  expect_identical(length(features), 202L)
   expect_list(features)
 
   # all objects are either NA, logical or a number
@@ -85,7 +80,6 @@ test_that("Cellmapping Objects", {
   expect_true(testInteger(features$basic.blocks_max))
   expect_true(testInteger(features$basic.cells_total))
   expect_true(testInteger(features$basic.cells_filled))
-  expect_true(features$basic.allows_cm)
 
   # (3) test, whether an incorrect input causes an error:
   expect_error(calculateFeatures(feat.object,
@@ -101,7 +95,7 @@ test_that("Cellmapping Objects", {
     show_progress = FALSE, cm_angle.show_warnings = FALSE))
   
   # test return value types and ranges
-  expect_identical(length(features), 296L)
+  expect_identical(length(features), 295L)
   expect_true(all(vapply(features, length, integer(1L)) ==  1L))
   expect_list(features)
   
@@ -116,7 +110,6 @@ test_that("Cellmapping Objects", {
   expect_true(testInteger(features$basic.blocks_max))
   expect_true(testInteger(features$basic.cells_total))
   expect_true(testInteger(features$basic.cells_filled))
-  expect_true(features$basic.allows_cm)
 })
 
 test_that("Underlying Functions Available (non-cellmapping)", {
@@ -131,7 +124,7 @@ test_that("Underlying Functions Available (non-cellmapping)", {
     control = list(allow_cellmapping = FALSE, show_progress = FALSE))
 
   # test return value types and ranges
-  expect_identical(length(features), 142L)
+  expect_identical(length(features), 141L)
   expect_list(features)
 
   # all objects are either NA, logical or a number
@@ -149,11 +142,8 @@ test_that("Underlying Functions Available (non-cellmapping)", {
   expect_identical(features$basic.blocks_max, 1L)
   expect_identical(features$basic.cells_total, 1L)
   expect_identical(features$basic.cells_filled, 1L)
-  expect_identical(features$basic.allows_cm, FALSE)
 
   # (4) test, whether an incorrect input causes an error:
-  expect_error(calculateFeatures(feat.object))
-  expect_error(calculateFeatures(feat.object, control = list(allow_costs = FALSE)))
   expect_error(calculateFeatures(feat.object, control = list(subset = c("test123"), 
     allow_costs = FALSE, allow_cellmapping = FALSE)))
 })
@@ -170,7 +160,7 @@ test_that("Underlying Functions Available (cellmapping)", {
     control = list(show_progress = FALSE))
 
   # test return value types and ranges
-  expect_identical(length(features), 251L)
+  expect_identical(length(features), 250L)
   expect_list(features)
 
   # all objects are either NA, logical or a number
@@ -188,7 +178,6 @@ test_that("Underlying Functions Available (cellmapping)", {
   expect_true(testInteger(features$basic.blocks_max))
   expect_true(testInteger(features$basic.cells_total))
   expect_true(testInteger(features$basic.cells_filled))
-  expect_true(features$basic.allows_cm)
 
   # (4) test, whether an incorrect input causes an error:
   expect_error(calculateFeatures(feat.object, control = list(subset = c("test123"), 

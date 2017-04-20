@@ -48,14 +48,27 @@ calculateLevelsetFeatures = function(feat.object, control) {
       y_quant = quantile(y, prob)
       data = data.frame(class = as.factor(y < y_quant), X)
       if (min(table(data$class)) < res.iters) {
-        warningf("There are too few observations in case of 'quantile = %.3f'. In order to have at least one element of each class per block, quantile should be at least %.3f.",
-          prob, (length(y[y <= y_quant]) + 1L) / feat.object$n.obs)
+        warningf("There are too few observations in case of 'quantile = %s'. In order to have at least one element of each class per block, quantile should be at least %.3f.",
+          as.character(prob), (length(y[y <= y_quant]) + 1L) / feat.object$n.obs)
       }
       task = mlr::makeClassifTask(id = "prob", data = data, target = "class")
       mmces = vapply(methods, function(method) {
         lrn = mlr::makeLearner(paste("classif.", method, sep = ""))
-        mlr::resample(learner = lrn, task = task, 
-          resampling = inst, show.info = show.info)$aggr["mmce.test.mean"]
+        r = try(mlr::resample(learner = lrn, task = task, 
+          resampling = inst, show.info = show.info)$aggr["mmce.test.mean"],
+          silent = TRUE)
+        if (class(r) == "try-error") {
+          msg = attr(r, "condition")$message
+          if (grepl("too small", msg)) {
+            warningf("The 'ela_level' features for 'method = %s' and 'quantile = %s' could not be computed because at least one of the respective groups was too small.",
+              method, as.character(prob))
+          } else {
+            warning(msg)
+          }
+          return(NA)
+        } else {
+          return(r)
+        }
       }, double(1))
       names(mmces) = paste("mmce", methods, sep = "_")
       if (length(methods) > 1) {

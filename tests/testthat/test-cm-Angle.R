@@ -63,9 +63,6 @@ test_that("Show Warning", {
 
 test_that("Show Error", {
   feat.object = createFeatureObject(init = iris[, -5], 
-    objective = "Sepal.Length")
-  expect_error(calculateFeatureSet(feat.object, "cm_angle"))
-  feat.object = createFeatureObject(init = iris[, -5], 
     objective = "Sepal.Length", blocks = 3L)
   expect_error(calculateFeatureSet(feat.object, "cm_angle",
     control = list(allow_cellmapping = FALSE)))
