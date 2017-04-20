@@ -80,7 +80,11 @@ calculateLevelsetFeatures = function(feat.object, control) {
       }    
       return(mmces)
     }, double(choose(length(methods), 2) + length(methods)))
-    meth.names = rownames(result)
+    if (length(methods) > 1) {
+      meth.names = rownames(result)
+    } else {
+      meth.names = paste("mmce", methods, sep = "_")
+    }
     result = as.vector(result, mode = "list")
     names(result) = sprintf("ela_level.%s_%02i", rep(meth.names, length(probs)), 
       rep(100 * probs, each = length(meth.names)))
