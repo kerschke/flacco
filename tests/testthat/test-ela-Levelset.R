@@ -45,6 +45,9 @@ test_that("Expect Warning", {
   expect_warning(calculateFeatureSet(feat.object, "ela_level",
     control = list(ela_level.quantiles = 0.05, ela_level.classif_methods = "lda"))
   )
+  expect_warning(calculateFeatureSet(feat.object, "ela_level",
+    control = list(ela_level.quantiles = 0.05, ela_level.classif_methods = "qda"))
+  )
 })
 
 
