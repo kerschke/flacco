@@ -445,7 +445,10 @@ Note that if you want to speed up the runtime of the features, you might
       \item{\code{ela_curv.{delta, eps, zero_tol, r, v}}}: Parameters used
       by \code{\link[numDeriv]{grad}} and \code{\link[numDeriv]{hessian}} within the
       approximation of the gradient and hessian. The default values are
-      identical to the ones from the corresponding functions.
+      identical to the ones from the corresponding functions. Note that we
+      slightly modified \code{\link[numDeriv]{hessian}} in order to assure
+      that we do not exceed the boundaries during the estimation of the
+      Hessian.
     }
     \item{ELA distribution features}: \itemize{
       \item{\code{ela_distr.smoothing_bandwidth}}: The smoothing bandwidth,

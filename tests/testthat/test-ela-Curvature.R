@@ -101,11 +101,6 @@ test_that("Expected Output on Bounds", {
   expect_identical(as.character(sapply(features, class)),
     c(rep("numeric", 24L), "integer", "numeric"))
 
-  hess_feats = unlist(features[setdiff(grep("hessian", names(features)),
-    grep("hessian_cond.nas", names(features)))])
-  comp_feats = vapply(names(hess_feats), function(x) NA_real_, double(1L))
-  expect_identical(hess_feats, comp_feats)
-
   expect_true(testNumber(features$ela_curv.grad_norm.lq, lower = 0L))
   expect_true(testNumber(features$ela_curv.grad_norm.mean, lower = 0L))
   expect_true(testNumber(features$ela_curv.grad_norm.med, lower = 0L))
@@ -121,13 +116,13 @@ test_that("Expected Output on Bounds", {
   expect_true(testNumber(features$ela_curv.grad_scale.max, lower = 1L))
   expect_true(testNumber(features$ela_curv.grad_scale.sd, lower = 0L))
   expect_true(testNumber(features$ela_curv.grad_scale.nas, lower = 0L, upper = 1L))
-  expect_true(testNumber(features$ela_curv.hessian_cond.min, lower = 1L, na.ok = TRUE))
-  expect_true(testNumber(features$ela_curv.hessian_cond.lq, lower = 1L, na.ok = TRUE))
-  expect_true(testNumber(features$ela_curv.hessian_cond.mean, lower = 1L, na.ok = TRUE))
-  expect_true(testNumber(features$ela_curv.hessian_cond.med, lower = 1L, na.ok = TRUE))
-  expect_true(testNumber(features$ela_curv.hessian_cond.uq, lower = 1L, na.ok = TRUE))
-  expect_true(testNumber(features$ela_curv.hessian_cond.max, lower = 1L, na.ok = TRUE))
-  expect_true(testNumber(features$ela_curv.hessian_cond.sd, lower = 0L, na.ok = TRUE))
+  expect_true(testNumber(features$ela_curv.hessian_cond.min, lower = 1L))
+  expect_true(testNumber(features$ela_curv.hessian_cond.lq, lower = 1L))
+  expect_true(testNumber(features$ela_curv.hessian_cond.mean, lower = 1L))
+  expect_true(testNumber(features$ela_curv.hessian_cond.med, lower = 1L))
+  expect_true(testNumber(features$ela_curv.hessian_cond.uq, lower = 1L))
+  expect_true(testNumber(features$ela_curv.hessian_cond.max, lower = 1L))
+  expect_true(testNumber(features$ela_curv.hessian_cond.sd, lower = 0L))
   expect_true(testNumber(features$ela_curv.hessian_cond.nas, lower = 0L, upper = 1L))
   expect_true(testNumber(features$ela_curv.costs_fun_evals, lower = 0L))
   expect_true(testNumber(features$ela_curv.costs_runtime, lower = 0L))

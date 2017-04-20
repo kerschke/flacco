@@ -119,3 +119,16 @@ test_that("selectMax", {
   expect_identical(selectMax(x, tie.breaker = "first"), min(ind))
   expect_identical(selectMax(x, tie.breaker = "last"), max(ind))
 })
+
+test_that("hessian does not exceed the bounds", {
+  foo1 = function(x) {
+    if (any(x < -2) | any(x > 5))
+      stop("out of bounds")
+    else
+      sum((x - (1:2))^2)
+  }
+  expect_error(foo1(c(-4, 3)))
+  expect_equal(foo1(c(1, 2)), 0L)
+  expect_error(numDeriv::hessian(func = foo1, x = c(-2, 2)))
+  expect_matrix(flaccoHessian(func = foo1, x = c(-2, 2), lower = -2, upper = 5))
+})

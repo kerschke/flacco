@@ -31,14 +31,10 @@ calculateCurvatureFeatures = function(feat.object, control) {
       gr = abs(numDeriv::grad(f, par, side = side, method.args = list(d = delta,
         eps = eps, zero.tol = zero.tol, r = r, v = v)))
       gr_scale = ifelse(min(gr) > 0, max(gr) / min(gr), NA)
-      if (all(is.na(side))) {
-        hess = numDeriv::hessian(f, par, method.args = list(d = delta,
-          eps = eps, zero.tol = zero.tol, r = r, v = v))
-        eig = abs(eigen(hess)$values)
-        hess_cond = ifelse(min(eig) > 0, max(eig) / min(eig), NA)
-      } else {
-        hess_cond = NA
-      }
+      hess = flaccoHessian(f, par, method.args = list(d = delta,
+        eps = eps, zero.tol = zero.tol, r = r, v = v), lower = low, upper = upp)
+      eig = abs(eigen(hess)$values)
+      hess_cond = ifelse(min(eig) > 0, max(eig) / min(eig), NA)
       return(c(curv.grad_norm = sqrt(sum(gr^2)),
         curv.grad_scale = gr_scale,
         curv.hessian_cond = hess_cond))
