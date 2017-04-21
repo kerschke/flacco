@@ -63,11 +63,11 @@ featureObject_sidebar <- function(id) {
         shiny::textInput(ns("sampleup"), label="Upper bound", value = "1")),
         shiny::sliderInput(ns("ssize"),
                   "Sample size",
-                  min = 100,
+                  min = 200,
                   max = 10000,
-                  value = 30)
+                  value = 450)
     ),
-    shiny::textInput(ns("block_input"), label="Blocks (comma sperated per dimension)")
+    shiny::textInput(ns("block_input"), label="Blocks (comma sperated per dimension)", value = "2")
     )
 }
 
@@ -107,6 +107,7 @@ functionInput <- function(input, output, session, stringsAsFactors) {
         #validate the input for block
         shiny::validate(
             shiny::need(try( blocks <- eval(parse(text=paste("c(",input$block_input,")")))), "Please insert valid block defintion") %then%
+            shiny::need(max(input$dimension_size^blocks) <= 10000, "Block value in combination with the dimensions is too high!") %then%
             shiny::need(try(feat.object <- flacco::createFeatureObject(X = X, y = y, fun = f[[1]], blocks=blocks)), "Please insert a valid function")
         )
       } else {
@@ -137,8 +138,9 @@ functionInput <- function(input, output, session, stringsAsFactors) {
         #validate the input for block
         shiny::validate(
           shiny::need(try( blocks <- eval(parse(text=paste("c(",input$block_input,")")))), "Please insert valid block defintion") %then%
+          shiny::need(max(input$dimension_size^blocks) <= 10000, "Block value in combination with the dimensions is too high!") %then%
           shiny::need(try(feat.object <- flacco::createFeatureObject(X = X, y = y, fun = f, blocks=blocks)), "Please insert a valid function")
-        )
+      )
       } else {
         feat.object <- flacco::createFeatureObject(X = X, y = y, fun = f)
       }
@@ -169,6 +171,7 @@ functionInput <- function(input, output, session, stringsAsFactors) {
         #validate the input for block
         shiny::validate(
           shiny::need(try( blocks <- eval(parse(text=paste("c(",input$block_input,")")))), "Please insert valid block defintion") %then%
+          shiny::need(max(input$dimension_size^blocks) <= 10000, "Block value in combination with the dimensions is too high!") %then%
           shiny::need(try(feat.object <- flacco::createFeatureObject(X = X, y = y, fun = f, blocks=blocks)), "Please insert a valid function")
         )
       } else {
@@ -201,6 +204,7 @@ functionInput <- function(input, output, session, stringsAsFactors) {
         shiny::validate(
           shiny::need(try( f <- eval(parse(text=paste("function(x) ",input$function_input)))), "Please insert a valid function") %then%
           shiny::need(try( blocks <- eval(parse(text=paste("c(",input$block_input,")")))), "Please insert valid block defintion") %then%
+          shiny::need(max(input$dimension_size^blocks) <= 10000, "Block value in combination with the dimensions is too high!") %then%
           shiny::need(try(feat.object <- flacco::createFeatureObject(X = X, fun = f, blocks=blocks)), "Please insert a valid function")
         )
       }
@@ -216,7 +220,8 @@ functionInput <- function(input, output, session, stringsAsFactors) {
         #validate the input for block
         shiny::validate(
           shiny::need(try( blocks <- eval(parse(text=paste("c(",input$block_input,")")))), "Please insert valid block defintion") %then%
-          shiny::need(try(feat.object <- flacco::createFeatureObject(X = data.frame(importdata[,-ncol(importdata)]), y = importdata[,2], blocks=blocks)), "Please insert valid funciton values")
+          shiny::need(max(ncol(importdata)^blocks) <= 10000, "Block value in combination with the dimensions is too high!") %then%
+          shiny::need(try(feat.object <- flacco::createFeatureObject(X = data.frame(importdata[,-ncol(importdata)]), y = importdata[,ncol(importdata)], blocks=blocks)), "Please insert valid funciton values")
         )
       } else {
         feat.object <- flacco::createFeatureObject(X = data.frame(importdata[,-ncol(importdata)]), y = importdata[,2])
