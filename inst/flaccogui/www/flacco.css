@@ -1,0 +1,5 @@
+.shiny-split-layout>div {
+  display: inline-table;
+  vertical-align: top;
+  box-sizing: border-box;
+}
