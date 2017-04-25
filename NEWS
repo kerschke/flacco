@@ -1,8 +1,11 @@
-flacco_1.4:
+flacco_1.5:
 - barrier trees:
 -- fixed the problems which limited the bt features to 2D
 - we have started to work on flaccoGUI -- a graphical user interface for our package:
 -- the most recent (online) version can be found here: https://flaccogui.shinyapps.io/flaccogui
+
+flacco_1.4:
+- minor bug fixes
 
 flacco_1.3:
 - ela_local:
