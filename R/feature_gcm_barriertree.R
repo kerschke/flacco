@@ -170,12 +170,8 @@ createBarrierTree = function(feat.object, fundamental.list, canonical.list, yval
 
   ## only keep cells which are part of the tree
   ## (= if NOT ALL elements have a predecessor)
-  if (sum(res.table[, "predecessors"] == 0) > 0L) {
-    rel.ind = sort(union(root, res.table[res.table[, "predecessors"] > 0, "p.index"]))
-    res.table3 = res.table[res.table[, "p.index"] %in% rel.ind,, drop = FALSE]
-  } else {
-    res.table3 = res.table
-  }
+  rel.ind = sort(union(root, res.table[res.table[, "predecessors"] > 0, "p.index"]))
+  res.table3 = res.table[res.table[, "p.index"] %in% rel.ind,, drop = FALSE]
   base.value = max(table(res.table3[, "predecessors"]))
 
   ## remove root from cells
@@ -358,14 +354,4 @@ computeBarrierTreeFeats = function(yvals, fundamental.list, barrier.tree, feat.o
 ## computes the center point of a given cell coordinate z
 ztox = function(z, cell.size, lower) {
   return(lower + cell.size * (z - 0.5))
-}
-
-## helper, which checks whether two cells are neighbors
-isValidNeighbour = function(cell, nb, blocks) {
-  n = length(blocks)
-  h = nb - cell
-  if ((sum(abs(h)) == 1L) & (sum(h == 0) == (n - 1L)))
-    return(TRUE)
-  else
-    return(FALSE)
 }
