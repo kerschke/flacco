@@ -75,7 +75,11 @@ Installation Instructions
     devtools::install_github("kerschke/flacco")
     ```
 
-* [Further installation instructions](https://githubkagesInfo/wiki/Installation-Information)
+
+flacco-GUI
+----------
+
+We have started to implement a graphical user interface (GUI) for our package. Its online-version is hosted [here](https://flaccogui.shinyapps.io/flaccogui/).
 
 
 News
