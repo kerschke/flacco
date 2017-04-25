@@ -51,3 +51,20 @@ test_that("Vary plot arguments", {
 
   expect_true(TRUE) 
 })
+
+test_that("Error when BT features can't be computed", {
+  ## (1) complete plateau
+  set.seed(2015*03*26)
+  X = expand.grid(1:3, 1:2)
+  y = rep(2, 6)
+  feat.object = createFeatureObject(X = X, y = y, blocks = c(3, 2),
+    lower = c(0.5, 0.5), upper = c(3.5, 2.5))
+  expect_error(plotBarrierTree2D(feat.object))
+
+  ## (2) too many dimensions
+  set.seed(2015*03*26)
+  X = createInitialSample(n.obs = 100, dim = 3)
+  y = rnorm(100)
+  feat.object = createFeatureObject(X = X, y = y, blocks = c(3, 2, 4))
+  expect_error(plotBarrierTree2D(feat.object))
+})

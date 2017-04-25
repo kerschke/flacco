@@ -59,6 +59,8 @@ plotBarrierTree2D = function(feat.object, control) {
   assertClass(feat.object, "FeatureObject")
   X = extractFeatures(feat.object)
   y = extractObjective(feat.object)
+  if (length(unique(y)) == 1)
+    stop("The landscape is a complete plateau (i.e., all objective values are identical). You can not plot a barrier tree for such a landscape!")
   if (missing(control))
     control = list()
   assertList(control)
