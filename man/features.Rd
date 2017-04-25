@@ -210,12 +210,12 @@ computation of the ELA local search features) or \code{\link{density}}
       the computation of these features
     }
     \item{\code{bt} -- barrier tree features (90)}:\cr
-    Computes barrier tree features on 2D (!) problems, based on a
-    Generalized Cell Mapping (GCM) approach. Computations are performed
-    based on three different approaches: taking the best (\code{min}) or
-    average (\code{mean}) objective value of a cell or the closest
-    observation (\code{near}) to a cell as representative. For each of these
-    approaches the following 31 features are computed:\cr
+    Computes barrier tree features, based on a Generalized Cell Mapping
+    (GCM) approach. Computations are performed based on three different
+    approaches: taking the best (\code{min}) or average (\code{mean})
+    objective value of a cell or the closest observation (\code{near}) to a
+    cell as representative. For each of these approaches the following 31
+    features are computed:\cr
     \itemize{
       \item{\code{levels}}: absolute number of levels of the barrier tree
       \item{\code{leaves}}: absolute number of leaves (i.e. local optima)
