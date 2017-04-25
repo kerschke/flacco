@@ -62,11 +62,11 @@ test_that("Cellmapping Objects", {
   feat.object = createFeatureObject(X = X, y = y, blocks = c(4, 3, 4, 3, 3))
 
   # (2) compute the non-expensive features
-  expect_warning((features = calculateFeatures(feat.object, control = list(allow_costs = FALSE,
-    show_progress = FALSE, cm_angle.show_warnings = FALSE, gcm.approaches = "min"))))
+  features = calculateFeatures(feat.object, control = list(allow_costs = FALSE,
+    show_progress = FALSE, cm_angle.show_warnings = FALSE, gcm.approaches = "min"))
 
   # test return value types and ranges
-  expect_identical(length(features), 152L)
+  expect_identical(length(features), 183L)
   expect_list(features)
 
   # all objects are either NA, logical or a number
@@ -156,11 +156,11 @@ test_that("Underlying Functions Available (cellmapping)", {
   feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2), blocks = 3L)
 
   # (2) compute all non-cm features:
-  expect_warning((features = calculateFeatures(feat.object,
-    control = list(show_progress = FALSE, gcm.approaches = "mean"))))
+  features = calculateFeatures(feat.object,
+    control = list(show_progress = FALSE, gcm.approaches = "mean"))
 
   # test return value types and ranges
-  expect_identical(length(features), 200L)
+  expect_identical(length(features), 231L)
   expect_list(features)
 
   # all objects are either NA, logical or a number

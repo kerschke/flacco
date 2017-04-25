@@ -688,10 +688,6 @@ calculateFeatures = function(feat.object, control, ...) {
   allow.cellmapping = control_parameter(control, "allow_cellmapping", TRUE)
   assertLogical(allow.costs)
   blacklist = control_parameter(control, "blacklist", NULL)
-  if (feat.object$dim > 2) {
-    blacklist = unique(c(blacklist, "bt"))
-    warning("The 'bt' features were not computed, because they currently only work for 2-dimensional problems.")
-  }
   if (any(feat.object$blocks <= 2)) {
     blacklist = unique(c(blacklist, c("cm_conv", "gcm")))
     warning("The 'gcm' and 'cm_conv' features were not computed, because not all blocks were greater than 2.")
