@@ -123,24 +123,27 @@ flaccoGenD = function (func, x, method.args = list(), lower, upper) {
   Daprox = matrix(0, length(f0), r)
   Hdiag = matrix(0, length(f0), n)
   Haprox = matrix(0, length(f0), r)
+  if (any(upper - lower < h0))
+    stop("The boundaries are smaller than the step size for the approximation of the hessian.")
   for (i in seq_len(n)) {
     h = h0
     for (k in seq_len(r)) {
-      x1 = x + (i == (1:n)) * h
-      ind1 = (x1 >= upper)
-      x2 = x - (i == (1:n)) * h
-      ind2 = (x2 <= lower)
-      if (any(ind1)) {
-        ## exceeded upper boundaries by this value
-        excess = x1[ind1] - upper[ind1]
-        x1[ind1] = upper[ind1]
-        x2[ind1] = x2[ind1] - excess
+      x1 = x2 = x
+      ## assure that we do not exceed the upper bound
+      if (x1[i] > upper[i] - h[i]) {
+        excess = h[i] - (upper[i] - x1[i])
+        x1[i] = upper[i]
+        x2[i] = x2[i] - excess
+      } else {
+        x1[i] = x1[i] + h[i]
       }
-      if (any(ind2)) {
-        ## exceeded lower boundaries by this value
-        excess = lower[ind2] - x2[ind2]
-        x1[ind2] = x1[ind2] + excess
-        x2[ind2] = lower[ind2]
+      ## assure that we do not exceed the lower bound
+      if (x2[i] < lower[i] + h[i]) {
+        excess = h[i] - (x2[i] - lower[i])
+        x2[i] = lower[i]
+        x1[i] = x1[i] + excess
+      } else {
+        x2[i] = x2[i] - h[i]
       }
       f1 = func(x1)
       f2 = func(x2)
@@ -148,9 +151,11 @@ flaccoGenD = function (func, x, method.args = list(), lower, upper) {
       Haprox[, k] = (f1 - 2 * f0 + f2)/h[i]^2
       h = h/v
     }
-    for (m in 1:(r - 1)) for (k in 1:(r - m)) {
-      Daprox[, k] = (Daprox[, k + 1] * (4^m) - Daprox[, k])/(4^m - 1)
-      Haprox[, k] = (Haprox[, k + 1] * (4^m) - Haprox[, k])/(4^m - 1)
+    for (m in seq_len(r - 1)) {
+      for (k in seq_len(r - m)) {
+        Daprox[, k] = (Daprox[, k + 1] * (4^m) - Daprox[, k])/(4^m - 1)
+        Haprox[, k] = (Haprox[, k + 1] * (4^m) - Haprox[, k])/(4^m - 1)
+      }
     }
     D[, i] = Daprox[, 1]
     Hdiag[, i] = Haprox[, 1]
@@ -163,10 +168,10 @@ flaccoGenD = function (func, x, method.args = list(), lower, upper) {
         D[, u] = Hdiag[, i]
       } else {
         h = h0
-        for (k in 1:r) {
-          x1 = x + (i == (1:n)) * h + (j == (1:n)) * h
+        for (k in seq_len(r)) {
+          x1 = x + (i == seq_len(n)) * h + (j == seq_len(n)) * h
           ind1 = (x1 >= upper)
-          x2 = x - (i == (1:n)) * h - (j == (1:n)) * h
+          x2 = x - (i == seq_len(n)) * h - (j == seq_len(n)) * h
           ind2 = (x2 <= lower)
           if (any(ind1)) {
             ## exceeded upper boundaries by this value
@@ -185,8 +190,8 @@ flaccoGenD = function (func, x, method.args = list(), lower, upper) {
           Daprox[, k] = (f1 - 2 * f0 + f2 - Hdiag[, i] * h[i]^2 - Hdiag[, j] * h[j]^2)/(2 * h[i] * h[j])
           h = h/v
         }
-        for (m in 1:(r - 1)) {
-          for (k in 1:(r - m)) {
+        for (m in seq_len(r - 1)) {
+          for (k in seq_len(r - m)) {
             Daprox[, k] = (Daprox[, k + 1] * (4^m) - Daprox[, k])/(4^m - 1)
           }
         }

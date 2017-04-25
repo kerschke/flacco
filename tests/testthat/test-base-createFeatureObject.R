@@ -110,3 +110,9 @@ test_that("Derive Boundaries from Initial Sample", {
   expect_true(any(feat.object3$lower != ctrl$init_sample.lower))
   expect_true(any(feat.object3$upper != ctrl$init_sample.upper))
 })
+
+
+test_that("Assure that the safety stop works.", {
+  expect_error(createFeatureObject(X = iris[, 1:3], y = iris[,4], blocks = c(20, 45, 30)))
+  expect_class(createFeatureObject(X = iris[, 1:3], y = iris[,4], blocks = c(10, 15, 5)), "FeatureObject")
+})

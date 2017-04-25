@@ -62,29 +62,34 @@ getObjectivesByApproach = function(feat.object, approach) {
 
 
 calculateSparseMatrix = function(feat.object, yvals) {
-  valid.cells = setdiff(seq_len(feat.object$total.cells), which(!is.finite(yvals)))
+  valid.cells = seq_len(feat.object$total.cells)[is.finite(yvals)]
+  blocks = feat.object$blocks
   transitions = lapply(seq_len(feat.object$total.cells), function(i) {
     if (is.infinite(yvals[i])) {
       return(NULL)
     }
-    cell.coord = celltoz(i, feat.object$blocks)
+    cell.coord = celltoz(i, blocks)
 
     # Find all neighbours of the current cell
     nb.coord = expand.grid(lapply(cell.coord, function(x) x + c(-1, 0, 1)))
 
     # Discard those neighbours that are outside the bounds or the cell itself
-    discard = apply(nb.coord, 1, isInvalidNeighbour, cell = cell.coord, blocks = feat.object$blocks)
-    nb = as.integer(apply(nb.coord[!discard, ], 1, ztocell, blocks = feat.object$blocks))
-    nb = nb[nb %in% valid.cells]
-    cell = as.integer(rep(i, length(nb)))
+    discard = apply(nb.coord, 1, isInvalidNeighbour, cell = cell.coord, blocks = blocks)
 
+    ## find the cell IDs of the valid neighbors
+    nb = as.integer(apply(nb.coord[!discard, ], 1, ztocell, blocks = blocks))
+    nb = intersect(nb, valid.cells)
+
+    cell = as.integer(rep(i, length(nb)))
     y1 = yvals[cell]
     y2 = yvals[nb]
     better = (y1 > y2)
     if (any(better)) {
-      diffs = (y1 - y2)[better]
+      ## transit to the better neighbors
+      diffs = y1[better] - y2[better]
       return(list(cell = cell[better], nb = nb[better], prob = diffs / sum(diffs)))
     } else {
+      ## otherwise move to the cells with an equal performance
       cell = c(cell, i)
       nb = c(nb, i)
       equal = c(y1 == y2, TRUE)
@@ -92,6 +97,9 @@ calculateSparseMatrix = function(feat.object, yvals) {
         prob = rep(1 / sum(equal), sum(equal))))
     }
   })
+  ## creates a sparse matrix (m by m, where m is the number of cells),
+  ## which contains the probabilities to move from cell A (row of the
+  ## matrix) to cell B (column of the matrix)
   fullsparse(unlist(lapply(transitions, function(x) x$cell)),
     unlist(lapply(transitions, function(x) x$nb)),
     unlist(lapply(transitions, function(x) x$prob)))
@@ -165,13 +173,12 @@ computeFundamental = function(canonical.list, gcm.control) {
   fundamental.mat = fundamental.mat[non.zero, , drop = FALSE]
 
   # remove columns that only contain zeros (and recalculate no. of closed classes)
-  zero = vapply(seq_len(ncol(fundamental.mat)), function(i) all(fundamental.mat[, i] == 0), logical(1L))
-  if (sum(zero) > 0) {
-    rtmp = permutation.index[seq.closed.classes]
-    rtmp = rtmp[!zero]
+  zero = vapply(seq_col(fundamental.mat), function(i) all(fundamental.mat[, i] == 0), logical(1L))
+  if (any(zero)) {
+    rtmp = permutation.index[seq.closed.classes[!zero]]
     no.attractors = length(rtmp)
     seq.closed.classes = seq_len(no.attractors)
-    
+
     # actually remove columns now:
     permutation.index = permutation.index[-which(zero)] # [ orig: %Index ]
     fundamental.mat = fundamental.mat[ , !zero, drop = FALSE] #[ orig: Fm( :, !any(Fm,1) ) = [];  %columns ]

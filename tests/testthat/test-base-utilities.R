@@ -130,5 +130,10 @@ test_that("hessian does not exceed the bounds", {
   expect_error(foo1(c(-4, 3)))
   expect_equal(foo1(c(1, 2)), 0L)
   expect_error(numDeriv::hessian(func = foo1, x = c(-2, 2)))
-  expect_matrix(flaccoHessian(func = foo1, x = c(-2, 2), lower = -2, upper = 5))
+  expect_matrix(flaccoHessian(func = foo1, x = c(-2, 2), lower = rep(-2, 2), upper = rep(5, 2)))
+  expect_identical(numDeriv::hessian(func = foo1, x = c(2, 2)),
+    flaccoHessian(func = foo1, x = c(2, 2), lower = rep(-2, 2), upper = rep(5, 2)))
+  ## step size should not be smaller than the block size
+  expect_error(flaccoGenD(foo1, x = c(2, 2),
+    method.args = list(d = 1e2), upper = rep(-2, 2), lower = rep(5, 2)))
 })

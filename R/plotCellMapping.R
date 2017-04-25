@@ -81,6 +81,8 @@ plotCellMapping = function (feat.object, control) {
   if (missing(control))
     control = list()
   assertList(control)
+  blocks = feat.object$blocks
+  assertIntegerish(blocks, lower = 1, len = 2)
 
   approach = control_parameter(control, "gcm.approach", "min")
   assertChoice(x = approach, choices = c("min", "mean", "near"))
@@ -90,9 +92,6 @@ plotCellMapping = function (feat.object, control) {
   orig.margins = par("mar")
   on.exit(par(mar = orig.margins))
   par(mar = control_parameter(control, "gcm.margin", c(5, 5, 4, 4)))
-
-  blocks = feat.object$blocks
-  assertIntegerish(blocks, lower = 1, len = 2)
 
   yvals = getObjectivesByApproach(feat.object, approach)
   sparse.matrix = calculateSparseMatrix(feat.object, yvals)

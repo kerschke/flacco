@@ -213,12 +213,12 @@
 #'       the computation of these features
 #'     }
 #'     \item{\code{bt} -- barrier tree features (90)}:\cr
-#'     Computes barrier tree features on 2D (!) problems, based on a
-#'     Generalized Cell Mapping (GCM) approach. Computations are performed
-#'     based on three different approaches: taking the best (\code{min}) or
-#'     average (\code{mean}) objective value of a cell or the closest
-#'     observation (\code{near}) to a cell as representative. For each of these
-#'     approaches the following 31 features are computed:\cr
+#'     Computes barrier tree features, based on a Generalized Cell Mapping
+#'     (GCM) approach. Computations are performed based on three different
+#'     approaches: taking the best (\code{min}) or average (\code{mean})
+#'     objective value of a cell or the closest observation (\code{near}) to a
+#'     cell as representative. For each of these approaches the following 31
+#'     features are computed:\cr
 #'     \itemize{
 #'       \item{\code{levels}}: absolute number of levels of the barrier tree
 #'       \item{\code{leaves}}: absolute number of leaves (i.e. local optima)
@@ -688,10 +688,14 @@ calculateFeatures = function(feat.object, control, ...) {
   allow.cellmapping = control_parameter(control, "allow_cellmapping", TRUE)
   assertLogical(allow.costs)
   blacklist = control_parameter(control, "blacklist", NULL)
-  if (feat.object$dim > 2)
+  if (feat.object$dim > 2) {
     blacklist = unique(c(blacklist, "bt"))
-  if (any(feat.object$blocks <= 2))
+    warning("The 'bt' features were not computed, because they currently only work for 2-dimensional problems.")
+  }
+  if (any(feat.object$blocks <= 2)) {
     blacklist = unique(c(blacklist, c("cm_conv", "gcm")))
+    warning("The 'gcm' and 'cm_conv' features were not computed, because not all blocks were greater than 2.")
+  }
   assertSubset(blacklist, choices = possible)
 
   expensive = setdiff(listAvailableFeatureSets(allow.additional_costs = TRUE),

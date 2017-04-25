@@ -25,6 +25,15 @@
 #' @param objective [\code{\link{character}(1)}]\cr
 #'   The name of the feature, which contains the objective values. The
 #'   default is \code{"y"}.
+#' @param force [\code{\link{logical}(1)}]\cr
+#'   Only change this parameter IF YOU KNOW WHAT YOU ARE DOING! Per default
+#'   (\code{force = FALSE}), the function checks whether the total number of
+#'   cells that you are trying to generate, is below the (hard-coded) internal
+#'   maximum of 25,000 cells. If you set this parameter to \code{TRUE}, you
+#'   agree that you want to exceed that internal limit.\cr
+#'   Note: *Exploratory Landscape Analysis (ELA)* is only useful when you are
+#'   limited to a small budget (i.e., a small number of function evaluations)
+#'   and in such scenarios, the number of cells should also be kept low!
 #'
 #' @return [\code{\link{FeatureObject}}].
 #'
@@ -60,7 +69,7 @@
 #'
 #' @export 
 createFeatureObject = function(init, X, y, fun, minimize, 
-  lower, upper, blocks, objective) {
+  lower, upper, blocks, objective, force = FALSE) {
 
   if (missing(init) && (missing(X) || (missing(y) && missing(fun)) ))
     stop("The initial design has to be provided either by init or by X and y or by X and f.")
@@ -155,6 +164,11 @@ createFeatureObject = function(init, X, y, fun, minimize,
     }
   }
   assertIntegerish(blocks, len = d, lower = 1)
+  if (!force) {
+    if (prod(blocks) > 25000L)
+      stopf("You were trying to create more than 25,000 cells. To be precise, you were trying to generate a feature object with %i cells. In case you really know what you are doing, set 'force = TRUE'.",
+        prod(blocks))
+  }
   if (missing(fun))
     fun = NULL
   env = new.env(parent = emptyenv())

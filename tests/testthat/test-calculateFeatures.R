@@ -8,8 +8,8 @@ test_that("Non-Cellmapping Objects", {
   feat.object = createFeatureObject(X = X, y = rowSums(X^2))
 
   # (2) compute all non-cellmapping and non-expensive features
-  features = calculateFeatures(feat.object,
-    control = list(allow_cellmapping = FALSE, allow_costs = FALSE))
+  expect_warning((features = calculateFeatures(feat.object,
+    control = list(allow_cellmapping = FALSE, allow_costs = FALSE))))
 
   # test return value types and ranges
   expect_identical(length(features), 93L)
@@ -28,9 +28,9 @@ test_that("Non-Cellmapping Objects", {
   expect_identical(features$basic.cells_filled, 1L)
   
   # (3) do the same, but blacklist the expensive features
-  features = calculateFeatures(feat.object, control = list(
+  expect_warning((features = calculateFeatures(feat.object, control = list(
     allow_cellmapping = FALSE, allow_costs = TRUE, show_progress = FALSE,
-    blacklist = c("ela_local", "ela_curv", "ela_conv")))
+    blacklist = c("ela_local", "ela_curv", "ela_conv")))))
 
   # test return value types and ranges
   expect_identical(length(features), 93L)
@@ -59,14 +59,14 @@ test_that("Cellmapping Objects", {
   # (1) create a feature object:
   X = t(replicate(n = 2000L, expr = runif(n = 5L, min = -10L, max = 10L)))
   y = rowSums(X^2)
-  feat.object = createFeatureObject(X = X, y = y, blocks = c(4, 3, 4, 3, 5))
+  feat.object = createFeatureObject(X = X, y = y, blocks = c(4, 3, 4, 3, 3))
 
   # (2) compute the non-expensive features
-  features = calculateFeatures(feat.object, control = list(allow_costs = FALSE,
-    show_progress = FALSE, cm_angle.show_warnings = FALSE))
+  expect_warning((features = calculateFeatures(feat.object, control = list(allow_costs = FALSE,
+    show_progress = FALSE, cm_angle.show_warnings = FALSE, gcm.approaches = "min"))))
 
   # test return value types and ranges
-  expect_identical(length(features), 202L)
+  expect_identical(length(features), 152L)
   expect_list(features)
 
   # all objects are either NA, logical or a number
@@ -120,8 +120,8 @@ test_that("Underlying Functions Available (non-cellmapping)", {
   feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2))
 
   # (2) compute all non-cm features:
-  features = calculateFeatures(feat.object,
-    control = list(allow_cellmapping = FALSE, show_progress = FALSE))
+  expect_warning((features = calculateFeatures(feat.object,
+    control = list(allow_cellmapping = FALSE, show_progress = FALSE))))
 
   # test return value types and ranges
   expect_identical(length(features), 141L)
@@ -156,11 +156,11 @@ test_that("Underlying Functions Available (cellmapping)", {
   feat.object = createFeatureObject(X = X, fun = function(x) sum(x^2), blocks = 3L)
 
   # (2) compute all non-cm features:
-  features = calculateFeatures(feat.object,
-    control = list(show_progress = FALSE))
+  expect_warning((features = calculateFeatures(feat.object,
+    control = list(show_progress = FALSE, gcm.approaches = "mean"))))
 
   # test return value types and ranges
-  expect_identical(length(features), 250L)
+  expect_identical(length(features), 200L)
   expect_list(features)
 
   # all objects are either NA, logical or a number
