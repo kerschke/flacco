@@ -1,0 +1,37 @@
+.shiny-split-layout>div {
+  display: inline-table;
+  vertical-align: top;
+  box-sizing: border-box;
+}
+
+.navbar-default {
+  background-color: rgb(133,35,57);
+  color: white;
+}
+
+.navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a {
+  background-color: rgb(133,35,57);
+  color: white;
+}
+
+.navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover {
+  color: rgb(200,156,166);
+}
+
+.well {
+  background-color: rgb(135,151,163);
+}
+
+
+.irs-grid-text, .irs-min, .irs-max {
+  color: white;
+}
+
+.irs-grid-pol {
+  background-color: white;
+}
+
+
+a {
+  color:rgb(67,92,139)
+}

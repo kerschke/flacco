@@ -25,4 +25,3 @@ required for evaluating the expression.
 \description{
 Simple wrapper around \code{proc.time}.
 }
-

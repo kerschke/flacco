@@ -48,4 +48,3 @@ feat.object = createFeatureObject(X = X,
 # (2) find the nearest prototypes of all cells:
 findNearestPrototype(feat.object)
 }
-

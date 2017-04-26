@@ -201,3 +201,11 @@ flaccoGenD = function (func, x, method.args = list(), lower, upper) {
   }
   return(D)
 }
+
+# helper function for the GUI (copy of shiny:::`%OR%`)
+`%then%` = function (x, y) {
+  if (is.null(x) || isTRUE(is.na(x))) 
+    y
+  else
+    x
+}
