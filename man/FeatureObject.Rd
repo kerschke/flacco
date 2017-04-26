@@ -89,4 +89,3 @@ library(plyr)
 calculateFeatureSet(feat.object3, "cm_angle", control = list(cm_angle.show_warnings = FALSE))
 
 }
-

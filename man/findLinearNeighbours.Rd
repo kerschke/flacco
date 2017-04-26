@@ -42,4 +42,3 @@ findLinearNeighbours(cell.ids = cell.ids, blocks = blocks, diag = TRUE)
 findLinearNeighbours(cell.ids = cell.ids, blocks = blocks)
 
 }
-

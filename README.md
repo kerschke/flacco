@@ -81,6 +81,13 @@ flacco-GUI
 
 We have started to implement a graphical user interface (GUI) for our package. Its online-version is hosted [here](https://flaccogui.shinyapps.io/flaccogui/).
 
+Alternatively, you can start it from within R:
+
+```{r}
+library(flacco)
+runFlaccoGUI()
+```
+
 
 News
 ----

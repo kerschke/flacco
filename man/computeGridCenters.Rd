@@ -29,4 +29,3 @@ Computes the cell centers and the corresponding cell IDs of a cell mapping
 computeGridCenters(lower = -10, upper = 10, blocks = c(10, 5, 8))
 
 }
-

@@ -70,4 +70,3 @@ feat.object = createFeatureObject(X = X, y = y, fun = f, blocks = c(4, 6))
 # plot the corresponing barrier tree
 plotBarrierTree2D(feat.object)
 }
-

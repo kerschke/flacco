@@ -689,4 +689,3 @@ system.time((levelset.seq = calculateFeatureSet(feat.object, "ela_level")))}
     (\url{http://dx.doi.org/10.1109/TEVC.2014.2302006}).
   }
 }
-

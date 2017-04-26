@@ -10,4 +10,3 @@ Contains a list of features. This could be the result of a feature selection
 \code{\link[mlbench]{Glass}} data.
 }
 \keyword{data}
-

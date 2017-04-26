@@ -113,4 +113,3 @@ plotInformationContent(feat.object)
     (\url{http://dx.doi.org/10.1109/TEVC.2014.2302006}).
   }
 }
-

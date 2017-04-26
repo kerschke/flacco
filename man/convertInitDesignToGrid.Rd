@@ -43,4 +43,3 @@ init = data.frame(X, y = y)
 convertInitDesignToGrid(init = init, lower = -10, upper = 10, blocks = 20)
 
 }
-
