@@ -8,9 +8,6 @@
 #'
 #' @export
 featureObject_sidebar = function(id) {
-  if (!requireNamespace("smoof", quietly = TRUE)) {
-    stop(" smoof needed for this function to work. Please install it.", call. = FALSE)
-  }
   # Create a namespace function using the provided id
   ns = shiny::NS(id)
 
@@ -81,10 +78,6 @@ featureObject_sidebar = function(id) {
 functionInput = function(input, output, session, stringsAsFactors) {
   # function to control the output data if smoof is selected for function input
   smoof_input_createFeatures = shiny::reactive({
-    # smoofFunctionPage  is using the smoof package for implementing them
-    if (!requireNamespace("smoof", quietly = TRUE)) {
-      stop("smoof needed for this function to work. Please install it.", call. = FALSE)
-    }
     # transform the text input for lower and upper bound to an vector with the respective values
     shiny::validate(
       shiny::need(try({
@@ -121,10 +114,6 @@ functionInput = function(input, output, session, stringsAsFactors) {
 
   # function to control the output data if smoof BBOB is selected for function input
   smoof_BBOB_input_createFeatures = shiny::reactive({
-    # smoofFunctionPage is using the smoof package for implementing them
-    if (!requireNamespace("smoof", quietly = TRUE)) {
-      stop("smoof needed for this function to work. Please install it.", call. = FALSE)
-    }
     # transform the text input for lower and upper bound to a vector with the respective values
     shiny::validate(
       shiny::need(try({
@@ -161,10 +150,6 @@ functionInput = function(input, output, session, stringsAsFactors) {
 
   # # function to control the output data if smoof MPM2 is selected for function input
   # smoof_MPM2_input_createFeatures = shiny::reactive({
-  #   # smoofFunctionPage is using the smoof package for implementing them
-  #   if (!requireNamespace("smoof", quietly = TRUE)) {
-  #     stop("smoof needed for this function to work. Please install it.", call. = FALSE)
-  #   }
   #   # transform the text input for lower and upper bound to an vector with the respective values
   #   shiny::validate(
   #     shiny::need(try({

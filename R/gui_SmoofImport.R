@@ -43,11 +43,6 @@ SmoofImportPage = function(id) {
 #'
 #' @export
 SmoofImport = function(input, output, session, stringsAsFactors) {
-  # BBOB functions is using the smoof package for implementing them
-  if (!requireNamespace("smoof", quietly = TRUE)) {
-    stop("smoof needed for this function to work. Please install it.", call. = FALSE)
-  }
-
   # function for controlling the file input app
   smoof_import_createFeatures = shiny::reactive({
     features = data.frame()

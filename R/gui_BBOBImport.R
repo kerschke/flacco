@@ -46,17 +46,8 @@ BBOBImportPage = function(id) {
 #'
 #' @export
 BBOBImport = function(input, output, session, stringsAsFactors) {
-  # BBOB functions use the smoof package for implementing them
-  if (!requireNamespace("smoof", quietly = TRUE)) {
-    stop("smoof needed for this function to work. Please install it.",
-      call. = FALSE)
-  }
-
   #function for controlling the file input app
   BBOB_import_createFeatures = shiny::reactive({
-    if (!requireNamespace("smoof", quietly = TRUE)) {
-      stop("smoof needed for this function to work. Please install it.", call. = FALSE)
-    }
     features = data.frame()
     # load values from uploaded file
     importdata = utils::read.csv(input$BBOB_import_file$datapath, sep = ",", header = TRUE)

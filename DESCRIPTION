@@ -34,7 +34,6 @@ Suggests:
     plyr,
     RANN,
     rpart,
-    rPython,
     shape,
     shiny,
     smoof,

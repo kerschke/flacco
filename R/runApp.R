@@ -9,6 +9,11 @@
 #'
 #'@export
 runFlaccoGUI = function() {
+  # the app requires the smoof package
+  if (!requireNamespace("smoof", quietly = TRUE)) {
+    stop("smoof needed for this function to work. Please install it.", call. = FALSE)
+  }
+
   appDir = system.file("flaccogui", package = "flacco")
   if (appDir == "") {
     stop("Could not find example directory. Try re-installing `mypackage`.", call. = FALSE)
