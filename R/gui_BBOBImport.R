@@ -22,7 +22,7 @@ BBOBImportPage = function(id) {
       shiny::numericInput(ns("BBOB_import_replication"), label = "Replications", value = 1),
       shiny::selectInput(ns("BBOB_import_featureSet"),label = "Feature Set",choices=listAvailableFeatureSets()),
       shiny::textInput(ns("BBOB_block_input"), label = "Blocks (comma sperated per dimension)"),
-      shiny::sliderInput(ns("BBOB_ssize"), "Sample size", min = 100, max = 10000, value = 30),
+      shiny::sliderInput(ns("BBOB_ssize"), "Sample size", min = 10, max = 5000, value = 100),
       shiny::downloadButton(ns('BBOB_import_downloadData'), 'Download')
     ),
     # Show a table with the generated features
