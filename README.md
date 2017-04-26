@@ -44,7 +44,7 @@ Quickstart
 
 If you want to get started quickly, have a look at the [flacco tutorial](http://kerschke.github.io/flacco-tutorial/site/).
 
-```{r}
+```splus
 library(flacco)
 
 ## (1) Create some example-data
@@ -83,7 +83,7 @@ We have started to implement a graphical user interface (GUI) for our package. I
 
 Alternatively, you can start it from within R:
 
-```{r}
+```splus
 library(flacco)
 runFlaccoGUI()
 ```
