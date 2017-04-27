@@ -71,7 +71,7 @@ SmoofImport = function(input, output, session, stringsAsFactors) {
           feat.object = createFeatureObject(X = X, y = y, fun = f)
         }
         # calculate the features
-        features_l = data.frame(rep = r,
+        features_l = data.frame(dim = importdata[i, 1L], rep = r,
           calculateFeatureSet(feat.object, set = input$smoof_import_featureSet,
             control = list(ela_curv.sample_size = min(200L, feat.object$n.obs))))
         features = rbind(features, features_l)

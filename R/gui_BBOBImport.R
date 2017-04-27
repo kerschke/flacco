@@ -70,7 +70,8 @@ BBOBImport = function(input, output, session, stringsAsFactors) {
           feat.object = createFeatureObject(X = X, y = y, fun = f)
         }
         # calculate the features
-        features_l = data.frame(fid = importdata[i, 1L], iid = importdata[i, 2L], rep = r,
+        features_l = data.frame(fid = importdata[i, 1L], iid = importdata[i, 2L],
+          dim = importdata[i, 3L], rep = r,
           calculateFeatureSet(feat.object, set = input$BBOB_import_featureSet,
             control = list(ela_curv.sample_size = min(200L, feat.object$n.obs))))
         features = rbind(features, features_l)
