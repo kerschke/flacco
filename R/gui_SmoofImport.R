@@ -17,10 +17,13 @@ SmoofImportPage = function(id) {
   shiny::sidebarLayout(
     shiny::sidebarPanel(
       shiny::fileInput(ns("smoof_import_file"), label = "File to import"),
+      shiny::numericInput(ns("smoof_import_replication"), label = "Replications", value = 1),
       shiny::selectInput(ns("smoof_import_function"), label = "Function name",
         choices = smoof::filterFunctionsByTags("single-objective")),
       shiny::selectInput(ns("smoof_import_featureSet"), label = "Feature Set",
         choices = listAvailableFeatureSets()),
+      shiny::textInput(ns("smoof_block_input"), label = "Blocks (comma sperated per dimension)", value = 2),
+      shiny::sliderInput(ns("smoof_ssize"), "Sample size", min = 10, max = 5000, value = 100),
       shiny::downloadButton(ns('smoof_import_downloadData'), 'Download')
     ),
     # Show a table with the generated features
@@ -50,16 +53,29 @@ SmoofImport = function(input, output, session, stringsAsFactors) {
     importdata = utils::read.csv(input$smoof_import_file$datapath, sep = ",", header = TRUE)
     # calculate features for all rows of input file
     for (i in seq_row(importdata)) {
-      ## FIXME: Why is the number of observations hard-coded?
-      X = createInitialSample(n.obs = 2500, dim = importdata[i, 1L])
-      f = smoof::makeFunctionsByName(input$smoof_import_function, dimensions = importdata[i, 1L])[[1L]]
-      y = apply(X, 1, f)
-      feat.object = createFeatureObject(X = X, y = y, fun = f)
-      # calculate the features
-      features_l = data.frame(
-        calculateFeatureSet(feat.object, set = input$smoof_import_featureSet,
-          control = list(ela_curv.sample_size = min(200L, feat.object()$n.obs))))
-      features = rbind(features , features_l)
+      for (r in seq_len(input$BBOB_import_replication)) {
+        X = createInitialSample(n.obs = input$smoof_ssize, dim = importdata[i, 1L])
+        f = smoof::makeFunctionsByName(input$smoof_import_function, dimensions = importdata[i, 1L])[[1L]]
+        y = apply(X, 1, f)
+        feat.object = createFeatureObject(X = X, y = y, fun = f)
+        # calculate the features
+        if (input$smoof_block_input != ""){
+          #validate the input for block
+          shiny::validate(
+            shiny::need(try({blocks = eval(parse(text = paste("c(", input$smoof_block_input, ")")))}),
+              "Please insert valid block defintion") %then%
+            shiny::need(try({feat.object = createFeatureObject(X = X, y = y, fun = f, blocks = blocks)}),
+              "Please insert valid funciton values")
+          )
+        } else {
+          feat.object = createFeatureObject(X = X, y = y, fun = f)
+        }
+        # calculate the features
+        features_l = data.frame(rep = r,
+          calculateFeatureSet(feat.object, set = input$smoof_import_featureSet,
+            control = list(ela_curv.sample_size = min(200L, feat.object$n.obs))))
+        features = rbind(features, features_l)
+      }
     }
     features
   })

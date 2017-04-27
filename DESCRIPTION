@@ -31,6 +31,7 @@ Suggests:
     numDeriv,
     parallel,
     parallelMap,
+    ParamHelpers,
     plyr,
     RANN,
     rpart,
@@ -40,6 +41,6 @@ Suggests:
     testthat
 LazyData: yes
 ByteCompile: yes
-Version: 1.4
-Date: 2017-02-27
+Version: 1.5
+Date: 2017-04-28
 RoxygenNote: 6.0.1

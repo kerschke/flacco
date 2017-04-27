@@ -26,12 +26,11 @@ FeatureSetVisualizationComponent = function(id) {
     shiny::conditionalPanel(
       condition = paste0("input['", ns("visualization_method"), "'] == 4"),
         shiny::splitLayout(
-          shiny::numericInput(ns("ic_xlim_low"),label="Lower X-Limit", value = -5),
-          shiny::numericInput(ns("ic_xlim_up"),label="Upper X-Limit ", value = 15))
+          shiny::numericInput(ns("ic_xlim_low"), label = "Lower X-Limit", value = -5),
+          shiny::numericInput(ns("ic_xlim_up"), label = "Upper X-Limit ", value = 15))
           #shiny::numericInput(ns("ic_ylim"),label="Y-Limit ", value = 0.5)
     ),
-    shiny::plotOutput(ns("visualization_plotOutput"))#,
-    # shiny::downloadButton(ns("visualization_downloadBt"), "Download Graphic")
+    shiny::plotOutput(ns("visualization_plotOutput"))
   )
 }
 
@@ -61,14 +60,15 @@ FeatureSetVisualization = function(input, output, session, stringsAsFactors, fea
     userSelection = input$visualization_method
     if (feat.object()["dim"] == 2) {
       shiny::selectInput(ns("visualization_method"), label = "Visualization method",
-        choices = c("Function-Plot" = 5, "Cell-Mapping" = 1, "Barrier-Tree 2D" = 2,
+        choices = c("Contour Plot" = 5, "Surface Plot" = 6, 
+          "Cell-Mapping" = 1, "Barrier-Tree 2D" = 2,
           "Barrier-Tree 3D" = 3, "Information Content" = 4), selected = userSelection)
-    } else if (feat.object()["dim"] != 1) {
+    } else if (feat.object()["dim"] == 1) {
+      shiny::selectInput(ns("visualization_method"), label = "Visualization method",
+        choices = c("Function Plot" = 5))
+    } else if (feat.object()["dim"] > 2){
       shiny::selectInput(ns("visualization_method"), label = "Visualization method",
         choices = c("Information Content" = 4))
-    } else if (feat.object()["dim"] == 1){
-      shiny::selectInput(ns("visualization_method"), label = "Visualization method",
-        choices = c("Function-Plot" = 5))
     }
   })
 
@@ -90,26 +90,13 @@ FeatureSetVisualization = function(input, output, session, stringsAsFactors, fea
         return(smoof::plot1DNumeric(x = feat.object()$fun, render.levels = TRUE))
       } else if (feat.object()$dim == 2) {
         return(smoof::plot2DNumeric(x = feat.object()$fun, render.levels = TRUE))
-      } else if (feat.object()$dim == 3) {
-        return(smoof::plot3D(x = feat.object()$fun, render.levels = TRUE))
       }
+    } else if (input$visualization_method == 6) {
+      return(smoof::plot3D(x = feat.object()$fun, render.levels = TRUE))
     }
   })
 
   output$visualization_plotOutput = shiny::renderPlot({
     plotflaccoVisualization()
   })
-
-
-  # output$visualization_downloadBt = shiny::downloadHandler(
-  #   filename = function() {
-  #     paste0("flacco_plot", as.numeric(Sys.time()), '.png')
-  #   },
-  #   content = function(file) {
-  #     grDevices::png(file)
-  #     plotflaccoVisualization()
-  #    grDevices::dev.off()
-  #   },
-  #   contentType = "image/png"
-  # )
 }
