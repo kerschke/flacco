@@ -21,7 +21,7 @@ BBOBImportPage = function(id) {
       shiny::fileInput(ns("BBOB_import_file"), label = "File to import"),
       shiny::numericInput(ns("BBOB_import_replication"), label = "Replications", value = 1),
       shiny::selectInput(ns("BBOB_import_featureSet"),label = "Feature Set",choices=listAvailableFeatureSets()),
-      shiny::textInput(ns("BBOB_block_input"), label = "Blocks (comma sperated per dimension)"),
+      shiny::textInput(ns("BBOB_block_input"), label = "Blocks (comma sperated per dimension)", value=2),
       shiny::sliderInput(ns("BBOB_ssize"), "Sample size", min = 10, max = 5000, value = 100),
       shiny::downloadButton(ns('BBOB_import_downloadData'), 'Download')
     ),
@@ -69,7 +69,7 @@ BBOBImport = function(input, output, session, stringsAsFactors) {
         }
         features_l = data.frame(fid = importdata[i, 1L], iid = importdata[i, 2L], rep = r,
           calculateFeatureSet(feat.object, set = input$BBOB_import_featureSet,
-            control = list(ela_curv.sample_size = min(200L, feat.object()$n.obs)))) #calculate the features
+            control = list(ela_curv.sample_size = min(200L, feat.object$n.obs)))) #calculate the features
         features = rbind(features, features_l)
       }
     }
