@@ -7,13 +7,13 @@
 BBOBImport(input, output, session, stringsAsFactors)
 }
 \arguments{
-\item{input}{[???]\cr
+\item{input}{[\code{shiny-input}]\cr
 \href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} input variable for the specific UI module.}
 
-\item{output}{[???]\cr
+\item{output}{[\code{shiny-output object}]\cr
 \href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} output variable for the specific UI module.}
 
-\item{session}{[???]\cr
+\item{session}{[\code{shiny-session object}]\cr
 \href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} session variable for the specific UI module.}
 
 \item{stringsAsFactors}{[\code{\link{logical}(1)}]\cr

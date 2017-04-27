@@ -20,8 +20,8 @@ BBOBImportPage = function(id) {
     shiny::sidebarPanel(
       shiny::fileInput(ns("BBOB_import_file"), label = "File to import"),
       shiny::numericInput(ns("BBOB_import_replication"), label = "Replications", value = 1),
-      shiny::selectInput(ns("BBOB_import_featureSet"),label = "Feature Set",choices=listAvailableFeatureSets()),
-      shiny::textInput(ns("BBOB_block_input"), label = "Blocks (comma sperated per dimension)"),
+      shiny::selectInput(ns("BBOB_import_featureSet"),label = "Feature Set", choices = listAvailableFeatureSets()),
+      shiny::textInput(ns("BBOB_block_input"), label = "Blocks (comma sperated per dimension)", value = 2),
       shiny::sliderInput(ns("BBOB_ssize"), "Sample size", min = 10, max = 5000, value = 100),
       shiny::downloadButton(ns('BBOB_import_downloadData'), 'Download')
     ),
@@ -57,19 +57,22 @@ BBOBImport = function(input, output, session, stringsAsFactors) {
         X = createInitialSample(n.obs = input$BBOB_ssize, dim = importdata[i, 3L])
         f = smoof::makeBBOBFunction(dimension = importdata[i, 3L], fid = importdata[i, 1L], iid = importdata[i, 2L])
         y = apply(X, 1L, f)
-        #check if input for blocks is available
+        # check if input for blocks is available
         if (input$BBOB_block_input != ""){
-          #validate the input for block
+          # validate the input for block
           shiny::validate(
-            shiny::need(try({blocks = eval(parse(text = paste("c(", input$BBOB_block_input, ")")))}), "Please insert valid block defintion") %then%
-            shiny::need(try({feat.object = createFeatureObject(X = X, y = y, fun = f, blocks = blocks)}), "Please insert valid funciton values")
+            shiny::need(try({blocks = eval(parse(text = paste("c(", input$BBOB_block_input, ")")))}),
+              "Please insert valid block defintion") %then%
+            shiny::need(try({feat.object = createFeatureObject(X = X, y = y, fun = f, blocks = blocks)}),
+              "Please insert valid funciton values")
           )
         } else {
           feat.object = createFeatureObject(X = X, y = y, fun = f)
         }
+        # calculate the features
         features_l = data.frame(fid = importdata[i, 1L], iid = importdata[i, 2L], rep = r,
           calculateFeatureSet(feat.object, set = input$BBOB_import_featureSet,
-            control = list(ela_curv.sample_size = min(200L, feat.object()$n.obs)))) #calculate the features
+            control = list(ela_curv.sample_size = min(200L, feat.object$n.obs))))
         features = rbind(features, features_l)
       }
     }
@@ -77,7 +80,7 @@ BBOBImport = function(input, output, session, stringsAsFactors) {
   })
 
   output$BBOB_import_FeatureTable = shiny::renderTable({
-    features <- BBOB_import_createFeatures()
+    features = BBOB_import_createFeatures()
   }, rownames = FALSE, colnames = TRUE)
 
   output$BBOB_import_downloadData = shiny::downloadHandler(
