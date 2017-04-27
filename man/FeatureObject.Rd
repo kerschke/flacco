@@ -5,7 +5,8 @@
 \alias{createFeatureObject}
 \title{Create a Feature Object}
 \usage{
-createFeatureObject(init, X, y, fun, minimize, lower, upper, blocks, objective)
+createFeatureObject(init, X, y, fun, minimize, lower, upper, blocks, objective,
+  force = FALSE)
 }
 \arguments{
 \item{init}{[\code{\link{data.frame}}]\cr
@@ -41,6 +42,16 @@ The number of blocks per dimension.}
 \item{objective}{[\code{\link{character}(1)}]\cr
 The name of the feature, which contains the objective values. The
 default is \code{"y"}.}
+
+\item{force}{[\code{\link{logical}(1)}]\cr
+Only change this parameter IF YOU KNOW WHAT YOU ARE DOING! Per default
+(\code{force = FALSE}), the function checks whether the total number of
+cells that you are trying to generate, is below the (hard-coded) internal
+maximum of 25,000 cells. If you set this parameter to \code{TRUE}, you
+agree that you want to exceed that internal limit.\cr
+Note: *Exploratory Landscape Analysis (ELA)* is only useful when you are
+limited to a small budget (i.e., a small number of function evaluations)
+and in such scenarios, the number of cells should also be kept low!}
 }
 \value{
 [\code{\link{FeatureObject}}].
@@ -78,4 +89,3 @@ library(plyr)
 calculateFeatureSet(feat.object3, "cm_angle", control = list(cm_angle.show_warnings = FALSE))
 
 }
-

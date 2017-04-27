@@ -2,20 +2,25 @@
 % Please edit documentation in R/gui_SmoofImport.R
 \name{SmoofImport}
 \alias{SmoofImport}
-\title{Shiny server function for BBOB import page module}
+\title{Shiny Server Function for BBOB Import Page Module}
 \usage{
 SmoofImport(input, output, session, stringsAsFactors)
 }
 \arguments{
-\item{input}{Shiny input variable for the specific UI module}
+\item{input}{[???]\cr
+\href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} input variable for the specific UI module.}
 
-\item{output}{Shiny output variable for the specific UI module}
+\item{output}{[???]\cr
+\href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} output variable for the specific UI module.}
 
-\item{session}{Shiny session variable for the specific UI module}
+\item{session}{[???]\cr
+\href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} session variable for the specific UI module.}
 
-\item{stringsAsFactors}{How to treat strings in application (for shiny internally)}
+\item{stringsAsFactors}{[\code{\link{logical}(1)}]\cr
+How should strings be treated internally?}
 }
 \description{
-\code{SmoofImport} is a Shiny server function which will control all aspects
-of the SmoofImportPage UI Module. Will be called with \code{callModule()}
+\code{SmoofImport} is a \href{https://CRAN.R-project.org/package=shiny}{\code{shiny}}
+server function which will control all aspects of the \code{SmoofImportPage}-UI Module.
+It will be called with \code{\link[shiny]{callModule}}.
 }

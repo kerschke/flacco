@@ -2,14 +2,16 @@
 % Please edit documentation in R/gui_featureObjectCreator.R
 \name{featureObject_sidebar}
 \alias{featureObject_sidebar}
-\title{Shiny ui-module for Function Input}
+\title{Shiny UI-Module for Function Input}
 \usage{
 featureObject_sidebar(id)
 }
 \arguments{
-\item{id}{ID for the shiny component}
+\item{id}{[\code{\link{character}(1)}]\cr
+Character representing the \code{namespace} of the \href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} component.}
 }
 \description{
-\code{featObject_sidebar} is a shiny ui-component which can be added to your shiny app
-so that you can easily generate a feature object by putting in all relevant information
+\code{featObject_sidebar} is a \href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} UI-component which can be
+added to your \href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} app so that you can easily generate a
+feature object by providing all relevant information.
 }

@@ -18,6 +18,6 @@ after_success:
 notifications:
   email:
     recipients:
-      - christian.hanster@uni-muenster.de
+      - kerschke@uni-muenster.de
     on_success: change
     on_failure: always

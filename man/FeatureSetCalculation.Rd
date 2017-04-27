@@ -2,25 +2,32 @@
 % Please edit documentation in R/gui_featureSetCalculation.R
 \name{FeatureSetCalculation}
 \alias{FeatureSetCalculation}
-\title{Shiny server function for FeatureSet Component}
+\title{Shiny Server Function for Feature Set Component}
 \usage{
 FeatureSetCalculation(input, output, session, stringsAsFactors, feat.object)
 }
 \arguments{
-\item{input}{Shiny input variable for the specific UI module}
+\item{input}{[???]\cr
+\href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} input variable for the specific UI module.}
 
-\item{output}{Shiny output variable for the specific UI module}
+\item{output}{[???]\cr
+\href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} output variable for the specific UI module.}
 
-\item{session}{Shiny session variable for the specific UI module}
+\item{session}{[???]\cr
+\href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} session variable for the specific UI module.}
 
-\item{stringsAsFactors}{How to treat strings in application (for shiny internally)}
+\item{stringsAsFactors}{[\code{\link{logical}(1)}]\cr
+How should strings be treated internally?}
 
-\item{feat.object}{The featureObject which will be used to calculate the featureSets.}
+\item{feat.object}{[\code{\link{FeatureObject}}]\cr
+A feature object as created by \code{\link{createFeatureObject}}.}
 }
 \description{
-\code{FeatureSetCalculation} is a Shiny server function which will control all aspects
-of the FeatureSetCalculationComponent UI Module. Will be called with \code{callModule()}
+\code{FeatureSetCalculation} is a \href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} server function
+which will control all aspects of the \code{FeatureSetCalculationComponent}
+UI Module. Will be called with \code{\link[shiny]{callModule}}.
 }
 \details{
-It will take the user input and calculate the selected featureSet. To calculate a featureSet the function needs a flacco featureObject.
+It will take the user input and calculate the selected feature set.
+In order to calculate a feature set, the function needs a \code{\link{FeatureObject}}.
 }

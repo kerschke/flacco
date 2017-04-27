@@ -2,25 +2,32 @@
 % Please edit documentation in R/gui_featureSetVisualization.R
 \name{FeatureSetVisualization}
 \alias{FeatureSetVisualization}
-\title{Shiny server function for FeatureSet Component}
+\title{Shiny Server Function for Feature Set Component}
 \usage{
 FeatureSetVisualization(input, output, session, stringsAsFactors, feat.object)
 }
 \arguments{
-\item{input}{Shiny input variable for the specific UI module}
+\item{input}{[???]\cr
+\href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} input variable for the specific UI module.}
 
-\item{output}{Shiny output variable for the specific UI module}
+\item{output}{[???]\cr
+\href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} output variable for the specific UI module.}
 
-\item{session}{Shiny session variable for the specific UI module}
+\item{session}{[???]\cr
+\href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} session variable for the specific UI module.}
 
-\item{stringsAsFactors}{How to treat strings in application (for shiny internally)}
+\item{stringsAsFactors}{[\code{\link{logical}(1)}]\cr
+How should strings be treated internally?}
 
-\item{feat.object}{The featureObject which will be used to generate the flacco plots.}
+\item{feat.object}{[\code{\link{FeatureObject}}]\cr
+A feature object as created by \code{\link{createFeatureObject}}.}
 }
 \description{
-\code{FeatureSetVisualization} is a Shiny server function which will control all aspects
-of the FeatureSetVisualizationComponent UI Module. Will be called with \code{callModule()}
+\code{FeatureSetVisualization} is a \href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} server function
+which will control all aspects of the \code{FeatureSetVisualizationComponent}
+UI-Module. It will be called with \code{\link[shiny]{callModule}}.
 }
 \details{
-It will take the user input and plot the selected visualization. To create a flacco plot, function needs a flacco featureObject.
+It will take the user input and plot the selected visualization. To create a
+flacco plot, the function needs a \code{\link{FeatureObject}}.
 }

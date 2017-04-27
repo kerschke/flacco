@@ -10,9 +10,8 @@ test_that("Basic FeatureObject ", {
   expect_equal(feat.object$feature.names, setdiff(colnames(iris), "Species"))
   expect_equal(feat.object$objective.name, "Species")
   expect_equal(feat.object$blocks, rep(1L, ncol(iris) - 1L))
-  expect_false(feat.object$allows.cellmapping)
-  expect_null(feat.object$init.grid)
-  expect_null(feat.object$cell.centers)
+  expect_identical(dim(feat.object$init.grid), c(150L, 6L))
+  expect_identical(dim(feat.object$cell.centers), c(1L, 5L))
   expect_identical(feat.object$cell.size, 
     apply(iris[, -5L], 2L, function(x) diff(range(x))))
   expect_equal(feat.object$env$init, iris)
@@ -54,12 +53,16 @@ test_that("Error-Handling", {
   # FeatureObject with differing dimensions for the blocks
   expect_error(createFeatureObject(X = matrix(1L, nrow = 2L, ncol = 3L),
     y = rep(1L, 2L), lower = -1L, upper = 10L, blocks = c(5L, 5L)))
-  
+
+  # FeatureObject with non-positive or non-integerish values for the blocks
+  expect_error(createFeatureObject(X = matrix(1L, nrow = 2L, ncol = 3L),
+    y = rep(1L, 2L), lower = -1L, upper = 10L, blocks = c(5, 4, 3.2)))
+  expect_error(createFeatureObject(X = matrix(1L, nrow = 2L, ncol = 3L),
+    y = rep(1L, 2L), lower = -1L, upper = 10L, blocks = c(0, 4, 3)))
 })
 
 test_that("FeatureObject with enabled Cell-Mapping", {
   feat.object = createFeatureObject(iris, objective = "Species", blocks = 5L)
-  expect_true(feat.object$allows.cellmapping)
   expect_equal(dim(feat.object$init.grid), dim(iris) + c(0L, 1L))
   expect_true(all(feat.object$init.grid$cell.ID <= 5^4))  
 
@@ -106,4 +109,10 @@ test_that("Derive Boundaries from Initial Sample", {
   feat.object3 = createFeatureObject(X = X, y = y, lower = c(-5, 2, 1), upper = 13)
   expect_true(any(feat.object3$lower != ctrl$init_sample.lower))
   expect_true(any(feat.object3$upper != ctrl$init_sample.upper))
+})
+
+
+test_that("Assure that the safety stop works.", {
+  expect_error(createFeatureObject(X = iris[, 1:3], y = iris[,4], blocks = c(20, 45, 30)))
+  expect_class(createFeatureObject(X = iris[, 1:3], y = iris[,4], blocks = c(10, 15, 5)), "FeatureObject")
 })

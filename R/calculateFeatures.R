@@ -213,12 +213,12 @@
 #'       the computation of these features
 #'     }
 #'     \item{\code{bt} -- barrier tree features (90)}:\cr
-#'     Computes barrier tree features on 2D (!) problems, based on a
-#'     Generalized Cell Mapping (GCM) approach. Computations are performed
-#'     based on three different approaches: taking the best (\code{min}) or
-#'     average (\code{mean}) objective value of a cell or the closest
-#'     observation (\code{near}) to a cell as representative. For each of these
-#'     approaches the following 31 features are computed:\cr
+#'     Computes barrier tree features, based on a Generalized Cell Mapping
+#'     (GCM) approach. Computations are performed based on three different
+#'     approaches: taking the best (\code{min}) or average (\code{mean})
+#'     objective value of a cell or the closest observation (\code{near}) to a
+#'     cell as representative. For each of these approaches the following 31
+#'     features are computed:\cr
 #'     \itemize{
 #'       \item{\code{levels}}: absolute number of levels of the barrier tree
 #'       \item{\code{leaves}}: absolute number of leaves (i.e. local optima)
@@ -272,7 +272,7 @@
 #'      function evaluations and runtime (in seconds), which were needed for
 #'      the computation of these features
 #'     }
-#'     \item{\code{basic} -- basic features (16)}:\cr
+#'     \item{\code{basic} -- basic features (15)}:\cr
 #'     Very simple features, which can be read from the feature object (without
 #'     any computational efforts):\cr
 #'     \itemize{
@@ -283,8 +283,7 @@
 #'       and the number of blocks / cells (per dimension)
 #'       \item{\code{cells_{filled, total}}}: number of filled (i.e. non-empty)
 #'       cells and total number of cells
-#'       \item{\code{{allows_cm, minimize_fun}}}: logical values, indicating
-#'       whether this \code{\link{FeatureObject}} allows cell mapping and
+#'       \item{\code{{minimize_fun}}}: logical value, indicating
 #'       whether the optimization function should be minimized
 #'       \item{\code{costs_{fun_evals, runtime}}}: number of (additional)
 #'       function evaluations and runtime (in seconds), which were needed for
@@ -429,7 +428,10 @@
 #'       \item{\code{ela_curv.{delta, eps, zero_tol, r, v}}}: Parameters used
 #'       by \code{\link[numDeriv]{grad}} and \code{\link[numDeriv]{hessian}} within the
 #'       approximation of the gradient and hessian. The default values are
-#'       identical to the ones from the corresponding functions.
+#'       identical to the ones from the corresponding functions. Note that we
+#'       slightly modified \code{\link[numDeriv]{hessian}} in order to assure
+#'       that we do not exceed the boundaries during the estimation of the
+#'       Hessian.
 #'     }
 #'     \item{ELA distribution features}: \itemize{
 #'       \item{\code{ela_distr.smoothing_bandwidth}}: The smoothing bandwidth,
@@ -663,7 +665,7 @@
 #' library(parallelMap)
 #' library(parallel)
 #' n.cores = detectCores()
-#' parallelStart(mode = "multicore", cpus = n.cores,
+#' parallelStart(mode = "socket", cpus = n.cores,
 #'   logging = FALSE, show.info = FALSE)
 #' system.time((levelset.par = calculateFeatureSet(feat.object, "ela_level")))
 #' parallelStop()
@@ -681,20 +683,16 @@ calculateFeatures = function(feat.object, control, ...) {
   prog = control_parameter(control, "show_progress", TRUE)
   subset = control_parameter(control, "subset", possible)
   assertSubset(subset, choices = possible)
-  allow.cellmapping = control_parameter(control, "allow_cellmapping", TRUE)
-  assertLogical(allow.cellmapping)
   allow.costs = control_parameter(control, "allow_costs",
     !is.null(feat.object$fun))
+  allow.cellmapping = control_parameter(control, "allow_cellmapping", TRUE)
   assertLogical(allow.costs)
   blacklist = control_parameter(control, "blacklist", NULL)
-  if (feat.object$dim > 2)
-    blacklist = unique(c(blacklist, "bt"))
+  if (any(feat.object$blocks <= 2)) {
+    blacklist = unique(c(blacklist, "cm_conv"))
+    warning("The 'cm_conv' features were not computed, because not all blocks were greater than 2.")
+  }
   assertSubset(blacklist, choices = possible)
-
-  pure_cm = setdiff(listAvailableFeatureSets(allow.cellmapping = TRUE),
-    listAvailableFeatureSets(allow.cellmapping = FALSE))
-  if (allow.cellmapping && !feat.object$allows.cellmapping && any(pure_cm %in% setdiff(subset, blacklist)))
-    stop ("This feature object does not support cell mapping. You first need to define the number of cells per dimension before computing these features.")
 
   expensive = setdiff(listAvailableFeatureSets(allow.additional_costs = TRUE),
     listAvailableFeatureSets(allow.additional_costs = FALSE))  

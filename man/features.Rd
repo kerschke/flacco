@@ -210,12 +210,12 @@ computation of the ELA local search features) or \code{\link{density}}
       the computation of these features
     }
     \item{\code{bt} -- barrier tree features (90)}:\cr
-    Computes barrier tree features on 2D (!) problems, based on a
-    Generalized Cell Mapping (GCM) approach. Computations are performed
-    based on three different approaches: taking the best (\code{min}) or
-    average (\code{mean}) objective value of a cell or the closest
-    observation (\code{near}) to a cell as representative. For each of these
-    approaches the following 31 features are computed:\cr
+    Computes barrier tree features, based on a Generalized Cell Mapping
+    (GCM) approach. Computations are performed based on three different
+    approaches: taking the best (\code{min}) or average (\code{mean})
+    objective value of a cell or the closest observation (\code{near}) to a
+    cell as representative. For each of these approaches the following 31
+    features are computed:\cr
     \itemize{
       \item{\code{levels}}: absolute number of levels of the barrier tree
       \item{\code{leaves}}: absolute number of leaves (i.e. local optima)
@@ -269,7 +269,7 @@ computation of the ELA local search features) or \code{\link{density}}
      function evaluations and runtime (in seconds), which were needed for
      the computation of these features
     }
-    \item{\code{basic} -- basic features (16)}:\cr
+    \item{\code{basic} -- basic features (15)}:\cr
     Very simple features, which can be read from the feature object (without
     any computational efforts):\cr
     \itemize{
@@ -280,8 +280,7 @@ computation of the ELA local search features) or \code{\link{density}}
       and the number of blocks / cells (per dimension)
       \item{\code{cells_{filled, total}}}: number of filled (i.e. non-empty)
       cells and total number of cells
-      \item{\code{{allows_cm, minimize_fun}}}: logical values, indicating
-      whether this \code{\link{FeatureObject}} allows cell mapping and
+      \item{\code{{minimize_fun}}}: logical value, indicating
       whether the optimization function should be minimized
       \item{\code{costs_{fun_evals, runtime}}}: number of (additional)
       function evaluations and runtime (in seconds), which were needed for
@@ -446,7 +445,10 @@ Note that if you want to speed up the runtime of the features, you might
       \item{\code{ela_curv.{delta, eps, zero_tol, r, v}}}: Parameters used
       by \code{\link[numDeriv]{grad}} and \code{\link[numDeriv]{hessian}} within the
       approximation of the gradient and hessian. The default values are
-      identical to the ones from the corresponding functions.
+      identical to the ones from the corresponding functions. Note that we
+      slightly modified \code{\link[numDeriv]{hessian}} in order to assure
+      that we do not exceed the boundaries during the estimation of the
+      Hessian.
     }
     \item{ELA distribution features}: \itemize{
       \item{\code{ela_distr.smoothing_bandwidth}}: The smoothing bandwidth,
@@ -650,7 +652,7 @@ features.angle = calculateFeatureSet(feat.object, "cm_angle")
 library(parallelMap)
 library(parallel)
 n.cores = detectCores()
-parallelStart(mode = "multicore", cpus = n.cores,
+parallelStart(mode = "socket", cpus = n.cores,
   logging = FALSE, show.info = FALSE)
 system.time((levelset.par = calculateFeatureSet(feat.object, "ela_level")))
 parallelStop()
@@ -687,4 +689,3 @@ system.time((levelset.seq = calculateFeatureSet(feat.object, "ela_level")))}
     (\url{http://dx.doi.org/10.1109/TEVC.2014.2302006}).
   }
 }
-

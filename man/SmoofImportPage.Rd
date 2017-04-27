@@ -2,18 +2,20 @@
 % Please edit documentation in R/gui_SmoofImport.R
 \name{SmoofImportPage}
 \alias{SmoofImportPage}
-\title{Shiny ui-module for Smoof Batch import}
+\title{Shiny UI-Module for Batch Import of Smoof Functions}
 \usage{
 SmoofImportPage(id)
 }
 \arguments{
-\item{id}{ID for the shiny component}
+\item{id}{[\code{\link{character}(1)}]\cr
+Character representing the \code{namespace} of the \href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} component.}
 }
 \description{
-\code{SmoofImportPage} is a shiny ui-component which can be added to your shiny app
-so that you get a Batch import for a specific Smoof function but different parameters
+\code{SmoofImportPage} is a \href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} UI-component which can be
+added to your \href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} app so that you get a batch import for a
+specific \href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} function but different parameters.
 }
 \details{
-It will load a CSV-file with parameters for the smoof function and calculate the selected features
-for the specific function.
+It will load a CSV-file with parameters for the \href{https://CRAN.R-project.org/package=smoof}{\code{smoof}} function
+and calculate the selected features for the specific function.
 }

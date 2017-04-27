@@ -127,7 +127,7 @@ plotInformationContent = function (feat.object, control) {
   max_ic.cex = control_parameter(control, "ic.plot.max_ic.cex", 1L)
   assertNumber(max_ic.cex, lower = 0.1, upper = 10)
   max_ic.pch_col = control_parameter(control, "ic.plot.max_ic.pch_col", "red")
-  points(log10(epsilon[which(H == res$Hmax)]), res$Hmax, pch = max_ic.pch,
+  points(log10(epsilon[which(H == res$Hmax)]), rep(res$Hmax, sum(H == res$Hmax)), pch = max_ic.pch,
     cex = max_ic.cex, col = max_ic.pch_col)
   max_ic.lwd = control_parameter(control, "ic.plot.max_ic.lwd", 1L)
   assertNumber(max_ic.lwd, lower = 0.1, upper = 10)

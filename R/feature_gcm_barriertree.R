@@ -1,17 +1,17 @@
 calculateBarrierTreeFeatures = function (feat.object, control) {
   assertClass(feat.object, "FeatureObject")
-  if (!feat.object$allows.cellmapping)
-    stop ("This feature object does not support cell mapping. You first need to define the number of cells per dimension before computing these features.")
-  if (feat.object$dim != 2)
-    stop("The barrier trees can currently only be computed for 2-dimensional problems!")
   X = extractFeatures(feat.object)
   y = extractObjective(feat.object)
+  if (length(unique(y)) == 1)
+    stop("The landscape is a complete plateau (i.e., all objective values are identical). You can not compute a barrier tree for such a landscape!")
   if (missing(control))
     control = list()
   assertList(control)
   allows.cellmapping = control_parameter(control, "allow_cellmapping", TRUE)
   if (!allows.cellmapping)
     stop("You can not prohibit cell-mapping features and still try to compute them!")
+  if (feat.object$total.cells == 1L)
+    stop("The barrier tree features can't be computed as long as the feature object consists of a single cell!")
 
   approaches = control_parameter(control, "gcm.approaches", c("min", "mean", "near"))
   cf.power = control_parameter(control, "gcm.cf_power", 256L)
@@ -22,13 +22,17 @@ calculateBarrierTreeFeatures = function (feat.object, control) {
     measureTime(expression({
       yvals = getObjectivesByApproach(feat.object, approach)
       yvals[is.infinite(yvals)] = max(yvals[is.finite(yvals)]) * 100
+      ## creates a sparse matrix (m by m, where m is the number of cells),
+      ## which contains the probabilities to move from cell A (row of the
+      ## matrix) to cell B (column of the matrix)
       sparse.matrix = calculateSparseMatrix(feat.object, yvals)
       canonical.list = computeCanonical(sparse.matrix)
       fundamental.list = computeFundamental(
         canonical.list = canonical.list,
         gcm.control = gcm.control)
       barrier.tree = createBarrierTree(feat.object, fundamental.list,
-        canonical.list, yvals, control)
+        canonical.list, yvals = getObjectivesByApproach(feat.object, approach),
+        control)
       feats = computeBarrierTreeFeats(yvals, fundamental.list, barrier.tree, feat.object)
       names(feats) = sprintf("bt.%s.%s", approach, names(feats))
       return(feats)
@@ -39,27 +43,31 @@ calculateBarrierTreeFeatures = function (feat.object, control) {
 
 
 createBarrierTree = function(feat.object, fundamental.list, canonical.list, yvals, control) {
-  # store components of fundamental.list
-  fundamental.mat = fundamental.list$fundamental.mat
+  ## store components of fundamental.list
   permutation.index = fundamental.list$permutation.index
   seq.closed.classes = fundamental.list$seq.closed.classes
   canonical.form = canonical.list$canonical.form
-  finite.values = is.finite(yvals)
+  lsc = length(seq.closed.classes)
 
-  # remove invalid (infinite) values
+  ## store the permutation-index in a matrix in order to keep track of the
+  ## transformations of the permutation index
+  res.table = cbind(p.index = permutation.index,
+    index = seq_along(permutation.index), yvals = yvals[permutation.index])
+
+  ## remove entries that correspond to cells with infinite y-values
+  finite.values = is.finite(res.table[, "yvals"])
   canonical.form = canonical.form[finite.values, finite.values]
-  yvals = yvals[finite.values]
-  permutation.index = permutation.index[finite.values]
+  res.table = res.table[finite.values,]
 
   # Probability of transient to transient state [Q = P(idx(sv+1:end),idx(sv+1:end));]
-  Q = canonical.form[-seq.closed.classes, -seq.closed.classes]
+  Q = canonical.form[-seq.closed.classes, -seq.closed.classes, drop = FALSE]
 
   # Probability of transient to absorbing state [R = P(idx(sv+1:end),idx(1:sv));]
   R = canonical.form[-seq.closed.classes, seq.closed.classes, drop = FALSE]
 
   # Note that the decomposition is not necessarily unique
   # [[L,U] = lu(speye(length(Q)) - Q)]
-  decomp = Matrix::expand(Matrix::lu(diag(nrow(Q)) - Q)) 
+  decomp = Matrix::expand(Matrix::lu(diag(nrow(Q)) - Q))
 
   # L\R [Matlab] <--> solve(L, R) [R]
   LdR = Matrix::solve(decomp$P %*% decomp$L, R)
@@ -68,171 +76,170 @@ createBarrierTree = function(feat.object, fundamental.list, canonical.list, yval
   prob.absorb = as.matrix(Matrix::solve(decomp$U, LdR))
   prob.absorb.orig = prob.absorb
 
-  cells = seq_along(permutation.index)
-  diffs = predecessors = rep(0L, length(permutation.index))
+  ## restrict canonical form to the attractor cells
   canonical.form = canonical.form[seq.closed.classes, seq.closed.classes, drop = FALSE]
 
-  # copy of original yvals for later comparisons
-  yvals.orig = yvals
+  ## look for possible plateaus among attractors
+  key.plateau = rowSums(canonical.form != 0) >= 2L # [ orig: key2 = sum(I~=0,2) >= 2 ]
+  non.zero = lapply(which(key.plateau), function(i) which(canonical.form[i,] != 0))
+  remove.columns = NULL
 
-  # combine columns that belong to the same basins
-  key2 = rowSums(canonical.form != 0) >= 2 # [ orig: key2 = sum(I~=0,2) >= 2 ]
-  non.zero = lapply(which(key2), function(i) which(canonical.form[i,] != 0))
-  for (i in rev(seq_along(non.zero)[-1])) {
-    x = non.zero[[i]]
-    common.basin = vapply(non.zero, function(y) length(intersect(y, x)) > 0, logical(1L))
-    if (any(common.basin[-i])) {
-      non.zero = lapply(seq_along(non.zero), function(j) {
-        if (common.basin[j])
-          return(sort(unique(c(non.zero[[j]], x))))
-        else
-          return(non.zero[[j]])
-      })
-      non.zero[[i]] = NULL
+  ## if there exist plateaus, "merge" them
+  if (length(non.zero) > 0) {
+    for (i in rev(seq_along(non.zero)[-1L])) {
+      x = non.zero[[i]]
+      common.basin = vapply(non.zero, function(y) length(intersect(y, x)) > 0, logical(1L))
+      if (any(common.basin[-i])) {
+        non.zero = lapply(seq_along(non.zero), function(j) {
+          if (common.basin[j])
+            return(sort(unique(c(non.zero[[j]], x))))
+          else
+            return(non.zero[[j]])
+        })
+        non.zero[[i]] = NULL
+      }
     }
-  }
 
-  # Update matrices
-  for (i in seq_along(non.zero)) {
-    canonical.form[, non.zero[[i]][1]] = rowSums(canonical.form[, non.zero[[i]]])
-    prob.absorb[, non.zero[[i]][1]] = rowSums(prob.absorb[, non.zero[[i]]])
-  }
-
-  remove.columns = unique(unlist(lapply(non.zero, function(x) x[-1])))
-  if (length(remove.columns) > 0) {
-    remove.columns = sort(unique(remove.columns)  )
-    canonical.form = canonical.form[-remove.columns , -remove.columns, drop = FALSE]
+    ## Update matrices, i.e., add the probabilites of the columns that belong
+    ## to the same "attractor" within the first cell of that basin and remove
+    ## the remaining columns
+    for (i in seq_along(non.zero)) {
+      canonical.form[, non.zero[[i]][1L]] = rowSums(canonical.form[, non.zero[[i]], drop = FALSE])
+      prob.absorb[, non.zero[[i]][1L]] = rowSums(prob.absorb[, non.zero[[i]], drop = FALSE])
+    }
+    remove.columns = sort(unique(unlist(lapply(non.zero, function(x) x[-1L]))))
+    canonical.form = canonical.form[-remove.columns, -remove.columns, drop = FALSE]
     prob.absorb = prob.absorb[, -remove.columns, drop = FALSE]
   }
+  res.table2 = res.table[-seq.closed.classes,,drop = FALSE]
 
-  is.attr = rowSums(prob.absorb != 0) < 2  # [ orig: key = sum(Apr~=0, 2) < 2 ]
-  prob.absorb = prob.absorb[!is.attr, ]
+  ## initialize cells, diffs and predecessors
+  res.table = cbind(res.table, cells = seq_row(res.table),
+    diffs = 0, predecessors = 0)
 
-  # 'keep' stores the indices of all non-attractor cells
-  keep = sort(permutation.index[length(seq.closed.classes) + which(!is.attr)])
-  #  [ orig: fe([indexPermutation(1:closedClassIndex); indexPermutation(closedClassIndex+find(key ~= 0))]) = []; ]
-  a1 = permutation.index[seq.closed.classes]
-  a2 = na.omit(permutation.index[length(seq.closed.classes) + which(is.attr)])
-  yvals = yvals[-unique(c(a1, a2))]
-
-  # Update permutation.index 
-  if (length(remove.columns) > 0) {
-    permutation.index  = permutation.index[-remove.columns]
+  ## Put all attractors in the buffer and remove those which actually have
+  ## zero-columns
+  if (length(remove.columns) > 0L) {
+    perm.ind.attr = res.table[seq.closed.classes[-remove.columns], "p.index"]
+  } else {
+    perm.ind.attr = res.table[seq.closed.classes, "p.index"]
   }
+  buffer = perm.ind.attr[colSums(canonical.form) != 0L]
 
-  # Put all canonical.form in the buffer    
-  buffer = permutation.index[seq.closed.classes]
-  # remove those which are actually zero-columns
-  buffer = buffer[colSums(canonical.form) != 0]
+  for (i in order(res.table2[, "yvals"])) {
+    ## we are done, once all rows (and thereby transient cells) contain (at
+    ## most) one non-zero probability
+    if (all(rowSums(prob.absorb != 0) <= 1L))
+      break
 
-  # find order
-  yval.order = order(yvals) # [ orig: #   [~, indexPermutation2] = sort(fe); ]
-
-  for (i in yval.order) {
-    # make predecessor graph        
+    ## make predecessor graph;
+    ## start with the (transient) cell that has the lowest y-value
     key3 = which(prob.absorb[i, ] != 0)
-    if (length(key3) <= 1) {
+    if (length(key3) <= 1L) {
+      ## predecessor has to connect at least two basins (!)
       next
     }
 
-    g1 = rowSums(canonical.form[, key3] != 0) > 0 # [ orig: g1 = sum(I(:, key3) ~= 0, 2) > 0; ]
-    g2 = rowSums(prob.absorb[, key3] != 0) > 0 # [ orig: g2 = sum(Apr(:, key3) ~= 0, 2) > 0; ]
-    g  = c(permutation.index[seq_along(g1)][g1], keep[g2])
+    ## which cells lead to the same basins as the current cell
+    g1 = rowSums(canonical.form[, key3] != 0) > 0L # [ orig: g1 = sum(I(:, key3) ~= 0, 2) > 0; ]
+    g2 = rowSums(prob.absorb[, key3] != 0) > 0L # [ orig: g2 = sum(Apr(:, key3) ~= 0, 2) > 0; ]
+    g  = c(perm.ind.attr[g1], res.table2[g2, "p.index"])
 
-    # build intersection to join columns
-    ib = intersect(g, buffer) # [ orig: [ib, ~, ic] = intersect(g, buffer); ]
-    ic = match(ib, buffer) # TODO rename ib (intersection) and ic (indices in ib)
-    predecessors[ib] = keep[i]
-    diffs[ib] = yvals[i] - yvals.orig[ib]
+    ## which cells are already in the buffer (i.e. have no predecessor),
+    ## also belong to the same basins and therefore should be merged
+    ## by the current cell
+    isec = intersect(g, buffer) # [ orig: [ib, ~, ic] = intersect(g, buffer); ]
+    ## i is predecessor of the elements that are in the buffer AND in g
+    indi = which(res.table[, "p.index"] %in% isec)
+    res.table[indi, "predecessors"] = res.table2[i, "p.index"]
+    res.table[indi, "diffs"] = res.table2[i, "yvals"] - res.table[indi, "yvals"]
 
-    buffer = c(buffer[-ic], keep[i])
+    ## remove the cells (from the buffer) which were just merged
+    ## and add the current branching cells
+    buffer = union(setdiff(buffer, isec), res.table2[i, "p.index"])
 
-    # join basins and update indices
-    canonical.form[, key3[1]] = rowSums(canonical.form[, key3]) # join
-    canonical.form = canonical.form[-key3[-1], -key3[-1], drop = FALSE] # remove
-    prob.absorb[ , key3[1]] = rowSums(prob.absorb [ , key3])
-    prob.absorb = prob.absorb[ , -key3[-1], drop = FALSE]
-    permutation.index = permutation.index[-key3[-1]]
-    if (all(rowSums((prob.absorb != 0)) <= 1))
-      break
+    ## join basins
+    canonical.form[, key3[1L]] = rowSums(canonical.form[, key3])
+    canonical.form[, key3[-1L]] = canonical.form[key3[-1L], ] = 0
+    prob.absorb[, key3[1L]] = rowSums(prob.absorb[, key3])
+    prob.absorb[, key3[-1L]] = 0
   }
 
-  root = buffer[1] # the last element in buffer becomes the root of the barrier tree
+  ## the last remaining element in buffer becomes the root of the barrier tree
+  root = buffer[1L]
 
-  # clean up vectors: only remaining elements are those cells which are part of the tree
-  if (sum(predecessors == 0) > 0) {
-    cells = cells[predecessors != 0]
-    diffs = diffs[predecessors != 0]
-    predecessors = predecessors[predecessors != 0]
-  }
+  ## only keep cells which are part of the tree
+  ## (= if NOT ALL elements have a predecessor)
+  rel.ind = sort(union(root, res.table[res.table[, "predecessors"] > 0, "p.index"]))
+  res.table3 = res.table[res.table[, "p.index"] %in% rel.ind,, drop = FALSE]
+  base.value = max(table(res.table3[, "predecessors"]))
 
-  # remove root from cells (otherwise we might have loops)
-  cell.ind = which(cells == root)
-  if (length(cell.ind) > 0) {
-    cells = cells[-cell.ind]
-    predecessors = predecessors[-cell.ind]
-    diffs = diffs[-cell.ind]  
-  }
+  ## remove root from cells
+  root.ind = which(res.table3[, "p.index"] == root)
+  res.table3 = res.table3[-root.ind, , drop = FALSE]
 
-  # initialise BFS
-  next.level = cells[which(predecessors == root)] #children(root)
+  ## initialise BFS
+  next.level = res.table3[which(res.table3[, "predecessors"] == root), "p.index"] #children(root)
 
-  # ugly work-around
-  base = control_parameter(control, "bt.base", 4L)
+  ## ugly work-around
+  bt.base = control_parameter(control, "bt.base", base.value)
   max.depth = control_parameter(control, "bt.max_depth", 16L)
-  max.depth.possible = 1 + floor(length(unique(predecessors)) / 2)
+  max.depth.possible = 1L + floor(length(unique(res.table3[, "predecessors"])) / 2)
   max.depth = min(max.depth, max.depth.possible)
-  tree = rep(NA_integer_, base^max.depth)
-  tree[1] = root
+  tree = rep(NA_integer_, bt.base^max.depth)
+  tree[1L] = root
   max.levels = 0L
-  if (length(next.level) > 0) {
-    tree[1 + seq_along(next.level)] = next.level
+  if (length(next.level) > 0L) {
+    tree[1L + seq_along(next.level)] = next.level
   }
-  while (length(next.level) > 0) {
+  while (length(next.level) > 0L) {
     max.levels = max.levels + 1L
-    # change to next level (BFS)
+    ## change to next level (BFS)
     current.level = next.level
     next.level = NULL
     for (i in current.level) {
-      # append children of this node to the next level (BFS)
-      potential.next.level = cells[which(predecessors == i)]
-      index = yvals.orig[i] > yvals.orig[potential.next.level]
+      ## append children of this node to the next level (BFS)
+      potential.next.level = res.table3[res.table3[, "predecessors"] == i, "p.index"]
+      if (length(potential.next.level) == 0L)
+        next
+      i1 = which(res.table3[, "p.index"] == i)
+      i2 = which(res.table3[, "predecessors"] == i)
+      index = res.table3[i1, "yvals"] > res.table3[i2, "yvals"]
       potential.next.level = potential.next.level[index]
       next.level = c(next.level, potential.next.level)
-      if (any(potential.next.level)) {
+      if (any(index)) {
         old.index = which(tree == i)
-        new.index = (old.index - 1) * base + 1 + seq_along(potential.next.level)
+        new.index = (old.index - 1L) * bt.base + 1L + seq_along(potential.next.level)
         tree[new.index] = potential.next.level
       }
     }
   }
 
-  # 'cells': index of nodes
+  # 'cells': index of nodes (without the root node!)
   # 'predecessors': index of parent nodes
   # 'diffs': differences in y-values
   # 'root': root of barrier tree
   # 'tree.nodes': nodes of the barrier tree
   # 'tree.index': indices of the tree nodes
-  cell.index = which(cells %in% tree)
-  return(list(cells = cells[cell.index],
-    predecessors = predecessors[cell.index],
-    diffs = diffs[cell.index],
-    root = root,
+  return(list(cells = as.integer(res.table3[, "p.index"]),
+    predecessors = as.integer(res.table3[, "predecessors"]),
+    diffs = res.table3[, "diffs"],
+    root = as.integer(root),
     prob.absorb = prob.absorb.orig,
-    tree.nodes = tree[!is.na(tree)],
-    tree.index = which(!is.na(tree)),
-    base = base,
-    max.levels = max.levels)
+    tree.nodes = as.integer(tree[!is.na(tree)]),
+    tree.index = as.integer(which(!is.na(tree))),
+    base = as.integer(bt.base),
+    max.levels = as.integer(max.levels))
   )
 }
 
-# Careful:
-# The matlab code made the assumption that the minimum is a leaf in the lowest
-# level of the tree, thus traversing it from minimum to the root. Example runs
-# showed that this is not necessarily true. While lower values cannot be child
-# nodes of the minimum, they can be child nodes of a sibling. Therefore, rather
-# traverse from the root until there are no further children, using BFS. This
-# is a litte bit more expensive, but probably worth the effort.
+## Careful:
+## The matlab code made the assumption that the minimum is a leaf in the lowest
+## level of the tree, thus traversing it from minimum to the root. Example runs
+## showed that this is not necessarily true. While lower values cannot be child
+## nodes of the minimum, they can be child nodes of a sibling. Therefore, rather
+## traverse from the root until there are no further children, using BFS. This
+## is a litte bit more expensive, but probably worth the effort.
 computeBarrierTreeFeats = function(yvals, fundamental.list, barrier.tree, feat.object) {
   seq.closed.classes = fundamental.list$seq.closed.classes
   permutation.index = fundamental.list$permutation.index
@@ -241,10 +248,12 @@ computeBarrierTreeFeats = function(yvals, fundamental.list, barrier.tree, feat.o
   root = barrier.tree$root
   cells = barrier.tree$cells
   diffs = barrier.tree$diffs
-  base = barrier.tree$base
-  max.node.per.level = cumsum(barrier.tree$base^(0:barrier.tree$max.levels))
-  levels = vapply(barrier.tree$tree.index, function(x)
-    min(which(x <= max.node.per.level)), integer(1L)) - 1L
+  bt.base = barrier.tree$base
+  max.node.per.level = cumsum(bt.base^(0:barrier.tree$max.levels))
+  levels = vapply(barrier.tree$tree.index,
+    function(x) min(which(x <= max.node.per.level)), integer(1L)) - 1L
+  if (length(levels) == 0)
+    levels = 0L
   depth = diff(range(yvals[barrier.tree$tree.nodes]))
 
   # storing depth-features
@@ -252,7 +261,7 @@ computeBarrierTreeFeats = function(yvals, fundamental.list, barrier.tree, feat.o
   feats$levels = max(levels)
   feats$leaves = length(seq.closed.classes)
   feats$depth = depth
-  if (max(levels) != 0)
+  if (max(levels) != 0L)
     feats$depth_levels_ratio = depth / max(levels)
   else
     feats$depth_levels_ratio = NA_real_
@@ -260,7 +269,7 @@ computeBarrierTreeFeats = function(yvals, fundamental.list, barrier.tree, feat.o
   # ratio levels/nodes
   feats$levels_nodes_ratio = max(levels) / length(seq.closed.classes)
 
-  if (length(diffs) > 0) {
+  if (length(levels) > 1L) {
     # location and dispersion of 'weights' (diffs)
     feats$diffs.min = min(diffs)
     feats$diffs.mean = mean(diffs)
@@ -269,9 +278,9 @@ computeBarrierTreeFeats = function(yvals, fundamental.list, barrier.tree, feat.o
     feats$diffs.sd = sd(diffs)
   
     # average diff per level
-    avg.diffs = vapply(unique(levels)[-1], function(lvl) {
+    avg.diffs = vapply(unique(levels)[-1L], function(lvl) {
       x = barrier.tree$tree.nodes[levels == lvl]
-      mean(barrier.tree$diffs[barrier.tree$cells %in% (x)])
+      mean(barrier.tree$diffs[barrier.tree$cells %in% x])
     }, double(1L))
     feats$level_diffs.min = min(avg.diffs)
     feats$level_diffs.mean = mean(avg.diffs)

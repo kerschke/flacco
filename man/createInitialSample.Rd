@@ -54,4 +54,3 @@ X = createInitialSample(200, 3, control = ctrl)
 summary(X)
 
 }
-

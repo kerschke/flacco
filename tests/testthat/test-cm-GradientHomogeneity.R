@@ -112,9 +112,6 @@ test_that("Using Manhattan Distance", {
 
 test_that("Show Error", {
   feat.object = createFeatureObject(init = iris[, -5], 
-    objective = "Sepal.Length")
-  expect_error(calculateFeatureSet(feat.object, "cm_grad"))
-  feat.object = createFeatureObject(init = iris[, -5], 
     objective = "Sepal.Length", blocks = 3L)
   expect_error(calculateFeatureSet(feat.object, "cm_grad",
     control = list(allow_cellmapping = FALSE)))

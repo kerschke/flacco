@@ -7,6 +7,7 @@ Description: Contains tools and features, which can be used for an Exploratory
     global structure, separability, etc., of the optimization problems.
 Authors@R: c(person("Pascal", "Kerschke", role = c("aut", "cre"),
     email = "kerschke@uni-muenster.de"),
+    person("Christian", "Hanster", role = "ctb"),
     person("Jan", "Dagefoerde", role = "ctb"))
 URL: https://github.com/kerschke/flacco
 BugReports: https://github.com/kerschke/flacco/issues
@@ -33,7 +34,6 @@ Suggests:
     plyr,
     RANN,
     rpart,
-    rPython,
     shape,
     shiny,
     smoof,

@@ -57,15 +57,15 @@
 #' @export
 plotBarrierTree2D = function(feat.object, control) {
   assertClass(feat.object, "FeatureObject")
-  if (!feat.object$allows.cellmapping)
-    stop("This feature object does not support cell mapping. You first need to define the number of cells per dimension before computing these features.")
-  if (feat.object$dim != 2)
-    stop("The barrier trees can currently only be visualized for 2-dimensional problems!")
   X = extractFeatures(feat.object)
   y = extractObjective(feat.object)
+  if (length(unique(y)) == 1)
+    stop("The landscape is a complete plateau (i.e., all objective values are identical). You can not plot a barrier tree for such a landscape!")
   if (missing(control))
     control = list()
   assertList(control)
+  blocks = feat.object$blocks
+  assertIntegerish(blocks, lower = 1, len = 2)
 
   approach = control_parameter(control, "gcm.approach", "min")
   assertChoice(approach, choices = c("min", "mean", "near"))
@@ -91,7 +91,6 @@ plotBarrierTree2D = function(feat.object, control) {
   on.exit(par(mar = orig.margins))
   par(mar = control_parameter(control, "bt.margin", c(5, 5, 4, 4)))
 
-  blocks = feat.object$blocks
   yvals[yvals == Inf] = NA_real_
   attr(yvals, "dim") = c(blocks[1], blocks[2])
 

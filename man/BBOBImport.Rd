@@ -7,15 +7,20 @@
 BBOBImport(input, output, session, stringsAsFactors)
 }
 \arguments{
-\item{input}{Shiny input variable for the specific UI module}
+\item{input}{[???]\cr
+\href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} input variable for the specific UI module.}
 
-\item{output}{Shiny output variable for the specific UI module}
+\item{output}{[???]\cr
+\href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} output variable for the specific UI module.}
 
-\item{session}{Shiny session variable for the specific UI module}
+\item{session}{[???]\cr
+\href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} session variable for the specific UI module.}
 
-\item{stringsAsFactors}{How to treat strings in application (for shiny internally)}
+\item{stringsAsFactors}{[\code{\link{logical}(1)}]\cr
+How should strings be treated internally?}
 }
 \description{
-\code{BBOBImport} is a Shiny server function which will control all aspects
-of the BBOBImportPage UI Module. Will be called with \code{callModule()}
+\code{BBOBImport} is a \href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} server function which will
+control all aspects of the \code{\link{BBOBImportPage}} UI Module. It
+will be called with \code{\link[shiny]{callModule}}.
 }

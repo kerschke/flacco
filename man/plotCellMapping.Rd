@@ -90,4 +90,3 @@ plotCellMapping(feat.object)
     (\url{http://dx.doi.org/10.1007/978-3-319-07494-8_9}).
   }
 }
-

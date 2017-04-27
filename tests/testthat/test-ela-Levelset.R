@@ -38,12 +38,20 @@ test_that("Expected Output", {
 
   # (2) compute the levelset features
   features = calculateFeatureSet(feat.object, "ela_level")
+
+  # (3) compute only a single levelset feature
+  features = calculateFeatureSet(feat.object, "ela_level",
+    control = list(ela_level.quantiles = 0.1, ela_level.classif_methods = "lda"))
 })
 
 test_that("Expect Warning", {
   feat.object = createFeatureObject(init = iris[,-5], objective = "Petal.Width")
   expect_warning(calculateFeatureSet(feat.object, "ela_level",
     control = list(ela_level.quantiles = 0.05, ela_level.classif_methods = "lda"))
+  )
+  feat.object = createFeatureObject(X = iris[,1:3], y = iris[,4])
+  expect_warning(calculateFeatureSet(feat.object, "ela_level",
+    control = list(ela_level.quantiles = 0.1, ela_level.classif_methods = "qda"))
   )
 })
 

@@ -12,11 +12,11 @@ test_that("Non-Cellmapping Objects", {
   features = calculateFeatureSet(feat.object, "basic")
 
   # test return value types and ranges
-  expect_identical(length(features), 16L)
+  expect_identical(length(features), 15L)
   expect_list(features)
   expect_identical(as.character(sapply(features, class)),
     c("integer", "integer", rep("numeric", 6L), rep("integer", 4L),
-      rep("logical", 2L), "integer", "numeric"))
+      "logical", "integer", "numeric"))
   expect_identical(features$basic.dim, 5L)
   expect_identical(features$basic.observations, 2000L)
   expect_true(features$basic.lower_min >= -10)
@@ -34,7 +34,6 @@ test_that("Non-Cellmapping Objects", {
   expect_identical(features$basic.cells_total, 1L)
   expect_identical(features$basic.cells_filled, 1L)
 
-  expect_identical(features$basic.allows_cm, FALSE)
   expect_identical(features$basic.minimize_fun, TRUE)
 
   expect_identical(features$basic.costs_fun_evals, 0L)
@@ -53,11 +52,11 @@ test_that("Cellmapping Objects", {
   features = calculateFeatureSet(feat.object, "basic")
 
   # test return value types and ranges
-  expect_equal(length(features), 16L)
+  expect_equal(length(features), 15L)
   expect_list(features)
   expect_equal(as.character(sapply(features, class)),
     c("integer", "integer", rep("numeric", 6L), rep("integer", 4L),
-      rep("logical", 2L), "integer", "numeric"))
+      "logical", "integer", "numeric"))
   expect_identical(features$basic.dim, 5L)
   expect_identical(features$basic.observations, 2000L)
   expect_true(features$basic.lower_min >= -10)
@@ -95,32 +94,28 @@ test_that("Test Basic Features", {
   features4 = calculateFeatureSet(feat.object4, "basic")
 
   # test return value types and ranges
-  expect_equal(length(features1), 16L)
-  expect_equal(length(features2), 16L)
-  expect_equal(length(features3), 16L)
-  expect_equal(length(features4), 16L)
+  expect_equal(length(features1), 15L)
+  expect_equal(length(features2), 15L)
+  expect_equal(length(features3), 15L)
+  expect_equal(length(features4), 15L)
   expect_list(features1)
   expect_list(features2)
   expect_list(features3)
   expect_list(features4)
   expect_equal(as.character(sapply(features1, class)),
     c("integer", "integer", rep("numeric", 6L), rep("integer", 4L),
-      rep("logical", 2L), "integer", "numeric"))
+      "logical", "integer", "numeric"))
   expect_equal(as.character(sapply(features2, class)),
     c("integer", "integer", rep("numeric", 6L), rep("integer", 4L),
-      rep("logical", 2L), "integer", "numeric"))
+      "logical", "integer", "numeric"))
   expect_equal(as.character(sapply(features3, class)),
     c("integer", "integer", rep("numeric", 6L), rep("integer", 4L),
-      rep("logical", 2L), "integer", "numeric"))
+      "logical", "integer", "numeric"))
   expect_equal(as.character(sapply(features4, class)),
     c("integer", "integer", rep("numeric", 6L), rep("integer", 4L),
-      rep("logical", 2L), "integer", "numeric"))
+      "logical", "integer", "numeric"))
   expect_true(features1$basic.minimize_fun)
-  expect_true(!features1$basic.allows_cm)
   expect_true(!features2$basic.minimize_fun)
-  expect_true(!features2$basic.allows_cm)
   expect_true(features3$basic.minimize_fun)
-  expect_true(features3$basic.allows_cm)
   expect_true(!features4$basic.minimize_fun)
-  expect_true(features4$basic.allows_cm)
 })

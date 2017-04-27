@@ -2,16 +2,18 @@
 % Please edit documentation in R/gui_featureSetVisualization.R
 \name{FeatureSetVisualizationComponent}
 \alias{FeatureSetVisualizationComponent}
-\title{Shiny component for visualizing flacco FeatureSets}
+\title{Shiny Component for Visualizing the Feature Sets}
 \usage{
 FeatureSetVisualizationComponent(id)
 }
 \arguments{
-\item{id}{ID for the shiny component}
+\item{id}{[\code{\link{character}(1)}]\cr
+Character representing the \code{namespace} of the \href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} component.}
 }
 \description{
-\code{FeatureSetVisualizationComponent} is a shiny component which can be added to your shiny app
-so that you can display different Feature Set Graphs.
+\code{FeatureSetVisualizationComponent} is a \href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} component
+which can be added to your \href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} app so that you can display
+different feature set plots.
 }
 \details{
 It integrates a select input where the user can select the plot which should be created.

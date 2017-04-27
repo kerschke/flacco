@@ -34,4 +34,3 @@ Lists all available feature sets w.r.t. certain restrictions.
 \examples{
 sets = listAvailableFeatureSets()
 }
-

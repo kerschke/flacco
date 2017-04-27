@@ -2,13 +2,16 @@
 % Please edit documentation in R/runApp.R
 \name{runFlaccoGUI}
 \alias{runFlaccoGUI}
-\title{Run the flacco-GUI based on shiny}
+\title{Run the flacco-GUI based on Shiny}
 \usage{
 runFlaccoGUI()
 }
 \description{
-\code{runFlaccoGUI} starts a shiny application integrating the features of flacco.
+\code{runFlaccoGUI} starts a \href{https://CRAN.R-project.org/package=shiny}{\code{shiny}}
+application, which allows the user to compute the flacco features and also visualize
+the underlying functions.
 }
 \details{
-A shiny application is a web-app which can be accessed through an browser.
+A \href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} application is a web-app
+which can be accessed through a browser.
 }

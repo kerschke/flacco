@@ -2,18 +2,21 @@
 % Please edit documentation in R/gui_BBOBImport.R
 \name{BBOBImportPage}
 \alias{BBOBImportPage}
-\title{Shiny UI-module for BBOB Batch import}
+\title{Shiny UI-Module for Batch Import of BBOB Functions}
 \usage{
 BBOBImportPage(id)
 }
 \arguments{
-\item{id}{ID for the shiny component}
+\item{id}{[\code{\link{character}(1)}]\cr
+Character representing the \code{namespace} of the \href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} component.}
 }
 \description{
-\code{BBOBImportPage} is a shiny component which can be added to your shiny app
-so that you get a Batch import for several BBOB functions.
+\code{BBOBImportPage} is a \href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} component which can be added to
+your \href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} app so that you get a batch import for several BBOB
+functions.
 }
 \details{
-It will load a CSV-file with BBOB parameters and calculate the selected features
-for the specific function.
+It will load a CSV-file with BBOB parameters (the function ID, instance ID and
+problem dimension) and then calculate the selected features for the specific
+function(s).
 }

@@ -2,18 +2,21 @@
 % Please edit documentation in R/gui_featureSetCalculation.R
 \name{FeatureSetCalculationComponent}
 \alias{FeatureSetCalculationComponent}
-\title{Shiny ui-module for calculating and displaying flacco FeatureSets}
+\title{Shiny UI-Module for Calculating and Displaying Feature Sets}
 \usage{
 FeatureSetCalculationComponent(id)
 }
 \arguments{
-\item{id}{ID for the shiny component}
+\item{id}{[\code{\link{character}(1)}]\cr
+Character representing the \code{namespace} of the \href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} component.}
 }
 \description{
-\code{FeatureSetCalculationComponent} is a shiny ui-component which can be added to your shiny app
-so that you can calculate and display different Feature Sets.
+\code{FeatureSetCalculationComponent} is a \href{https://CRAN.R-project.org/package=shiny}{\code{shiny}}
+UI-component which can be added to your \href{https://CRAN.R-project.org/package=shiny}{\code{shiny}} app so
+that you can calculate and display different feature sets.
 }
 \details{
-The component integrates a select-Input for choosing the FeatureSet, which should be calculated and displayed in a table.
-With the download button the calculated features can be exported as CSV-file
+The component integrates a select-Input for choosing the feature set,
+which should be calculated and displayed in a table.
+With the download button the calculated features can be exported as CSV-file.
 }
