@@ -49,6 +49,7 @@ featureObject_sidebar = function(id) {
     shiny::conditionalPanel(
       condition = paste0("input['", ns("function_option"), "'] != 3"),
       shiny::splitLayout(
+
         shiny::numericInput(ns("dimension_size"), label = "Dimensions", value = 1),
         shiny::selectInput(ns("sampletype"), label = "Sample type", choices = c("random","lhs"))
       ),
@@ -198,62 +199,73 @@ functionInput = function(input, output, session, stringsAsFactors) {
       }), "Please insert valid upperbound defintion")
     )
     # get ctrl values for creation of initial Sample
-    ctrl = list(init_sample.type = input$sampletype,
-      init_sample.lower = lowerbound,
-      init_sample.upper = upperbound)
-    X = createInitialSample(n.obs = input$ssize, dim = input$dimension_size, control = ctrl)
-
-    # check if there is a block input
-    if (input$block_input == ""){
+    ctrl=list(init_sample.type = input$sampletype,
+              init_sample.lower = lowerbound,
+              init_sample.upper = upperbound) #get ctrl values for creation of initial Sample
+    X = flacco::createInitialSample(n.obs = input$ssize, dim = input$dimension_size, control=ctrl)
+    params <- list()
+    for (i in 1:input$dimension_size)
+    {
+      params[[i]] <- makeNumericParam(paste("x",i,sep=''), lower=lowerbound[1], upper = upperbound[1])
+    }
+    print(params)
+    #check if there is a block input
+    if (input$block_input==""){
       # validate if the function the user has put in can be evaluated by R
       shiny::validate(
-        shiny::need(try({
-          f = eval(parse(text = paste("function(x) ", input$function_input)))
-        }), "Please insert a valid function") %then%
-        shiny::need(try({
-          feat.object = createFeatureObject(X = X, fun = f)
-        }), "Please insert a valid function")
+        shiny::need(try( 
+          f <- eval(parse(text=paste("function(x) ",input$function_input)))
+          ), "Please insert a valid function") %then%
+        shiny::need(try(
+          fun <- smoof::makeSingleObjectiveFunction(name = input$function_input, fn = f, par.set = makeParamSet(params = params))
+          ), "Please insert a valid function") %then%
+        shiny::need(try(
+          feat.object <- flacco::createFeatureObject(X = X, fun = fun)
+          ), "Please insert a valid function")
       )
+      
     } else {
       shiny::validate(
-        shiny::need(try({
-          f = eval(parse(text = paste("function(x) ", input$function_input)))
-        }), "Please insert a valid function") %then%
-        shiny::need(try({
-          blocks = eval(parse(text = paste("c(", input$block_input, ")")))
-        }), "Please insert valid block defintion") %then%
+        shiny::need(try( 
+          f <- eval(parse(text=paste("function(x) ",input$function_input)))
+          ), "Please insert a valid function") %then%
+        shiny::need(try( 
+          blocks <- eval(parse(text=paste("c(",input$block_input,")")))
+          ), "Please insert valid block defintion") %then%
         shiny::need(max(input$dimension_size^blocks) <= 10000, "Block value in combination with the dimensions is too high!") %then%
-        shiny::need(try({
-          feat.object = createFeatureObject(X = X, fun = f, blocks = blocks)
-        }), "Please insert a valid function")
+        shiny::need(try(
+          fun <- smoof::makeSingleObjectiveFunction(name = input$function_input, fn = f, par.set = makeParamSet(params = params))
+          ), "Please insert a valid function") %then%
+        shiny::need(try(
+          feat.object <- flacco::createFeatureObject(X = X, fun = fun, blocks=blocks)
+          ), "Please insert a valid function")
       )
     }
     feat.object
   })
 
-  # function for controlling the file input app
-  createFeatures_import = shiny::reactive({
-    # load values from uploaded file
-    importdata = utils::read.csv(input$import_file$datapath)
-    # check if input for blocks is available
-    if (input$block_input != "") {
-      # validate the input for block
-      shiny::validate(
-        shiny::need(try({
-          blocks = eval(parse(text = paste("c(", input$block_input, ")")))
-        }), "Please insert valid block defintion") %then%
-        shiny::need(max(ncol(importdata)^blocks) <= 10000, "Block value in combination with the dimensions is too high!") %then%
-        shiny::need(try({feat.object = createFeatureObject(
-          X = data.frame(importdata[, -ncol(importdata)]),
-          y = importdata[, ncol(importdata)],
-          blocks = blocks)
-        }), "Please insert valid funciton values")
-      )
-    } else {
-      feat.object = createFeatureObject(X = data.frame(importdata[, -ncol(importdata)]), y = importdata[, 2L])
-    }
-    feat.object
-  })
+
+    #function for controlling the file input app
+    createFeatures_import <- shiny::reactive({
+      importdata <- utils::read.csv(input$import_file$datapath) #load values from uploaded file
+      #y <- apply(X, 1, eval(parse(text=paste("function(x) ",input$function_input))))
+      if (input$block_input!=""){ #check if input for blocks is available
+        #validate the input for block
+        shiny::validate(
+          shiny::need(try( 
+            blocks <- eval(parse(text=paste("c(",input$block_input,")")))
+            ), "Please insert valid block defintion") %then%
+          shiny::need(max(ncol(importdata)^blocks) <= 10000, "Block value in combination with the dimensions is too high!") %then%
+          shiny::need(try(
+            feat.object <- flacco::createFeatureObject(X = data.frame(importdata[,-ncol(importdata)]), y = importdata[,ncol(importdata)], blocks=blocks)
+            ), "Please insert valid funciton values")
+        )
+      } else {
+        feat.object <- flacco::createFeatureObject(X = data.frame(importdata[,-ncol(importdata)]), y = importdata[,2])
+      }
+      feat.object
+    })
+
 
   featureObject = shiny::reactive({
     if (input$function_option == 1) {
