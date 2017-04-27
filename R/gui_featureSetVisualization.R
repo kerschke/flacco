@@ -94,6 +94,7 @@ FeatureSetVisualization <- function(input, output, session, stringsAsFactors, fe
     content = function(file) {
       grDevices::png(file)
       plotflaccoVisualization()
+      grDevices::dev.off()
     },
     contentType = "image/png")
 }
