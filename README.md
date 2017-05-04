@@ -3,7 +3,7 @@ flacco: Feature-Based Landscape Analysis of Continuous and Constraint Optimizati
 
 [![CRAN Status Badge](http://www.r-pkg.org/badges/version/flacco)](https://cran.r-project.org/package=flacco)
 [![GitHub Status Badge](https://img.shields.io/badge/GitHub-1.6-green.svg)](https://github.com/kerschke/flacco)
-[![CRAN Downloads](http://cranlogs.r-pkg.org/badges/flacco)](http://cran.rstudio.com/web/packages/flacco/index.html)
+[![CRAN Downloads](http://cranlogs.r-pkg.org/badges/flacco)](https://cran.r-project.org/package=flacco)
 [![Tutorial](https://img.shields.io/badge/tutorial-flacco-ff69b5.svg)](http://kerschke.github.io/flacco-tutorial/site/)
 [![Web-GUI](https://img.shields.io/badge/GUI-flacco-bb6fbf.svg)](https://flaccogui.shinyapps.io/flaccogui/)
 
