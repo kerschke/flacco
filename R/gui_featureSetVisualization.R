@@ -105,6 +105,7 @@ FeatureSetVisualization = function(input, output, session, stringsAsFactors, fea
       ps$pars[[1]]$upper = feat.obj$upper
       attr(foo, "par.set") = ps
       return(smoof::plot3D(x = foo, render.levels = TRUE))
+      # return(smoof::plot3D(x = foo, package = "plotly"))
     }
   })
 
