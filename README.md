@@ -1,7 +1,7 @@
 flacco: Feature-Based Landscape Analysis of Continuous and Constraint Optimization Problems
 ===========================================================================================
 
-[![CRAN Status Badge](http://www.r-pkg.org/badges/version/flacco)](http://cran.r-project.org/web/packages/flacco)
+[![CRAN Status Badge](http://www.r-pkg.org/badges/version/flacco)](https://cran.r-project.org/package=flacco)
 [![GitHub Status Badge](https://img.shields.io/badge/GitHub-1.6-green.svg)](https://github.com/kerschke/flacco)
 [![CRAN Downloads](http://cranlogs.r-pkg.org/badges/flacco)](http://cran.rstudio.com/web/packages/flacco/index.html)
 [![Tutorial](https://img.shields.io/badge/tutorial-flacco-ff69b5.svg)](http://kerschke.github.io/flacco-tutorial/site/)
@@ -22,7 +22,7 @@ It allows the user to quantify characteristics of an (unknown) optimization prob
 
 Features, which used to be spread over different packages and platforms (R, Matlab, python, etc.), are now combined within this single package. Amongst others, this package contains feature sets, such as *ELA*, *Information Content*, *Dispersion*, *(General) Cell Mapping* or *Barrier Trees*.
 
-Furthermore, the package provides a unified interface for all features -- using a so-called *feature object* and (if required) *control* arguments. In total, the current release (1.4) consists of 17 different feature sets, which sum up to approximately 300 features.
+Furthermore, the package provides a unified interface for all features -- using a so-called *feature object* and (if required) *control* arguments. In total, the current release (1.5) consists of 17 different feature sets, which sum up to approximately 300 features.
 
 In addition to the features themselves, this package also provides visualizations, e.g. of the cell mappings, barrier trees or information content:
 
@@ -49,7 +49,7 @@ If you want to get started quickly, have a look at the [flacco tutorial](http://
 library(flacco)
 
 ## (1) Create some example-data
-X = createInitialDesign(n.obs = 500, dim = 2)
+X = createInitialSample(n.obs = 500, dim = 2)
 f = function(x) sum(sin(x) * x^2 + (x - 0.5)^3)
 y = apply(X, 1, f)
 
@@ -69,7 +69,11 @@ featureSet = calculateFeatureSet(feat.object, set = "ela_meta")
 Installation Instructions
 -------------------------
 
-* If you want to use the version from CRAN, you should download it from [here](https://cran.r-project.org/web/packages/flacco/).
+* If you want to use the version from CRAN, you should download it from [here](https://cran.r-project.org/package=flacco) and ideally install it along with all its dependencies:
+    ```splus
+    install.packages("flacco", dependencies = TRUE)
+    ```
+
 * However, if you want to use the development version, you can download it with the following command:
 
     ```splus
