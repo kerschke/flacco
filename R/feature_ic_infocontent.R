@@ -7,12 +7,13 @@ calculateInformationContentFeatures = function(feat.object, control) {
     res = computeInfoContentStatistics(feat.object, control)
     # h.max = "maximum information content" - cf. equation (5)
     # eps.s = "settling sensitivity" - cf. equation (6)
-    # eps.max (created due to a comment from Mario Munoz)
+    # eps.max (created due to a comment from Mario Andres Munoz), this
+    # is the epsilon which holds H(epsilon_max) = h.max
     # eps.ratio = "half partial information sensitivity" - cf. equation (8)
     # M0 = "initial partial information" - cf. equation (7)
     return(list(ic.h.max = res$Hmax,
       ic.eps.s = res$eps.S,
-      ic.eps.max = log10(max(res$eps)),
+      ic.eps.max = res$eps.max,
       ic.eps.ratio = res$eps05,
       ic.m0 = res$M0
     ))
@@ -140,7 +141,7 @@ computeInfoContentStatistics = function(feat.object, control) {
   eps05 = ifelse(length(eps05) > 0, log10(max(epsilon[eps05])), NA_real_)
 
   return(list(H = H, M = M, eps = epsilon, eps05 = eps05, eps.S = eps.S,
-    M0 = M0, Hmax = max(H)))
+    M0 = M0, Hmax = max(H), eps.max = median(epsilon[H == max(H)])))
 }
 
 ## initialization of Latin-Hypercube-Sample:

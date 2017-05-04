@@ -1,3 +1,9 @@
+flacco_1.6:
+- flaccoGUI:
+-- fixed a bug, which ignored the boundaries of the feature object when plotting the functional, contour or surface plot
+- information content features:
+-- fixed a bug, which returned a useless value for eps.max (it used to return the maximum of the considered epsilon-values)
+
 flacco_1.5:
 - barrier trees:
 -- fixed the problems which limited the bt features to 2D

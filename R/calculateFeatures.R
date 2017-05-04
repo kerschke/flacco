@@ -263,7 +263,8 @@
 #'      epsilon for which the sequence nearly consists of zeros only, cf.
 #'      equation (6)
 #'      \item{\code{eps.max}}: similar to \code{eps.s}, but in contrast to the
-#'      former \code{eps.max} guarantees non-missing values
+#'      former \code{eps.max} guarantees non-missing values; this simply is the
+#'      epsilon-value for which H(\code{eps.max}) == \code{h.max}
 #'      \item{\code{eps.ratio}}: \dQuote{ratio of partial information
 #'      sensitivity}, cf. equation (8), where the ratio is \code{0.5}
 #'      \item{\code{m0}}: \dQuote{initial partial information}, cf. equation

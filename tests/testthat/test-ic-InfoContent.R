@@ -10,7 +10,7 @@ testICFeatures = function(features, eps) {
   expect_true(testNumber(features$ic.eps.s, na.ok = TRUE,
     lower = min(eps), upper = max(eps)))
   expect_true(features$ic.eps.s %in% c(eps, NA_real_))
-  expect_true(testNumber(features$ic.eps.max, na.ok = FALSE,
+  expect_true(testNumber(log10(features$ic.eps.max), na.ok = FALSE,
     lower = min(eps), upper = max(eps)))
   expect_true(testNumber(features$ic.m0, na.ok = FALSE, lower = 0, upper = 1))
   expect_true( testNumber(features$ic.eps.ratio, na.ok = TRUE,

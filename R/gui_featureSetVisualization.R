@@ -86,13 +86,25 @@ FeatureSetVisualization = function(input, output, session, stringsAsFactors, fea
         control = list(ic.plot.xlim = c(input$ic_xlim_low, input$ic_xlim_up),
           ic.epsilon = c(0, 10^seq(input$ic_xlim_low, input$ic_xlim_up, length.out = 1000)))))
     } else if (input$visualization_method == 5) {
+      feat.obj = feat.object()
+      foo = feat.obj$fun
+      ps = ParamHelpers::getParamSet(foo)
+      ps$pars[[1]]$lower = feat.obj$lower
+      ps$pars[[1]]$upper = feat.obj$upper
+      attr(foo, "par.set") = ps
       if (feat.object()$dim == 1) {
-        return(smoof::plot1DNumeric(x = feat.object()$fun, render.levels = TRUE))
+        return(smoof::plot1DNumeric(x = foo, render.levels = TRUE))
       } else if (feat.object()$dim == 2) {
-        return(smoof::plot2DNumeric(x = feat.object()$fun, render.levels = TRUE))
+        return(smoof::plot2DNumeric(x = foo, render.levels = TRUE))
       }
     } else if (input$visualization_method == 6) {
-      return(smoof::plot3D(x = feat.object()$fun, render.levels = TRUE))
+      feat.obj = feat.object()
+      foo = feat.obj$fun
+      ps = ParamHelpers::getParamSet(foo)
+      ps$pars[[1]]$lower = feat.obj$lower
+      ps$pars[[1]]$upper = feat.obj$upper
+      attr(foo, "par.set") = ps
+      return(smoof::plot3D(x = foo, render.levels = TRUE))
     }
   })
 

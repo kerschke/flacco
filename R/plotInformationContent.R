@@ -112,7 +112,7 @@ plotInformationContent = function (feat.object, control) {
   ic.ylim = control_parameter(control, "ic.plot.ylim", range(H))
   ic.las = control_parameter(control, "ic.plot.las", 1L)
   ic.lty = control_parameter(control, "ic.plot.ic.lty", 1L)
-  checkLty(ic.lty)
+  ic.lty = checkLty(ic.lty)
   ic.lwd = control_parameter(control, "ic.plot.ic.lwd", 1L)
   assertNumber(ic.lwd, lower = 0.1, upper = 10)
   ic.line_col = control_parameter(control, "ic.plot.ic.line_col", "red")
@@ -121,19 +121,21 @@ plotInformationContent = function (feat.object, control) {
 
   # Maximum Information Content H_max
   max_ic.lty = control_parameter(control, "ic.plot.max_ic.lty", 4L)
-  checkLty(max_ic.lty)
+  max_ic.lty = checkLty(max_ic.lty)
   max_ic.pch = control_parameter(control, "ic.plot.max_ic.pch", 1L)
   checkPch(max_ic.pch)
   max_ic.cex = control_parameter(control, "ic.plot.max_ic.cex", 1L)
   assertNumber(max_ic.cex, lower = 0.1, upper = 10)
   max_ic.pch_col = control_parameter(control, "ic.plot.max_ic.pch_col", "red")
-  points(log10(epsilon[which(H == res$Hmax)]), rep(res$Hmax, sum(H == res$Hmax)), pch = max_ic.pch,
+  points(log10(res$eps.max), res$Hmax, pch = max_ic.pch,
     cex = max_ic.cex, col = max_ic.pch_col)
   max_ic.lwd = control_parameter(control, "ic.plot.max_ic.lwd", 1L)
   assertNumber(max_ic.lwd, lower = 0.1, upper = 10)
   max_ic.line_col = control_parameter(control, "ic.plot.max_ic.line_col", "red")
-  abline(v = log10(epsilon[which(H == res$Hmax)]), lty = max_ic.lty,
+  abline(v = log10(res$eps.max), lty = max_ic.lty,
     lwd = max_ic.lwd, col = max_ic.line_col)
+  text(x = log10(res$eps.max), y = 0, labels = expression(epsilon[max]), pos = 2L,
+    col = max_ic.line_col)
 
   # Settling Sensitivity epsilon_s
   settl.pch = control_parameter(control, "ic.plot.settl_sens.pch", 0L)
@@ -150,7 +152,7 @@ plotInformationContent = function (feat.object, control) {
     # M(epsilon)
     ylab = expression(H(epsilon) * "  &  " * M(epsilon))
     partial_ic.lty = control_parameter(control, "ic.plot.partial_ic.lty", 2L)
-    checkLty(partial_ic.lty)
+    partial_ic.lty = checkLty(partial_ic.lty)
     partial_ic.line_col = control_parameter(control, "ic.plot.partial_ic.line_col", "blue")
     partial_ic.lwd = control_parameter(control, "ic.plot.partial_ic.lwd", 1L)
     assertNumber(partial_ic.lwd, lower = 0.1, upper = 10)
@@ -176,7 +178,7 @@ plotInformationContent = function (feat.object, control) {
     points(res$eps05, M[max(which(M > inf.sens * res$M0))],
       pch = half_partial.pch, cex = half_partial.cex, col = half_partial.pch_col)
     half_partial.lty_v = control_parameter(control, "ic.plot.half_partial.lty_v", 3L)
-    checkLty(half_partial.lty_v)
+    half_partial.lty_v = checkLty(half_partial.lty_v)
     half_partial.line_col_v =
       control_parameter(control, "ic.plot.half_partial.line_col_v", "darkgreen")
     half_partial.lwd_v = control_parameter(control, "ic.plot.half_partial.lwd_v", 1L)
@@ -184,7 +186,7 @@ plotInformationContent = function (feat.object, control) {
     abline(v = res$eps05, lty = half_partial.lty_v, lwd = half_partial.lwd_v,
       col = half_partial.line_col_v)
     half_partial.lty_h = control_parameter(control, "ic.plot.half_partial.lty_h", 3L)
-    checkLty(half_partial.lty_h)
+    half_partial.lty_h = checkLty(half_partial.lty_h)
     half_partial.line_col_h =
       control_parameter(control, "ic.plot.half_partial.line_col_h", "darkgreen")
     half_partial.lwd_h = control_parameter(control, "ic.plot.half_partial.lwd_h", 1L)
@@ -216,21 +218,25 @@ plotInformationContent = function (feat.object, control) {
   if (partial.ic) {
     legend.descr = control_parameter(control, "ic.plot.legend_descr",
       c(expression(H(epsilon)), expression(M(epsilon)), expression(H[max]),
-        expression(epsilon[s]), expression(M[0]), expression(epsilon[ratio])))
+        expression(epsilon[max]), expression(epsilon[s]), expression(M[0]),
+        expression(epsilon[ratio])))
     legend.points = control_parameter(control, "ic.plot.legend_points",
-      c(NA_integer_, NA_integer_, max_ic.pch, settl.pch, partial_ic.pch, half_partial.pch))
+      c(NA_integer_, NA_integer_, max_ic.pch, NA_integer_, settl.pch,
+        partial_ic.pch, half_partial.pch))
     legend.lines = control_parameter(control, "ic.plot.legend_lines",
-      c(ic.lty, partial_ic.lty, NA_integer_, NA_integer_, NA_integer_, NA_integer_))
-    legend.col = c(ic.line_col, partial_ic.line_col, max_ic.pch_col, settl.col,
-      partial_ic.pch_col, half_partial.pch_col)
+      c(ic.lty, partial_ic.lty, NA_integer_, max_ic.lty, NA_integer_,
+        NA_integer_, NA_integer_))
+    legend.col = c(ic.line_col, partial_ic.line_col, max_ic.pch_col,
+      max_ic.line_col, settl.col, partial_ic.pch_col, half_partial.pch_col)
   } else {
     legend.descr = control_parameter(control, "ic.plot.legend_descr",
-      c(expression(H(epsilon)), expression(H[max]), expression(epsilon[s])))
+      c(expression(H(epsilon)), expression(H[max]), expression(epsilon[max]),
+        expression(epsilon[s])))
     legend.points = control_parameter(control, "ic.plot.legend_points",
-      c(NA_integer_, max_ic.pch, settl.pch))
+      c(NA_integer_, max_ic.pch, NA_integer_, settl.pch))
     legend.lines = control_parameter(control, "ic.plot.legend_lines",
-      c(ic.lty, NA_integer_, NA_integer_))
-    legend.col = c(ic.line_col, max_ic.pch_col, settl.col)
+      c(ic.lty, NA_integer_, max_ic.lty, NA_integer_))
+    legend.col = c(ic.line_col, max_ic.pch_col, max_ic.line_col, settl.col)
   }
   legend.location = control_parameter(control, "ic.plot.legend_location", "topright")
 
@@ -251,8 +257,10 @@ checkLty = function(arg) {
   if (is.character(arg)) {
     assertChoice(x = arg, choices = c("blank", "solid", "dashed", "dotted",
       "dotdash", "longdash", "twodash"))
+    return(arg)
   } else {
     assertIntegerish(arg, lower = 0L, upper = 6L)
+    return(c("blank", "solid", "dashed", "dotted", "dotdash", "longdash", "twodash")[arg + 1L])
   }
 }
 
