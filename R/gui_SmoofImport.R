@@ -21,7 +21,7 @@ SmoofImportPage = function(id) {
       shiny::selectInput(ns("smoof_import_function"), label = "Function name",
         choices = smoof::filterFunctionsByTags("single-objective")),
       shiny::selectInput(ns("smoof_import_featureSet"), label = "Feature Set",
-        choices = listAvailableFeatureSets()),
+        choices = c("all Features", listAvailableFeatureSets()), selected = "cm_angle"),
       shiny::textInput(ns("smoof_block_input"), label = "Blocks (comma sperated per dimension)", value = 2),
       shiny::sliderInput(ns("smoof_ssize"), "Sample size", min = 10, max = 5000, value = 100),
       shiny::downloadButton(ns('smoof_import_downloadData'), 'Download')
@@ -71,9 +71,15 @@ SmoofImport = function(input, output, session, stringsAsFactors) {
           feat.object = createFeatureObject(X = X, y = y, fun = f)
         }
         # calculate the features
-        features_l = data.frame(dim = importdata[i, 1L], rep = r,
-          calculateFeatureSet(feat.object, set = input$smoof_import_featureSet,
-            control = list(ela_curv.sample_size = min(200L, feat.object$n.obs))))
+        if (input$smoof_import_featureSet == "all Features") {
+          features_l = data.frame(dim = importdata[i, 1L], rep = r,
+            calculateFeatures(feat.object,
+              control = list(ela_curv.sample_size = min(200L, feat.object$n.obs))))
+        } else {
+          features_l = data.frame(dim = importdata[i, 1L], rep = r,
+            calculateFeatureSet(feat.object, set = input$smoof_import_featureSet,
+              control = list(ela_curv.sample_size = min(200L, feat.object$n.obs))))
+        }
         features = rbind(features, features_l)
       }
     }
