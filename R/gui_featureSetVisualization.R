@@ -142,7 +142,7 @@ FeatureSetVisualization = function(input, output, session, stringsAsFactors, fea
         return(foo(df.row))
       }))
       g = ggplot2::ggplot(data = df, ggplot2::aes(x = df[,1], y = df[,2]))
-      g = + ggplot2::geom_line()
+      g = g + ggplot2::geom_line()
       g = g + ggplot2::xlab(ps$pars[[1]]$id)
       g = g + ggplot2::ylab("y")
       g = g + ggplot2::ggtitle(smoof::getName(foo))
