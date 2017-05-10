@@ -102,7 +102,7 @@ FeatureSetVisualization = function(input, output, session, stringsAsFactors, fea
 
   plotlyflaccoVisualization = shiny::reactive({
     feat.obj = feat.object()
-    length.out = 150L
+    length.out = 100L
     foo = feat.obj$fun
     ps = ParamHelpers::getParamSet(foo)
     ps$pars[[1]]$lower = feat.obj$lower
