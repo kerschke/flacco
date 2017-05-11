@@ -61,7 +61,7 @@ selectMax = function(x, tie.breaker = "sample") {
 }
 
 normalizeVector = function(x) {
-  x / sqrt(crossprod(x, x))
+  x / sqrt(sum(x^2L))
 }
 
 extractFeatures = function(feat.object) {
