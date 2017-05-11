@@ -16,3 +16,4 @@ solvers
 ^man-roxygen
 ^todos
 ^images
+^inst\flaccogui\rsconnect

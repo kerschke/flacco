@@ -5,7 +5,7 @@ flacco: Feature-Based Landscape Analysis of Continuous and Constraint Optimizati
 [![GitHub Status Badge](https://img.shields.io/badge/GitHub-1.6-green.svg)](https://github.com/kerschke/flacco)
 [![CRAN Downloads](http://cranlogs.r-pkg.org/badges/flacco)](https://cran.r-project.org/package=flacco)
 [![Tutorial](https://img.shields.io/badge/tutorial-flacco-ff69b5.svg)](http://kerschke.github.io/flacco-tutorial/site/)
-[![Web-GUI](https://img.shields.io/badge/GUI-flacco-bb6fbf.svg)](https://flaccogui.shinyapps.io/flaccogui/)
+[![Web-GUI](https://img.shields.io/badge/GUI-flacco-bb6fbf.svg)](https://flacco.shinyapps.io/flacco/)
 
 [![Build Status](https://travis-ci.org/kerschke/flacco.svg?branch=master)](https://travis-ci.org/kerschke/flacco)
 [![Build status](https://ci.appveyor.com/api/projects/status/cd170v2xlpw8db47/branch/master?svg=true)](https://ci.appveyor.com/project/kerschke/flacco/branch/master)
@@ -84,7 +84,7 @@ Installation Instructions
 flacco-GUI
 ----------
 
-We have started to implement a graphical user interface (GUI) for our package. Its online-version is hosted [here](https://flaccogui.shinyapps.io/flaccogui/).
+We have started to implement a graphical user interface (GUI) for our package. Its online-version is hosted [here](https://flacco.shinyapps.io/flacco/).
 
 Alternatively, you can start it from within R:
 
@@ -97,6 +97,7 @@ runFlaccoGUI()
 News
 ----
 
+* May 11, 2017: flacco 1.6 has been submitted to CRAN.
 * April 28, 2017: flacco 1.5 (including its GUI) has been submitted to CRAN.
 * February 27, 2017: flacco 1.4 has been submitted to CRAN.
 * April 15, 2016: flacco 1.3 has been submitted to CRAN.
