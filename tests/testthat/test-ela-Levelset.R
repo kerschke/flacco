@@ -1,3 +1,4 @@
+library(mlr)
 context("Features: ELA - Levelset")
 
 checkLevelOutput = function(features) {

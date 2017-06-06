@@ -1,3 +1,4 @@
+library(mlr)
 context("Calculate All Features")
 
 test_that("Non-Cellmapping Objects", {
