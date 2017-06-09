@@ -2,8 +2,9 @@ flacco: Feature-Based Landscape Analysis of Continuous and Constraint Optimizati
 ===========================================================================================
 
 [![CRAN Status Badge](http://www.r-pkg.org/badges/version/flacco)](https://cran.r-project.org/package=flacco)
-[![GitHub Status Badge](https://img.shields.io/badge/GitHub-1.6-green.svg)](https://github.com/kerschke/flacco)
+[![GitHub Status Badge](https://img.shields.io/badge/GitHub-1.7-green.svg)](https://github.com/kerschke/flacco)
 [![CRAN Downloads](http://cranlogs.r-pkg.org/badges/flacco)](https://cran.r-project.org/package=flacco)
+[![Research software impact](http://depsy.org/api/package/cran/flacco/badge.svg)](http://depsy.org/package/r/flacco)
 [![Tutorial](https://img.shields.io/badge/tutorial-flacco-ff69b5.svg)](http://kerschke.github.io/flacco-tutorial/site/)
 [![Web-GUI](https://img.shields.io/badge/GUI-flacco-bb6fbf.svg)](https://flacco.shinyapps.io/flacco/)
 
@@ -22,7 +23,7 @@ It allows the user to quantify characteristics of an (unknown) optimization prob
 
 Features, which used to be spread over different packages and platforms (R, Matlab, python, etc.), are now combined within this single package. Amongst others, this package contains feature sets, such as *ELA*, *Information Content*, *Dispersion*, *(General) Cell Mapping* or *Barrier Trees*.
 
-Furthermore, the package provides a unified interface for all features -- using a so-called *feature object* and (if required) *control* arguments. In total, the current release (1.5) consists of 17 different feature sets, which sum up to approximately 300 features.
+Furthermore, the package provides a unified interface for all features -- using a so-called *feature object* and (if required) *control* arguments. In total, the current release (1.6) consists of 17 different feature sets, which sum up to approximately 300 features.
 
 In addition to the features themselves, this package also provides visualizations, e.g. of the cell mappings, barrier trees or information content:
 
@@ -97,6 +98,7 @@ runFlaccoGUI()
 News
 ----
 
+* June 09, 2017: started using [pkgdown](https://github.com/hadley/pkgdown) and [depsy](https://github.com/Impactstory/depsy).
 * May 11, 2017: flacco 1.6 has been submitted to CRAN.
 * April 28, 2017: flacco 1.5 (including its GUI) has been submitted to CRAN.
 * February 27, 2017: flacco 1.4 has been submitted to CRAN.
