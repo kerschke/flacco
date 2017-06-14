@@ -62,7 +62,7 @@
 #' feat.object3
 #'
 #' # (3) now, one could calculate features
-#' calculateFeatureSet(feat.object1, "cm_conv", control = list(cm_conv.diag = TRUE))
+#' calculateFeatureSet(feat.object1, "ela_meta")
 #' calculateFeatureSet(feat.object2, "cm_grad")
 #' library(plyr)
 #' calculateFeatureSet(feat.object3, "cm_angle", control = list(cm_angle.show_warnings = FALSE))
