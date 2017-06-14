@@ -1,3 +1,7 @@
+flacco_1.7:
+- use pkgdown and depsy
+- provide a package vignette
+
 flacco_1.6:
 - flaccoGUI:
 -- fixed a bug, which ignored the boundaries of the feature object when plotting the functional, contour or surface plot

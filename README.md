@@ -98,6 +98,7 @@ runFlaccoGUI()
 News
 ----
 
+* June 14, 2017: flacco 1.7 has been submitted to CRAN.
 * June 09, 2017: started using [pkgdown](https://github.com/hadley/pkgdown) and [depsy](https://github.com/Impactstory/depsy).
 * May 11, 2017: flacco 1.6 has been submitted to CRAN.
 * April 28, 2017: flacco 1.5 (including its GUI) has been submitted to CRAN.
