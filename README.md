@@ -98,15 +98,15 @@ runFlaccoGUI()
 News
 ----
 
-* July 15, 2017: Presented *flacco* (including the GUI) twice at [GECCO 2017 @ Berlin](http://gecco-2017.sigevo.org/index.html/HomePage):
-(1) ["flaccogui: Exploratory Landscape Analysis for Everyone"](http://dl.acm.org/citation.cfm?doid=3067695.3082477) at the [EvoSoft Workshop](http://dev.heuristiclab.com/trac.fcgi/wiki/EvoSoft) AND
-(2) ["Advanced Tutorial on Exploratory Landscape Analysis"] (http://dl.acm.org/citation.cfm?doid=3067695.3067696)
+* July 15, 2017: Presented flacco (including the GUI) twice at [GECCO 2017 @ Berlin](http://gecco-2017.sigevo.org/index.html/HomePage):
+    * ["flaccogui: Exploratory Landscape Analysis for Everyone"](http://dl.acm.org/citation.cfm?doid=3067695.3082477) at the [EvoSoft Workshop](http://dev.heuristiclab.com/trac.fcgi/wiki/EvoSoft) AND
+    * within the Advanced Tutorial on ["Exploratory Landscape Analysis"](http://dl.acm.org/citation.cfm?doid=3067695.3067696).
 * June 14, 2017: flacco 1.7 has been submitted to CRAN.
 * June 09, 2017: started using [pkgdown](https://github.com/hadley/pkgdown) and [depsy](https://github.com/Impactstory/depsy).
 * May 11, 2017: flacco 1.6 has been submitted to CRAN.
 * April 28, 2017: flacco 1.5 (including its GUI) has been submitted to CRAN.
 * February 27, 2017: flacco 1.4 has been submitted to CRAN.
-* July 29, 2016: Presented ["The R-Package FLACCO for Exploratory Landscape Analysis with Applications to Multi-Objective Optimization Problems"](http://ieeexplore.ieee.org/document/7748359/) at the [IEEE WCCI / CEC](http://www.wcci2016.org/) in Vancouver, Canada.
+* July 29, 2016: Presented ["The R-Package FLACCO for Exploratory Landscape Analysis with Applications to Multi-Objective Optimization Problems"](http://ieeexplore.ieee.org/document/7748359/) at the [IEEE WCCI / CEC in Vancouver, Canada](http://www.wcci2016.org/).
 * April 15, 2016: flacco 1.3 has been submitted to CRAN.
 * January 22, 2016: flacco 1.2 has been submitted to CRAN.
 * November 26, 2015: flacco 1.1 has been submitted to CRAN.
