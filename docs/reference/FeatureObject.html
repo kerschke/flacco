@@ -53,6 +53,9 @@
         <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li>
+  <a href="../articles/index.html">Articles</a>
+</li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
@@ -224,23 +227,38 @@ and in such scenarios, the number of cells should also be kept low!</p></td>
 #&gt;   - total: 1.20
 #&gt;   - non-empty: 4.05</div><div class='input'>
 <span class='co'># (3) now, one could calculate features</span>
-<span class='fu'><a href='features.html'>calculateFeatureSet</a></span>(<span class='no'>feat.object1</span>, <span class='st'>"cm_conv"</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>cm_conv.diag</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt; $cm_conv.convex.hard
-#&gt; [1] 0.4509202
+<span class='fu'><a href='features.html'>calculateFeatureSet</a></span>(<span class='no'>feat.object1</span>, <span class='st'>"ela_meta"</span>)</div><div class='output co'>#&gt; $ela_meta.lin_simple.adj_r2
+#&gt; [1] -0.005733815
 #&gt; 
-#&gt; $cm_conv.concave.hard
-#&gt; [1] 0.04294479
+#&gt; $ela_meta.lin_simple.intercept
+#&gt; [1] 96.88311
 #&gt; 
-#&gt; $cm_conv.convex.soft
-#&gt; [1] 0.8588957
+#&gt; $ela_meta.lin_simple.coef.min
+#&gt; [1] 0.1943708
 #&gt; 
-#&gt; $cm_conv.concave.soft
-#&gt; [1] 0.1411043
+#&gt; $ela_meta.lin_simple.coef.max
+#&gt; [1] 0.3058714
 #&gt; 
-#&gt; $cm_conv.costs_fun_evals
+#&gt; $ela_meta.lin_simple.coef.max_by_min
+#&gt; [1] 1.573649
+#&gt; 
+#&gt; $ela_meta.lin_w_interact.adj_r2
+#&gt; [1] 0.006650439
+#&gt; 
+#&gt; $ela_meta.quad_simple.adj_r2
+#&gt; [1] 1
+#&gt; 
+#&gt; $ela_meta.quad_simple.cond
+#&gt; [1] 1
+#&gt; 
+#&gt; $ela_meta.quad_w_interact.adj_r2
+#&gt; [1] 1
+#&gt; 
+#&gt; $ela_meta.costs_fun_evals
 #&gt; [1] 0
 #&gt; 
-#&gt; $cm_conv.costs_runtime
-#&gt; [1] 2.756
+#&gt; $ela_meta.costs_runtime
+#&gt; [1] 0.017
 #&gt; </div><div class='input'><span class='fu'><a href='features.html'>calculateFeatureSet</a></span>(<span class='no'>feat.object2</span>, <span class='st'>"cm_grad"</span>)</div><div class='output co'>#&gt; $cm_grad.mean
 #&gt; [1] 0.655673
 #&gt; 
@@ -281,7 +299,7 @@ and in such scenarios, the number of cells should also be kept low!</p></td>
 #&gt; [1] 0
 #&gt; 
 #&gt; $cm_angle.costs_runtime
-#&gt; [1] 0.141
+#&gt; [1] 0.147
 #&gt; </div><div class='input'>
 </div></pre>
   </div>
