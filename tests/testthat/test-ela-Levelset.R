@@ -39,10 +39,12 @@ test_that("Expected Output", {
 
   # (2) compute the levelset features
   features = calculateFeatureSet(feat.object, "ela_level")
+  checkLevelOutput(features)
 
   # (3) compute only a single levelset feature
   features = calculateFeatureSet(feat.object, "ela_level",
     control = list(ela_level.quantiles = 0.1, ela_level.classif_methods = "lda"))
+  expect_list(features, types = "numeric", any.missing = FALSE, len = 3L)
 })
 
 test_that("Expect Warning", {
