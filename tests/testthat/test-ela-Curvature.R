@@ -19,8 +19,8 @@ test_that("Required sample size is too big for the given data", {
   f = function(x) sum(x^2)
   feat.object = createFeatureObject(X = X, fun = f)
   
-  # (2) error because of missing function
-  expect_error(calculateFeatureSet(feat.object, "ela_curv"))
+  # (2) warning because of too few observations compared to the desired sample size
+  expect_warning(calculateFeatureSet(feat.object, "ela_curv"))
 })
 
 test_that("Expected Output", {

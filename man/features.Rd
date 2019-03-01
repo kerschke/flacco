@@ -135,7 +135,7 @@ computation of the ELA local search features) or \code{\link{density}}
       function evaluations and runtime (in seconds), which were needed for
       the computation of these features
     }
-    \item{\code{ela_local} -- ELA local search features (15)}:\cr
+    \item{\code{ela_local} -- ELA local search features (16)}:\cr
     Based on some randomly chosen points from the initial design, a
     pre-defined number of local searches (\code{ela_local.local_searches})
     are executed. Their optima are then clustered (using hierarchical

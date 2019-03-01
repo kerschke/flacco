@@ -21,9 +21,11 @@ calculateCurvatureFeatures = function(feat.object, control) {
       sqrt(.Machine$double.eps / 7e-07))
     r = control_parameter(control, "ela_curv.r", 4)
     v = control_parameter(control, "ela_curv.v", 2)
-    if (N > feat.object$n.obs)
-      stopf("The sample size (ela_curv.sample_size = %i) is bigger than the total number of observations (%i) in this object.",
-        N, feat.object$n.obs)
+    if (N > feat.object$n.obs) {
+      warningf("As the size of the sample used for computing the curvature features (ela_curv.sample_size = %i) exceeds the total number of observations (%i) in this object, it has automatically been reduced to %i.",
+        N, feat.object$n.obs, feat.object$n.obs)
+      N = feat.object$n.obs
+    }
     calcNumDeriv = function(par) {
       h0 = abs(delta * par) + eps * (abs(par) < zero.tol)
       side = ((par - low) <= h0) - ((upp - par) <= h0)

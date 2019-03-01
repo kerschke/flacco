@@ -14,12 +14,18 @@
 #'     \item{\code{featimp.perc_{high/low}}}: Percentage of the total number of folds,
 #'     defining when a features, is used often, sometimes or only a few times.
 #'     \item{\code{featimp.las}}: Alignment of axis labels.
-#'     \item{\code{featimp.{xlab/ylab}}}: Axis labels.
+#'     \item{\code{featimp.lab_{feat/resample}}}: Axis labels (features and resample iterations).
 #'     \item{\code{featimp.string_angle}}: Angle for the features on the x-axis.
 #'     \item{\code{featimp.pch_{active/inactive}}}: Plot symbol of the active and
 #'     inactive points.
 #'     \item{\code{featimp.col_inactive}}: Color of the inactive points.
 #'     \item{\code{featimp.col_vertical}}: Color of the vertical lines.
+#'     \item{\code{featimp.lab_{title/strip}}}: Label used for the title and/or strip label.
+#'     These parameters are only relevant for \code{ggplotFeatureImportance}.
+#'     \item{\code{featimp.legend_position}}: Location of the legend.
+#'     This parameter is only relevant for \code{ggplotFeatureImportance}.
+#'     \item{\code{featimp.flip_axes}}: Should the axes be flipped?
+#'     This parameter is only relevant for \code{ggplotFeatureImportance}.
 #'    }
 #' @param ... [any]\cr
 #'   Further arguments, which can be passed to \code{plot}.
@@ -63,7 +69,7 @@
 #'   resampling = outerResampling, models = TRUE)
 #'
 #' # (8) Extract the features, which were selected during each iteration of the
-#' # outer loop (i.e. during each of the 5 folds of the cross-validation):
+#' # outer loop (i.e. during each of the 10 folds of the cross-validation):
 #' featureList = lapply(featselResult$models, 
 #'   function(mod) getFeatSelResult(mod)$x)}
 #'
@@ -73,8 +79,15 @@
 #' featureList
 #'
 #' # Alternatively, one might use visual means such as the feature
-#' # importance plot:
+#' # importance plot. There exist two versions for the feature importance
+#' # plot. One based on the classical R figures
 #' plotFeatureImportance(featureList)
+#' 
+#' # and one using ggplot
+#' ggplotFeatureImportance(featureList)
+#' 
+#' @name plotFeatureImportance
+#' @rdname featureImportance
 #' @export
 plotFeatureImportance = function(featureList, control = list(), ...) {
   if (!is.list(featureList))
@@ -82,8 +95,8 @@ plotFeatureImportance = function(featureList, control = list(), ...) {
   perc.high = control_parameter(control, "featimp.perc_high", 0.8)
   perc.low = control_parameter(control, "featimp.perc_low", 0.2)
   srt = control_parameter(control, "featimp.string_angle", 45)
-  xlab = control_parameter(control, "featimp.xlab", "")
-  ylab = control_parameter(control, "featimp.ylab", "CV-Iteration")
+  xlab = control_parameter(control, "featimp.lab_feat", "")
+  ylab = control_parameter(control, "featimp.lab_resample", "CV-Iteration")
   las = control_parameter(control, "featimp.las", 1)
   col.high = control_parameter(control, "featimp.col_high", "red")
   col.med = control_parameter(control, "featimp.col_medium", "orange")
