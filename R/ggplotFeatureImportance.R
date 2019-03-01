@@ -15,6 +15,7 @@ ggplotFeatureImportance = function(featureList, control = list(), ...) {
   lab.strip = control_parameter(control, "featimp.lab_strip", NULL)
   legend.position = control_parameter(control, "featimp.legend_position", "bottom")
   flip.axes = control_parameter(control, "featimp.flip_axes", FALSE)
+  plot.tiles = control_parameter(control, "featimp.plot_tiles", FALSE)
   iters = seq_along(featureList)
   tab = table(unlist(featureList))
   tab = sort(tab, decreasing = FALSE)
@@ -58,16 +59,27 @@ ggplotFeatureImportance = function(featureList, control = list(), ...) {
     df$feats = factor(as.character(df$feats), levels = rev(ft.names))
   }
 
-  g = ggplot2::ggplot() +
-    ggplot2::geom_point(data = df, mapping = ggplot2::aes_string(x = "iters", y = "feats"), color = eval(col.inactive)) +
-    ggplot2::geom_point(data = df, mapping = ggplot2::aes_string(x = "iters", y = "feats", size = "cat", color = "cat")) +
-    ggplot2::scale_size_manual(values = pch.size) +
-    ggplot2::scale_color_manual(values = col) +
+  if (plot.tiles) {
+    g = ggplot2::ggplot() +
+      ggplot2::geom_tile(data = df,
+        mapping = ggplot2::aes_string(x = "iters", y = "feats", fill = "cat"), color = "black") +
+      ggplot2::scale_fill_manual(values = col) +
+      ggplot2::guides(
+        fill = ggplot2::guide_legend("Feature\nImportance"))
+  } else {
+    g = ggplot2::ggplot() +
+      ggplot2::geom_point(data = df, mapping = ggplot2::aes_string(x = "iters", y = "feats"), color = eval(col.inactive)) +
+      ggplot2::geom_point(data = df, mapping = ggplot2::aes_string(x = "iters", y = "feats", size = "cat", color = "cat")) +
+      ggplot2::scale_size_manual(values = pch.size) +
+      ggplot2::scale_color_manual(values = col) +
+      ggplot2::guides(
+        size = ggplot2::guide_legend("none"),
+        color = ggplot2::guide_legend("Feature\nImportance", override.aes = list(size = pch.size)))
+  }
+
+  g = g +
     ggplot2::scale_x_discrete(breaks = lab.iter, limits = lab.iter) +
     ggplot2::labs(y = lab.feat, x = lab.resample, title = lab.title) +
-    ggplot2::guides(
-      size = ggplot2::guide_legend("none"),
-      color = ggplot2::guide_legend("Feature\nImportance", override.aes = list(size = pch.size))) +
     ggplot2::theme_bw() +
     ggplot2::theme(
       panel.grid.major = ggplot2::element_line(size = 0.5),

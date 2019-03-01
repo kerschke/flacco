@@ -35,6 +35,8 @@ A list, which stores additional configuration parameters:
   This parameter is only relevant for \code{ggplotFeatureImportance}.
   \item{\code{featimp.flip_axes}}: Should the axes be flipped?
   This parameter is only relevant for \code{ggplotFeatureImportance}.
+  \item{\code{featimp.plot_tiles}}: Visualize (non-)selected features with tiles?
+  This parameter is only relevant for \code{ggplotFeatureImportance}.
  }}
 
 \item{...}{[any]\cr
