@@ -46,6 +46,6 @@ Suggests:
 LazyData: yes
 ByteCompile: yes
 Version: 1.7.1
-Date: 2019-03-01
-RoxygenNote: 6.1.1
+Date: 2020-03-06
+RoxygenNote: 7.0.2
 VignetteBuilder: R.rsp

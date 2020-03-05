@@ -4,8 +4,12 @@
 \alias{listAvailableFeatureSets}
 \title{List Available Feature Sets}
 \usage{
-listAvailableFeatureSets(subset, allow.cellmapping, allow.additional_costs,
-  blacklist)
+listAvailableFeatureSets(
+  subset,
+  allow.cellmapping,
+  allow.additional_costs,
+  blacklist
+)
 }
 \arguments{
 \item{subset}{[\code{\link{character}}]\cr

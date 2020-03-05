@@ -5,8 +5,18 @@
 \alias{createFeatureObject}
 \title{Create a Feature Object}
 \usage{
-createFeatureObject(init, X, y, fun, minimize, lower, upper, blocks,
-  objective, force = FALSE)
+createFeatureObject(
+  init,
+  X,
+  y,
+  fun,
+  minimize,
+  lower,
+  upper,
+  blocks,
+  objective,
+  force = FALSE
+)
 }
 \arguments{
 \item{init}{[\code{\link{data.frame}}]\cr

@@ -361,7 +361,7 @@
 #'   Note that if you want to speed up the runtime of the features, you might
 #'   consider running your feature computation parallelized. For more
 #'   information, please refer to the \code{parallelMap} package or to
-#'   \url{http://mlr-org.github.io/mlr-tutorial/release/html/parallelization/index.html}.
+#'   \url{https://mlr.mlr-org.com/articles/tutorial/parallelization.html}.
 #'
 #'   Furthermore, please consider adapting the feature computation to your
 #'   needs. Possible \code{control} arguments are:

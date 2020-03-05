@@ -4,8 +4,7 @@
 \alias{FeatureSetVisualization}
 \title{Shiny Server Function for Feature Set Component}
 \usage{
-FeatureSetVisualization(input, output, session, stringsAsFactors,
-  feat.object)
+FeatureSetVisualization(input, output, session, stringsAsFactors, feat.object)
 }
 \arguments{
 \item{input}{[\code{shiny-input}]\cr

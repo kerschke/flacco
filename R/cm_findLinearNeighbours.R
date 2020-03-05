@@ -45,10 +45,10 @@ findLinearNeighbours = function(cell.ids, blocks, diag = FALSE) {
   }
   nbs = lapply(seq_along(cell.ids), function(i) {
     x = cell.z[i, ]
-    if (all((x == blocks) || (x == 1))) {
+    if (all((x == blocks) | (x == 1))) {
       return(list(NULL))
     }
-    lapply(1:nrow(combs), function(k) {
+    lapply(seq_row(combs), function(k) {
       succ = ztocell(x + combs[k, ], blocks)
       if (is.null(succ))
         return(NULL)

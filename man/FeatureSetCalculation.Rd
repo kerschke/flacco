@@ -4,8 +4,7 @@
 \alias{FeatureSetCalculation}
 \title{Shiny Server Function for Feature Set Component}
 \usage{
-FeatureSetCalculation(input, output, session, stringsAsFactors,
-  feat.object)
+FeatureSetCalculation(input, output, session, stringsAsFactors, feat.object)
 }
 \arguments{
 \item{input}{[\code{shiny-input}]\cr
