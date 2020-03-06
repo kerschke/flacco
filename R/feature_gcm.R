@@ -162,7 +162,7 @@ computeFundamental = function(canonical.list, gcm.control) {
   seq.closed.classes = seq_len(no.attractors)
 
   # approximate canonical.form to the power of infinity
-  canonical.form = expm::"%^%"(canonical.form, gcm.control$cf.power) # [ orig:  Q = Cf^50; ]
+  canonical.form = canonical.form %matrixPower% gcm.control$cf.power # [ orig:  Q = Cf^50; ]
 
   # write matrix of closed.classes columns of Q    
   fundamental.mat = canonical.form[, seq.closed.classes, drop = FALSE]

@@ -2,7 +2,6 @@ library(shiny)
 library(smoof)
 #dependencies for shinyapps.io follow
 library(e1071)
-library(expm)
 library(flacco)
 library(ggplot2)
 library(lhs)

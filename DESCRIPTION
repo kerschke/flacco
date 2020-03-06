@@ -23,7 +23,6 @@ Imports:
 Suggests:
     devtools,
     e1071,
-    expm,
     ggplot2,
     lhs,
     MASS,

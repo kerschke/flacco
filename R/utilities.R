@@ -209,3 +209,47 @@ flaccoGenD = function (func, x, method.args = list(), lower, upper) {
   else
     x
 }
+
+# helper functions to compute the power of a matrix efficiently (without expm::%^%)
+"%matrixPower%" = function(A, k){
+  assert_count(k)
+  if (k == 0) {
+    res = rep(0, prod(dim(A)))
+    dim(res) = dim(A)
+    return(res)
+  }
+
+  squareMatrix = function(A) {
+    return(A %*% A)
+  }
+  
+  # if k is a power of 2, we can square A successively
+  "%matBinPower%" = function(A, k) {
+    if (k <= 1) {
+      if (k == 1) {
+        return(squareMatrix(A))
+      } else {
+        A
+      }
+    } else {
+      return(squareMatrix(A %matBinPower% (k - 1L)))
+    }
+  }
+  
+  "%matPower%" <- function(A, k) {
+    if (k == 0) {
+      res = rep(0L, prod(dim(A)))
+      dim(res) = dim(A)
+      diag(res) = 1L
+      return(res)
+    } else {
+      k.binary = floor(log2(k)) # largest power of 2, which is smaller than k
+      k.rest = k - 2L^k.binary  # remainder between k and k.binary
+      return((A %matBinPower% k.binary) %*% (A %matPower% k.rest))
+    }
+  }
+
+  return(A %matPower% k)
+}
+
+
