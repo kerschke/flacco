@@ -76,8 +76,6 @@
 #' @export
 plotCellMapping = function (feat.object, control) {
   assertClass(feat.object, "FeatureObject")
-  X = extractFeatures(feat.object)
-  y = extractObjective(feat.object)
   if (missing(control))
     control = list()
   assertList(control)
@@ -87,8 +85,7 @@ plotCellMapping = function (feat.object, control) {
   approach = control_parameter(control, "gcm.approach", "min")
   assertChoice(x = approach, choices = c("min", "mean", "near"))
   cf.power = control_parameter(control, "gcm.cf_power", 256L)
-  gcm.control = list(cf.power = cf.power)
-  
+
   orig.margins = par("mar")
   on.exit(par(mar = orig.margins))
   par(mar = control_parameter(control, "gcm.margin", c(5, 5, 4, 4)))
@@ -97,22 +94,20 @@ plotCellMapping = function (feat.object, control) {
   sparse.matrix = calculateSparseMatrix(feat.object, yvals)
   canonical.list = computeCanonical(sparse.matrix)
   fundamental.list = computeFundamental(
-    canonical.list = canonical.list, gcm.control = gcm.control)
+    canonical.list = canonical.list, cf.power = cf.power)
   fundamental.mat = fundamental.list$fundamental.mat
   permutation.index = fundamental.list$permutation.index
   attractors = seq_len(ncol(fundamental.mat))
   colors = matrix(NA, nrow = blocks[1L], ncol = blocks[2L])
 
-  # To how many basins of attraction do cells belong?
-  attr.cells = rowSums(fundamental.mat != 0)
-  
   # cells belonging to more than one basin of attraction => col #1
   # cells belonging to exactly one basin of attraction (but which one?) => col #2+i
   color.index = apply(fundamental.mat != 0, 1, function(x) {
-    if (sum(x) > 1)
+    if (sum(x) > 1) {
       return (1L)
-    else
+    } else {
       return (2L + which(x))
+    }
   })
   
   colors[permutation.index] = color.index
@@ -150,8 +145,8 @@ plotCellMapping = function (feat.object, control) {
   col.uncert = control_parameter(control, "gcm.color_uncertain", "#cccccc")
   ## use ggplot2-colors
   col.basin = control_parameter(control, "gcm.color_basin", function(n) {
-    hues = seq(15, 375, length = n + 1)
-    hcl(h = hues, l = 65, c = 100)[1:n]
+    hues = seq(15, 375, length = n + 1L)
+    hcl(h = hues, l = 65, c = 100)[seq_len(n)]
   })
   palette = c(col.uncert, col.attr, col.basin(length(attractors)))
 

@@ -25,7 +25,7 @@ calculateLocalSearchFeatures = function(feat.object, control, ...) {
     } else {
       opt.algo.control$fnscale = 1
     }
-    id.seed = control_parameter(control, "ela_local.sample_seed", sample(1:1e6, 1))
+    id.seed = control_parameter(control, "ela_local.sample_seed", sample(seq_len(1e6), 1L))
     clust.method = control_parameter(control, "ela_local.clust_method", "single")
     clust.cutfun = control_parameter(control, "ela_local.clust_cut_function", 
       function(cl) as.numeric(quantile(cl$height, 0.1)))

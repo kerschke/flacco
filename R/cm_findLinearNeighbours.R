@@ -38,14 +38,14 @@ findLinearNeighbours = function(cell.ids, blocks, diag = FALSE) {
   max.cell = prod(blocks)
   cell.z = t(vapply(cell.ids, celltoz, blocks = blocks, integer(max(dims))))
   if (diag) {
-    combs = expand.grid(lapply(dims, function(d) -1:1))
-    combs = combs[!apply(combs, 1, function(z) all(z %in% c(-1, 0))), ]
+    combs = expand.grid(lapply(dims, function(d) -1L:1L))
+    combs = combs[!apply(combs, 1L, function(z) all(z %in% c(-1L, 0L))), ]
   } else {
     combs = diag(length(dims))
   }
   nbs = lapply(seq_along(cell.ids), function(i) {
     x = cell.z[i, ]
-    if (all((x == blocks) | (x == 1))) {
+    if (all((x == blocks) | (x == 1L))) {
       return(list(NULL))
     }
     lapply(seq_row(combs), function(k) {
@@ -53,17 +53,17 @@ findLinearNeighbours = function(cell.ids, blocks, diag = FALSE) {
       if (is.null(succ))
         return(NULL)
       nb = c(2L * cell.ids[i] - succ, cell.ids[i], succ)
-      if (all(nb >= 1) & all(nb <= max.cell)) 
+      if (all(nb >= 1L) & all(nb <= max.cell)) 
         return(nb)
     })
   })
   nbs = do.call(c, nbs)
-  nbs = nbs[!vapply(nbs, is.null, logical(1))]
-  if (diag & (length(nbs) != 0)) {
+  nbs = nbs[!vapply(nbs, is.null, logical(1L))]
+  if (diag & (length(nbs) != 0L)) {
     nbs = lapply(nbs, function(nb) nb[sort.list(nb, method = "radix")])
     nbs = nbs[!duplicated(nbs)]
-    ind = vapply(nbs, function(h) h[1:2], integer(2))
-    return(nbs[order(ind[2,], ind[1,])])
+    ind = vapply(nbs, function(h) h[seq_len(2L)], integer(2L))
+    return(nbs[order(ind[2L,], ind[1L,])])
   } else {
     return(nbs)
   }

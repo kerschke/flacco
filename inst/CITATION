@@ -1,0 +1,29 @@
+citHeader("To cite 'flacco' in publications, please use:")
+
+bibentry(
+  bibtype = "incollection",
+  author = c(
+    person("Pascal", "Kerschke"),
+    person("Heike", "Trautmann")
+  ),
+  title = "Comprehensive Feature-Based Landscape Analysis of Continuous and Constrained Optimization Problems Using the R-package flacco",
+  year = "2019",
+  booktitle = "Applications in Statistical Computing -- From Music Data Analysis to Industrial Quality Improvement",
+  url = "https://link.springer.com/chapter/10.1007/978-3-030-25147-5_7",
+  doi = "10.1007/978-3-030-25147-5_7",
+  volume = 17L,
+  editor = c(
+    person("Nadja", "Bauer"),
+    person("Katja", "Ickstadt"),
+    person("Karsten", "Lübke"),
+    person("Gero", "Szepannek"),
+    person("Heike", "Trautmann"),
+    person("Maurizio", "Vichi")
+  ),
+  number = 170L,
+  pages = "93--123",
+  publisher= "Springer",
+  textVersion = "Pascal Kerschke and Heike Trautmann (2019). Comprehensive Feature-Based Landscape Analysis of Continuous and Constrained Optimization Problems Using the R-package flacco. Applications in Statistical Computing -- From Music Data Analysis to Industrial Quality Improvement. URL https://link.springer.com/chapter/10.1007/978-3-030-25147-5_7"
+)
+
+# vim: ft=r

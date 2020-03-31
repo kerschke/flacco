@@ -63,7 +63,6 @@ test_that("Dealing with plateaus", {
   X = extractFeatures(feat.object)
   y = extractObjective(feat.object)
   control = list(gcm.approaches = "min", gcm.cf_power = 256L)
-  gcm.control = list(cf.power = 256L)
   yvals = getObjectivesByApproach(feat.object, "min")
   expect_identical(yvals, y)
   sparse.matrix = calculateSparseMatrix(feat.object, yvals)
@@ -75,7 +74,7 @@ test_that("Dealing with plateaus", {
   expect_identical(dim(canonical.list$canonical.form), c(12L, 12L))
   fundamental.list = computeFundamental(
     canonical.list = canonical.list,
-    gcm.control = gcm.control)
+    cf.power = 256L)
   expect_identical(fundamental.list$fundamental.mat[1:6,],
     rbind(cbind(matrix(0.25, 4, 4), 0, 0), cbind(0, 0, 0, 0, diag(2))))
   expect_identical(dim(fundamental.list$fundamental.mat), c(12L, 6L))
@@ -128,7 +127,6 @@ test_that("Dealing with plateaus", {
   X = extractFeatures(feat.object)
   y = extractObjective(feat.object)
   control = list(gcm.approaches = "min", gcm.cf_power = 256L)
-  gcm.control = list(cf.power = 256L)
   yvals = getObjectivesByApproach(feat.object, "min")
   expect_identical(yvals, y)
   sparse.matrix = calculateSparseMatrix(feat.object, yvals)
@@ -146,7 +144,7 @@ test_that("Dealing with plateaus", {
   expect_identical(dim(canonical.list$canonical.form), c(6L, 6L))
   fundamental.list = computeFundamental(
     canonical.list = canonical.list,
-    gcm.control = gcm.control)
+    cf.power = 256L)
   expect_equal(fundamental.list$fundamental.mat, t(replicate(6, c(4, 5, 3, 4, 5) / 21)))
   expect_identical(dim(fundamental.list$fundamental.mat), c(6L, 5L))
   expect_identical(fundamental.list$permutation.index, canonical.list$permutation.index)
@@ -167,7 +165,6 @@ test_that("Dealing with plateaus", {
   X = extractFeatures(feat.object)
   y = extractObjective(feat.object)
   control = list(gcm.approaches = "min", gcm.cf_power = 256L)
-  gcm.control = list(cf.power = 256L)
   yvals = getObjectivesByApproach(feat.object, "min")
   expect_identical(yvals, y)
   sparse.matrix = calculateSparseMatrix(feat.object, yvals)
@@ -179,7 +176,7 @@ test_that("Dealing with plateaus", {
   expect_identical(dim(canonical.list$canonical.form), c(6L, 6L))
   fundamental.list = computeFundamental(
     canonical.list = canonical.list,
-    gcm.control = gcm.control)
+    cf.power = 256L)
   expect_identical(dim(fundamental.list$fundamental.mat), c(6L, 3L))
   expect_identical(fundamental.list$permutation.index, canonical.list$permutation.index)
   expect_identical(fundamental.list$seq.closed.classes, 1:3)

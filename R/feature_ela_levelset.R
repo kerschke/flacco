@@ -41,7 +41,7 @@ calculateLevelsetFeatures = function(feat.object, control) {
     show.info = control_parameter(control, "ela_level.resample_info", FALSE)
     res.iters = control_parameter(control, "ela_level.resample_iterations", 10L)
     res.meth = control_parameter(control, "ela_level.resample_method", "CV")
-    colnames(X) = paste0("x", 1:ncol(X))
+    colnames(X) = paste0("x", BBmisc::seq_col(X))
     desc = mlr::makeResampleDesc(res.meth, iters = res.iters)
     inst = mlr::makeResampleInstance(desc, size = nrow(X))
     result = vapply(probs, function(prob) {

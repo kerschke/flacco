@@ -30,7 +30,7 @@ calculateNearestBetterQuickFeatures = function(feat.object, control) {
     X = extractFeatures(feat.object)
     y = ifelse(feat.object$minimize, 1, -1) * extractObjective(feat.object)
     nn = RANN::nn2(X, k = fast_k)
-    nb.stats = t(vapply(1:nrow(X), function(i) {
+    nb.stats = t(vapply(BBmisc::seq_row(X), function(i) {
       y_rec = y[i]
       ind_nn = nn$nn.idx[i, -1]
       y_near = y[ind_nn]
@@ -39,7 +39,7 @@ calculateNearestBetterQuickFeatures = function(feat.object, control) {
         j = min(which(better))
         return(c(i, ind_nn[j], nn$nn.dists[i, j + 1L]))
       } else {
-        ind_alt = setdiff(1:nrow(X), nn$nn.idx[i,])
+        ind_alt = setdiff(BBmisc::seq_row(X), nn$nn.idx[i,])
         if (any(y[ind_alt] < y_rec)) {
           ind_alt = ind_alt[which(y[ind_alt] < y_rec)]
         } else if (any(y[ind_alt] == y_rec)) {
@@ -140,7 +140,7 @@ calculateNearestBetterFlexFeatures = function(feat.object, control) {
 # compute various distance measures and ratios wrt the nearest and nearest
 # better elements:
 computeNearestBetterStats = function(distmat, objectives) {
-  result = data.frame(ownID = 1:nrow(distmat))
+  result = data.frame(ownID = BBmisc::seq_row(distmat))
   result = cbind(result, t(vapply(result$ownID, function(row) {
     rowDists = as.numeric(distmat[row, ])
     # first look for elements with better fitness

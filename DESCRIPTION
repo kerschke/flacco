@@ -1,8 +1,8 @@
 Package: flacco
 Title: Feature-Based Landscape Analysis of Continuous and Constrained
     Optimization Problems
-Description: Contains tools and features, which can be used for an Exploratory
-    Landscape Analysis (ELA) of single-objective continuous optimization problems.
+Description: Tools and features for "Exploratory Landscape Analysis (ELA)" of
+	single-objective continuous optimization problems.
     Those features are able to quantify rather complex properties, such as the
     global structure, separability, etc., of the optimization problems.
 Authors@R: c(person("Pascal", "Kerschke", role = c("aut", "cre"),
@@ -44,7 +44,7 @@ Suggests:
     testthat
 LazyData: yes
 ByteCompile: yes
-Version: 1.7.1
-Date: 2020-03-06
-RoxygenNote: 7.0.2
+Version: 1.8
+Date: 2020-03-31
+RoxygenNote: 7.1.0
 VignetteBuilder: R.rsp

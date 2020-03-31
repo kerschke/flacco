@@ -64,10 +64,6 @@
 #' @export
 plotBarrierTree3D = function(feat.object, control) {
   assertClass(feat.object, "FeatureObject")
-  X = extractFeatures(feat.object)
-  y = extractObjective(feat.object)
-  if (length(unique(y)) == 1)
-    stop("The landscape is a complete plateau (i.e., all objective values are identical). You can not plot a barrier tree for such a landscape!")
   if (missing(control))
     control = list()
   assertList(control)
@@ -78,15 +74,16 @@ plotBarrierTree3D = function(feat.object, control) {
   assertChoice(approach, choices = c("min", "mean", "near"))
   cf.power = control_parameter(control, "gcm.cf_power", 256L)
   assertInt(cf.power, lower = 1L, upper = Inf)
-  gcm.control = list(cf.power = cf.power)
 
   yvals = getObjectivesByApproach(feat.object, approach)
+  if (length(unique(yvals)) == 1)
+    stop(sprintf("The landscape based on 'gcm.approach = %s' is a complete plateau, i.e., all objective values are identical. You can not plot a barrier tree for such a landscape!"))
   yvals[is.infinite(yvals)] = max(yvals[is.finite(yvals)]) * 100
   sparse.matrix = calculateSparseMatrix(feat.object, yvals)
   canonical.list = computeCanonical(sparse.matrix)
   fundamental.list = computeFundamental(
     canonical.list = canonical.list,
-    gcm.control = gcm.control)
+    cf.power = cf.power)
   barrier.tree = createBarrierTree(feat.object, fundamental.list,
     canonical.list, yvals, control)
   base = barrier.tree$base

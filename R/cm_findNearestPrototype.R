@@ -48,7 +48,7 @@ findNearestPrototype = function(feat.object, dist_meth, mink_p, fast_k, ...) {
     fast_k = ceiling(fast_k * feat.object$n.obs)
   fast_k = max(2L, fast_k)
   assertInt(fast_k, lower = 0L, upper = feat.object$n.obs)
-  if ((dist_meth == "euclidean") || ((dist_meth == "minkowski") & (mink_p == 2))) {
+  if ((dist_meth == "euclidean") || ((dist_meth == "minkowski") & (mink_p == 2L))) {
     findNearestPrototypeQuick(feat.object, fast_k = fast_k, ...)
   } else {
     findNearestPrototypeFlex(feat.object, ...)
@@ -61,10 +61,10 @@ findNearestPrototypeFlex = function(feat.object, ...) {
   cell.centers = feat.object$cell.centers
   dims = feat.object$dim
   n.cells = nrow(cell.centers)
-  dists = as.matrix(dist(rbind(cell.centers[, 1:dims], X)
-    ), ...)[1:n.cells,-(1:n.cells)]
-  nearest.grid = init.grid[apply(dists, 1, selectMin), ]
-  rownames(nearest.grid) = 1:n.cells
+  dists = as.matrix(dist(rbind(cell.centers[, seq_len(dims)], X)
+    ), ...)[seq_len(n.cells), -seq_len(n.cells)]
+  nearest.grid = init.grid[apply(dists, 1L, selectMin), ]
+  rownames(nearest.grid) = seq_len(n.cells)
   nearest.grid$represented.cell = cell.centers$cell.ID
   nearest.grid
 }
@@ -76,20 +76,20 @@ findNearestPrototypeQuick = function(feat.object, fast_k,...) {
   cell.centers = feat.object$cell.centers
   dims = feat.object$dim
   n.cells = nrow(cell.centers)
-  nn = RANN::nn2(rbind(cell.centers[, 1:dims], X), k = fast_k)$nn.idx
+  nn = RANN::nn2(rbind(cell.centers[, seq_len(dims)], X), k = fast_k)$nn.idx
   nn = nn[seq_len(n.cells), ] - n.cells
   nearest.grid = init.grid[vapply(seq_len(n.cells), function(i) {
     x = setdiff(nn[i,], i - n.cells)
-    (x[x > 0])[1]
+    (x[x > 0])[1L]
   }, integer(1L)), ]
 
   ## in case none of the nearest observations is a non-cell-center
-  all_centers = apply(nn, 1, function(x) all(x <= 0))
+  all_centers = apply(nn, 1L, function(x) all(x <= 0))
   if (any(all_centers)) {
     n_ctr = sum(all_centers)
-    nn_backup = RANN::nn2(rbind(cell.centers[all_centers, 1:dims], X), k = n_ctr + 1L)$nn.idx
-    nn_backup = nn_backup[seq_len(n_ctr), -1, drop = FALSE] - n_ctr
-    nearest.grid[all_centers, ] = init.grid[apply(nn_backup, 1, function(x) (x[x > 0])[1]), ]
+    nn_backup = RANN::nn2(rbind(cell.centers[all_centers, seq_len(dims)], X), k = n_ctr + 1L)$nn.idx
+    nn_backup = nn_backup[seq_len(n_ctr), -1L, drop = FALSE] - n_ctr
+    nearest.grid[all_centers, ] = init.grid[apply(nn_backup, 1L, function(x) (x[x > 0])[1]), ]
   }
 
   rownames(nearest.grid) = seq_len(n.cells)

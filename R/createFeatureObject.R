@@ -89,7 +89,7 @@ createFeatureObject = function(init, X, y, fun, minimize,
   if (missing(init)) {
     feat.names = colnames(X)
     if (is.null(feat.names)) {
-      feat.names = sprintf("x%i", 1:ncol(X))
+      feat.names = sprintf("x%i", BBmisc::seq_col(X))
     }
     if (missing(objective))
       objective = "y"
@@ -176,7 +176,7 @@ createFeatureObject = function(init, X, y, fun, minimize,
   init.grid = convertInitDesignToGrid(init = init,
     lower = lower, upper = upper, blocks = blocks)
   centers = computeGridCenters(lower = lower, upper = upper, blocks = blocks)
-  colnames(centers)[1:d] = feat.names
+  colnames(centers)[seq_len(d)] = feat.names
   res =  makeS3Obj("FeatureObject", env = env,
     minimize = minimize, fun = fun,
     lower = lower, upper = upper,
@@ -204,9 +204,9 @@ print.FeatureObject = function(x, ...) {
     catf("- Upper Boundaries: %s", collapse(sprintf("%.2e", x$upper), sep=", "))
     catf("- Name of Variables: %s", collapse(x$feature.names, sep = ", "))
   } else {
-    catf("- Lower Boundaries: %s, ...", collapse(sprintf("%.2e", x$lower[1:4]), sep=", "))
-    catf("- Upper Boundaries: %s, ...", collapse(sprintf("%.2e", x$upper[1:4]), sep=", "))
-    catf("- Name of Variables: %s, ...", collapse(x$feature.names[1:4], sep = ", "))
+    catf("- Lower Boundaries: %s, ...", collapse(sprintf("%.2e", x$lower[seq_len(4L)]), sep=", "))
+    catf("- Upper Boundaries: %s, ...", collapse(sprintf("%.2e", x$upper[seq_len(4L)]), sep=", "))
+    catf("- Name of Variables: %s, ...", collapse(x$feature.names[seq_len(4L)], sep = ", "))
   }
   catf("- Optimization Problem: %s %s", 
        ifelse(x$minimize, "minimize", "maximize"), x$objective.name)
@@ -222,12 +222,12 @@ print.FeatureObject = function(x, ...) {
   if (x$dim < 5L) {
     catf("- Number of Cells per Dimension: %s", collapse(sprintf("%i", x$blocks), sep=", "))
   } else {
-    catf("- Number of Cells per Dimension: %s, ...", collapse(sprintf("%i", x$blocks[1:4]), sep=", "))
+    catf("- Number of Cells per Dimension: %s, ...", collapse(sprintf("%i", x$blocks[seq_len(4L)]), sep=", "))
   }
   if (x$dim < 5L) {
     catf("- Size of Cells per Dimension: %s", collapse(sprintf("%.2f", x$cell.size), sep=", "))
   } else {
-    catf("- Size of Cells per Dimension: %s, ...", collapse(sprintf("%.2f", x$cell.size[1:4]), sep=", "))
+    catf("- Size of Cells per Dimension: %s, ...", collapse(sprintf("%.2f", x$cell.size[seq_len(4L)]), sep=", "))
   }
   filled.cells = length(unique(x$init.grid$cell.ID))
   cat("- Number of Cells:\n")

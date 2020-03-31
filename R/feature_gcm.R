@@ -1,7 +1,5 @@
 calculateGCMFeatures = function (feat.object, control) {
   assertClass(feat.object, "FeatureObject")
-  X = extractFeatures(feat.object)
-  y = extractObjective(feat.object)
   if (missing(control))
     control = list()
   assertList(control)
@@ -12,7 +10,6 @@ calculateGCMFeatures = function (feat.object, control) {
   approaches = control_parameter(control, "gcm.approaches", c("min", "mean", "near"))
   cf.power = control_parameter(control, "gcm.cf_power", 256L)
   assertInt(cf.power, lower = 1L, upper = Inf)
-  gcm.control = list(cf.power = cf.power)
 
   result = lapply(approaches, function(approach) {
     measureTime(expression({
@@ -20,7 +17,7 @@ calculateGCMFeatures = function (feat.object, control) {
       sparse.matrix = calculateSparseMatrix(feat.object, yvals)
       canonical.list = computeCanonical(sparse.matrix)
       fundamental.list = computeFundamental(
-        canonical.list = canonical.list, gcm.control = gcm.control)
+        canonical.list = canonical.list, cf.power = cf.power)
       feats = computeGCMFeats(fundamental.list, yvals)
       names(feats) = sprintf("gcm.%s.%s", approach, names(feats))
       return(feats)
@@ -154,7 +151,7 @@ findDirectedGraph = function(mat) {
 }
 
 
-computeFundamental = function(canonical.list, gcm.control) {
+computeFundamental = function(canonical.list, cf.power) {
 
   canonical.form = canonical.list$canonical.form
   permutation.index = canonical.list$permutation.index
@@ -162,7 +159,7 @@ computeFundamental = function(canonical.list, gcm.control) {
   seq.closed.classes = seq_len(no.attractors)
 
   # approximate canonical.form to the power of infinity
-  canonical.form = canonical.form %matrixPower% gcm.control$cf.power # [ orig:  Q = Cf^50; ]
+  canonical.form = canonical.form %matrixPower% cf.power # [ orig:  Q = Cf^50; ]
 
   # write matrix of closed.classes columns of Q    
   fundamental.mat = canonical.form[, seq.closed.classes, drop = FALSE]

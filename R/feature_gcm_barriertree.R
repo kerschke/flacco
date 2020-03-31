@@ -1,8 +1,7 @@
 calculateBarrierTreeFeatures = function (feat.object, control) {
   assertClass(feat.object, "FeatureObject")
-  X = extractFeatures(feat.object)
   y = extractObjective(feat.object)
-  if (length(unique(y)) == 1)
+  if (length(unique(y)) == 1L)
     stop("The landscape is a complete plateau (i.e., all objective values are identical). You can not compute a barrier tree for such a landscape!")
   if (missing(control))
     control = list()
@@ -16,7 +15,6 @@ calculateBarrierTreeFeatures = function (feat.object, control) {
   approaches = control_parameter(control, "gcm.approaches", c("min", "mean", "near"))
   cf.power = control_parameter(control, "gcm.cf_power", 256L)
   assertInt(cf.power, lower = 1L, upper = Inf)
-  gcm.control = list(cf.power = cf.power)
 
   result = lapply(approaches, function(approach) {
     measureTime(expression({
@@ -29,7 +27,7 @@ calculateBarrierTreeFeatures = function (feat.object, control) {
       canonical.list = computeCanonical(sparse.matrix)
       fundamental.list = computeFundamental(
         canonical.list = canonical.list,
-        gcm.control = gcm.control)
+        cf.power = cf.power)
       barrier.tree = createBarrierTree(feat.object, fundamental.list,
         canonical.list, yvals = getObjectivesByApproach(feat.object, approach),
         control)
@@ -47,7 +45,6 @@ createBarrierTree = function(feat.object, fundamental.list, canonical.list, yval
   permutation.index = fundamental.list$permutation.index
   seq.closed.classes = fundamental.list$seq.closed.classes
   canonical.form = canonical.list$canonical.form
-  lsc = length(seq.closed.classes)
 
   ## store the permutation-index in a matrix in order to keep track of the
   ## transformations of the permutation index
@@ -244,9 +241,12 @@ computeBarrierTreeFeats = function(yvals, fundamental.list, barrier.tree, feat.o
   seq.closed.classes = fundamental.list$seq.closed.classes
   permutation.index = fundamental.list$permutation.index
   prob.absorb = barrier.tree$prob.absorb
-  predecessors = barrier.tree$predecessors
-  root = barrier.tree$root
-  cells = barrier.tree$cells
+
+  ## FIXME: the following 3 objects are not used throughout the code --> remove?
+  # predecessors = barrier.tree$predecessors
+  # root = barrier.tree$root
+  # cells = barrier.tree$cells
+
   diffs = barrier.tree$diffs
   bt.base = barrier.tree$base
   max.node.per.level = cumsum(bt.base^(0:barrier.tree$max.levels))

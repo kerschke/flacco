@@ -36,13 +36,13 @@ calculateGradientHomogeneityFlex = function(feat.object, control) {
       funvals = cell[, dims + 1L]
       # 2 or less points are not helpful
       if (n.obs > 2L) { 
-        dists = as.matrix(dist(cell[, 1L:dims], 
+        dists = as.matrix(dist(cell[, seq_len(dims)], 
           diag = TRUE, upper = TRUE, method = meth, p = mink))
         # set diagonal to large (infinite) value
         diag(dists) = Inf
-        norm.vectors = vapply(1:n.obs, function(row) {
+        norm.vectors = vapply(seq_len(n.obs), function(row) {
           nearest = as.integer(selectMin(dists[row, ], tie.breaker = tie))
-          x = cell[c(row, nearest), 1L:dims]
+          x = cell[c(row, nearest), seq_len(dims)]
           # compute normalized vector
           ifelse(funvals[row] > funvals[nearest], -1, 1) * apply(x, 2, diff) /
             as.numeric(dist(x))
@@ -53,7 +53,7 @@ calculateGradientHomogeneityFlex = function(feat.object, control) {
         NA_real_
       }                    
     }, double(1))
-    if (show.warnings && (mean(is.na(gradhomo)) > 0)) {
+    if (show.warnings && (any(is.na(gradhomo)))) {
       warningf("%.2f%% of the cells contain less than two observations.", 
         100 * mean(is.na(gradhomo)))
     }
@@ -69,7 +69,6 @@ calculateGradientHomogeneityQuick = function(feat.object, control) {
   if (missing(control))
     control = list()
   assertClass(control, "list")
-  tie = control_parameter(control, "cm_grad.dist_tie_breaker", "sample")
   show.warnings = control_parameter(control, "cm_grad.show_warnings", FALSE)
   measureTime(expression({
     init.grid = feat.object$init.grid
@@ -81,22 +80,22 @@ calculateGradientHomogeneityQuick = function(feat.object, control) {
       funvals = cell[, dims + 1L]
       # 2 or less points are not helpful
       if (n.obs > 2L) {
-        nn = RANN::nn2(cell[, 1L:dims], k = 2L)
-        norm.vectors = vapply(1:n.obs, function(row) {
+        nn = RANN::nn2(cell[, seq_len(dims)], k = 2L)
+        norm.vectors = vapply(seq_len(n.obs), function(row) {
           if (nn$nn.dists[row, 2L] == 0)
             return(rep(0, length = dims))
           nearest = nn$nn.idx[row, 2L]
           # compute normalized vector
           ifelse(funvals[row] > funvals[nearest], -1, 1) * 
-            (cell[nearest, 1L:dims] - cell[row, 1L:dims]) / nn$nn.dists[row, 2L]
+            (cell[nearest, seq_len(dims)] - cell[row, seq_len(dims)]) / nn$nn.dists[row, 2L]
         }, double(dims))
         # calculate distance of sum of normalized vectors
         sqrt(sum(rowSums(norm.vectors)^2)) / n.obs
       } else {
         NA_real_
       }                    
-    }, double(1))
-    if (show.warnings && (mean(is.na(gradhomo)) > 0)) {
+    }, double(1L))
+    if (show.warnings && (any(is.na(gradhomo)))) {
       warningf("%.2f%% of the cells contain less than two observations.", 
         100 * mean(is.na(gradhomo)))
     }

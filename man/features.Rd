@@ -662,6 +662,12 @@ system.time((levelset.seq = calculateFeatureSet(feat.object, "ela_level")))}
 }
 \references{
 \itemize{
+    \item{Kerschke, P., and Trautmann, H. (2019)}:
+    \dQuote{Comprehensive Feature-Based Landscape Analysis of Continuous
+    and Constrained Optimization Problems Using the R-package flacco},
+    in: Applications in Statistical Computing -- From Music Data Analysis
+    to Industrial Quality Improvement, pp. 93-123, Springer.
+    (\url{https://link.springer.com/chapter/10.1007/978-3-030-25147-5_7}).
     \item{Kerschke, P., Preuss, M., Hernandez, C., Schuetze, O., Sun, J.-Q.,
     Grimme, C., Rudolph, G., Bischl, B., and Trautmann, H. (2014)}:
     \dQuote{Cell Mapping Techniques for Exploratory Landscape Analysis},

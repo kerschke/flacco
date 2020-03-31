@@ -192,7 +192,7 @@ plotInformationContent = function (feat.object, control) {
     half_partial.lwd_h = control_parameter(control, "ic.plot.half_partial.lwd_h", 1L)
     assertNumber(half_partial.lwd_h, lower = 0.1, upper = 10)
     abline(h = M[max(which(M > inf.sens * res$M0))], lty = half_partial.lty_h,
-      lwd = half_partial.lwd_v, col = half_partial.line_col_v)
+      lwd = half_partial.lwd_v, col = half_partial.line_col_h)
     half_partial.text_cex =
       control_parameter(control, "ic.plot.half_partial.text_cex", 0.8)
     half_partial.text_col =

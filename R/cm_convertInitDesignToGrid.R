@@ -31,12 +31,12 @@ convertInitDesignToGrid = function(init, lower, upper, blocks) {
   stopifnot(is.data.frame(init))
   dims = ncol(init) - 1L
   if (missing(lower)) {
-    lower = apply(init[,1:dims], 2, min)
+    lower = apply(init[,seq_len(dims)], 2L, min)
   } else if (length(lower) == 1L) {
     lower = rep(lower, dims)
   }
   if (missing(upper)) {
-    upper = apply(init[, 1:dims], 2, max)
+    upper = apply(init[, seq_len(dims)], 2L, max)
   } else if (length(upper) == 1L) {
     upper = rep(upper, dims)
   }
@@ -47,15 +47,15 @@ convertInitDesignToGrid = function(init, lower, upper, blocks) {
   }
   block.widths = (upper - lower) / blocks
   cp = cumprod(c(1L, blocks))
-  init$cell.ID = vapply(1L:nrow(init), function(init.row) {
-    z = as.numeric(init[init.row, 1L:dims])
-    cell.ID = vapply(1L:dims, function(dim) {
+  init$cell.ID = vapply(BBmisc::seq_row(init), function(init.row) {
+    z = as.numeric(init[init.row, seq_len(dims)])
+    cell.ID = vapply(seq_len(dims), function(dim) {
       as.integer(cp[dim] * floor((z[dim] - lower[dim]) / block.widths[dim]))
-    }, integer(1))
+    }, integer(1L))
     ## if observation is on upper limit of a dimension,
     ## it needs to be adjusted
     as.integer(sum(cell.ID - cp[seq_along(blocks)] * (z == upper)))
-  }, integer(1))
+  }, integer(1L))
   # adjust the range to 1 to prod(blocks) instead of 0 to prod(blocks) - 1
   init$cell.ID = init$cell.ID + 1L
   return(init)

@@ -36,7 +36,7 @@ computeGridCenters = function(lower, upper, blocks) {
     return ((x[-1L] + x[-length(x)]) / 2)
   })
   grid = expand.grid(centers)
-  names(grid) = sprintf("x%i", 1:ncol(grid))
+  names(grid) = sprintf("x%i", BBmisc::seq_col(grid))
   grid = convertInitDesignToGrid(lower = lower, upper = upper, blocks = blocks,
     init = cbind(grid, y = NA_integer_))
   grid$y = NULL

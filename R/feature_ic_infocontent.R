@@ -91,13 +91,13 @@ computeInfoContentStatistics = function(feat.object, control) {
         sum(dup.index))
     }
     while (length(v) > 1) {
-      index = vapply(1:nrow(Z), function(i) all(Z[i,] == Z[1,]), logical(1L))
+      index = vapply(BBmisc::seq_row(Z), function(i) all(Z[i,] == Z[1,]), logical(1L))
       X = rbind(X, Z[1,])
       Z = Z[!index,]
       y = c(y, aggr(v[index]))
       v = v[!index]
     }
-    rownames(X) = 1:nrow(X)
+    rownames(X) = BBmisc::seq_row(X)
     n = nrow(X)
   }
 
@@ -150,7 +150,7 @@ computeInfoContentStatistics = function(feat.object, control) {
 initializeLHD = function(points, dims, lower, upper) {
   X = lhs::improvedLHS(n = points, k = dims)
   n = nrow(X)
-  vapply(1:dims, function(i) {
+  vapply(seq_len(dims), function(i) {
     X[,i] * (upper - lower)[i] + lower[i]
   }, double(n))
 }
