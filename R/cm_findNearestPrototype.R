@@ -61,8 +61,7 @@ findNearestPrototypeFlex = function(feat.object, ...) {
   cell.centers = feat.object$cell.centers
   dims = feat.object$dim
   n.cells = nrow(cell.centers)
-  dists = as.matrix(dist(rbind(cell.centers[, seq_len(dims)], X)
-    ), ...)[seq_len(n.cells), -seq_len(n.cells)]
+  dists = as.matrix(dist(rbind(cell.centers[, seq_len(dims)], X), ...))[seq_len(n.cells), -seq_len(n.cells)]
   nearest.grid = init.grid[apply(dists, 1L, selectMin), ]
   rownames(nearest.grid) = seq_len(n.cells)
   nearest.grid$represented.cell = cell.centers$cell.ID
