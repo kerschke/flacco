@@ -26,13 +26,14 @@ calculateAngleFeatures = function(feat.object, control) {
     }
     ## only consider non-empty cells
     cell.values = vapply(seq_len(nrow(grid.worst)), function(i) {
-      x.center = as.numeric(cell.centers[i, ft.names])
+      ## ensure that cell IDs are matched correctly, even if some cells are empty
+      cell.id = as.integer(grid.worst[i, "cell.ID"])
+      x.center = as.numeric(cell.centers[cell.id, ft.names])
       x.worst = as.numeric(grid.worst[i, ft.names])
       x.best = as.numeric(grid.best[i, ft.names])
       y.local.worst = as.numeric(grid.worst[i, obj])
       y.local.best = as.numeric(grid.best[i, obj])
-      b2w.ratio = (y.local.worst - y.local.best) / 
-      (y.global.worst - y.global.best)
+      b2w.ratio = (y.local.worst - y.local.best) / (y.global.worst - y.global.best)
       c2b.vect = x.best - x.center
       c2b.dist = as.numeric(sqrt(crossprod(as.numeric(c2b.vect))))
       c2w.vect = x.worst - x.center
@@ -42,7 +43,7 @@ calculateAngleFeatures = function(feat.object, control) {
         angle = 0
       } else {
         angle = acos(x) * 180 / pi
-      }      
+      }
       return(c(c2b.dist = c2b.dist, c2w.dist = c2w.dist, 
         angle = angle, b2w.ratio = b2w.ratio))
     }, double(4))

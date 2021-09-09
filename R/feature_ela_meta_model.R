@@ -45,7 +45,7 @@ calculateAdjustedR2 = function(mod) {
   SS_reg = crossprod(pred - mean(pred))
   SS_res = crossprod(resi)
   SS_total = SS_reg + SS_res
-  n = mod$df.residual
-  p = mod$rank
+  n = length(resi)
+  p = length(mod$coefficients) - 1L
   drop(1 - (SS_res / SS_total) / ((n - p - 1) / (n - 1)))
 }
