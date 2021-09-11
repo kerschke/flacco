@@ -25,10 +25,10 @@ calculateFitnessDistanceFeatures = function(feat.object, control) {
 
     if (prop.best < 1) {
       n.best = ceiling(feat.object$n.obs * prop.best)
-      if (n.best < 2L) {
+      idx = which(y <= y[order(y)[n.best]])
+      if (sum(idx) < 2L) {
         stop(sprintf("Selecting only %.1f%% of the sample results in less than 2 remaining observations.", 100 * prop.best))
       }
-      idx = which(y <= y[order(y)[n.best]])
       y = y[idx]
       X = X[idx,]
     }
