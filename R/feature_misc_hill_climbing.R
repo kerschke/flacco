@@ -2,15 +2,16 @@ calculateHillClimbingFeatures = function(feat.object, control, ...) {
   assertClass(feat.object, "FeatureObject")
   if (is.null(feat.object$fun))
     stop("The hill climbing features require the exact function!")
+  if (missing(control))
+    control = list()
   allow.costs = control_parameter(control, "allow_costs", TRUE)
   if (!allow.costs)
     stop("You can not prohibit additional costs and still try to compute these features!")
-  if (missing(control))
-    control = list()
   assertList(control)
   measureTime(expression({
     f = initializeCounter(feat.object$fun)
     d = feat.object$dim
+    n.obs = feat.object$n.obs
     N = control_parameter(control, "hill_climbing.local_searches", 100L)
     budget_per_run = control_parameter(control, "hill_climbing.max_iterations_per_run", 1000L * d)
     opt.algo = control_parameter(control, "hill_climbing.optim_method", "L-BFGS-B")
@@ -49,22 +50,32 @@ calculateHillClimbingFeatures = function(feat.object, control, ...) {
       global.opt = which(fun.values == max(fun.values))
     }
 
-    d.rel = vapply(global.opt, function(g.opt) {
-      j = seq_len(g.opt - 1L)
-      d.rel = c(dists[cumsum(N - j) - (N - g.opt)], 0)
-      if (g.opt < N) {
-        d.rel = c(d.rel, dists[(sum(N - j) + 1L) : sum(N - seq_len(g.opt))])
+    ## consider distances to all global optima
+    # d.rel = vapply(global.opt, function(g.opt) {
+    #   j = seq_len(g.opt - 1L)
+    #   d.rel = c(dists[cumsum(N - j) - (N - g.opt)], 0)
+    #   if (g.opt < N) {
+    #     d.rel = c(d.rel, dists[(sum(N - j) + 1L) : sum(N - seq_len(g.opt))])
+    #   }
+    #   return(d.rel)
+    # }, double(N))
+
+    ## only consider distances to closest global optimum
+    local.opt = setdiff(seq_len(n.obs), global.opt)
+    d.rel = vapply(local.opt, function(l.opt) {
+      j = seq_len(l.opt - 1L)
+      d.rel = c(dists[cumsum(n.obs - j) - (n.obs - l.opt)], 0)
+      if (l.opt < n.obs) {
+        d.rel = c(d.rel, dists[(sum(n.obs - j) + 1L) : sum(n.obs - seq_len(l.opt))])
       }
-      return(d.rel)
-    }, double(N))
+      return(min(d.rel[global.opt]))
+    }, double(1L))
 
     list(
       hill_climbing.dist_between_opt.mean = mean(dists),
       hill_climbing.dist_between_opt.sd = sd(dists),
       hill_climbing.dist_local_to_global.mean = mean(d.rel),
       hill_climbing.dist_local_to_global.sd = sd(d.rel),
-      fun.evals = fun.evals,
-      budget.per.run = ls.budget_per_run,
       hill_climbing.costs_fun_evals = sum(fun.evals)
     )
   }), "hill_climbing")

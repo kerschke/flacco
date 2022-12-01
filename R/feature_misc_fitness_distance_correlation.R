@@ -47,7 +47,7 @@ calculateFitnessDistanceFeatures = function(feat.object, control) {
     }
 
     fd.cov = cov(y, d.rel)
-    fd.cor = cfd / (sd(y) * sd(d.rel))
+    fd.cor = fd.cov / (sd(y) * sd(d.rel))
 
     list(fitness_distance.fd.cor = fd.cor,
       fitness_distance.fd.cov = fd.cov,

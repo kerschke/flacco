@@ -69,13 +69,13 @@ calculateLengthScaleFeatures = function(feat.object, control) {
 
     k.moment = control_parameter(control, "lengthscale.moments", 2:4)
     r.centered = mean(r)
-    moments = vapply(k.moment, function(k) mean(r.centered^k), double(1L))
+    moments = vapply(k.moment, function(k) mean((r - r.centered)^k), double(1L))
     moments = as.list(moments)
     names(moments) = sprintf("length_scale.distribution_moment_%i", k.moment)
 
     c(
       length_scale.shanon_entropy = h.r,
-      length_scale.mean = mean(r),
+      length_scale.mean = r.centered,
       length_scale.sd = sd(r),
       moments,
       length_scale.costs_fun_evals = steps

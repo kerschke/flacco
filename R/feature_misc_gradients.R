@@ -1,4 +1,4 @@
-calculateLocalSearchFeatures = function(feat.object, control, ...) {
+calculateGradientFeatures = function(feat.object, control, ...) {
   assertClass(feat.object, "FeatureObject")
   if (is.null(feat.object$fun))
     stop("The gradient features require the exact function!")
@@ -21,6 +21,7 @@ calculateLocalSearchFeatures = function(feat.object, control, ...) {
     dd = sample(x = c(FALSE, TRUE), size = d, replace = TRUE)
     x = ifelse(dd, low, upp)
     y = f(x)
+    signs = ifelse(dd, -1, 1)
 
     g.t = NULL
     for (i in seq_len(n.steps)) {
