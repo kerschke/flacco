@@ -13,9 +13,17 @@ featureObject_sidebar = function(id) {
 
   # sidebar for the configuration of different function parameters
   shiny::sidebarPanel(
-    shiny::radioButtons(ns("function_option"), label = "Function input",
-      choices = list("User defined function" = 1, "smoof" = 2, "BBOB" = 4, 
-        "File-Import" = 3), selected = 1),
+    shiny::radioButtons(ns("function_option"), 
+                        label = p("Function Input",
+                                  span(a("(?)", 
+                                         href = "http://kerschke.github.io/flacco-tutorial/site/quickstart_gui/",
+                                         target = "_blank"),
+                                       title = "Link to the GUI tutorial")),
+                        choices = list("User Defined Function" = 1,
+                                       "smoof" = 2, 
+                                       "BBOB" = 4, 
+                                       "File-Import" = 3),
+                        selected = 1),
     # "MPM2" = 5, 
     shiny::conditionalPanel(
       condition = paste0("input['", ns("function_option"), "'] == 1"),
