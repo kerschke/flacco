@@ -65,22 +65,24 @@ FeatureSetVisualizationComponent = function(id) {
 #' @export
 #'
 FeatureSetVisualization = function(input, output, session, stringsAsFactors, feat.object) {
+  vis_meth = p("Visualization Methods",span(a("(?)", href = "http://kerschke.github.io/flacco-tutorial/site/viz/", target = "_blank"), title = "Link to the visualizaitons tutorial"))
+  
   # in modules use module's namespace for UI components
   ns = session$ns
   output$visualization_select_output = shiny::renderUI({
     # retrieve selected value so that user will see same plot again once the function has changed
     userSelection = input$visualization_method
     if (feat.object()["dim"] == 2) {
-      shiny::selectInput(ns("visualization_method"), label = "Visualization method",
-        choices = c("Contour Plot" = 5, "Surface Plot" = 6,
-          "Cell-Mapping" = 1, "Barrier-Tree 2D" = 2,
-          "Barrier-Tree 3D" = 3, "Information Content" = 4), selected = userSelection)
+      shiny::selectInput(ns("visualization_method"), label = vis_meth,
+                         choices = c("Contour Plot" = 5, "Surface Plot" = 6,
+                                     "Cell-Mapping" = 1, "Barrier-Tree 2D" = 2,
+                                     "Barrier-Tree 3D" = 3, "Information Content" = 4), selected = userSelection)
     } else if (feat.object()["dim"] == 1) {
-      shiny::selectInput(ns("visualization_method"), label = "Visualization method",
-        choices = c("Function Plot" = 7))
+      shiny::selectInput(ns("visualization_method"), label = vis_meth,
+                         choices = c("Function Plot" = 7))
     } else if (feat.object()["dim"] > 2){
-      shiny::selectInput(ns("visualization_method"), label = "Visualization method",
-        choices = c("Information Content" = 4))
+      shiny::selectInput(ns("visualization_method"), label = vis_meth,
+                         choices = c("Information Content" = 4))
     }
   })
 

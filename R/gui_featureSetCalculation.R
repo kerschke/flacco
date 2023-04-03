@@ -14,15 +14,16 @@
 FeatureSetCalculationComponent = function(id) {
   # Create a namespace function using the provided id
   ns = shiny::NS(id)
-
+  
   # Sidebar with a slider input for the number of bins
   shiny::div(
-    shiny::selectInput(ns("FeatureSet_function"), label = "Feature Set",
-      choices = c("all Features", listAvailableFeatureSets()), selected = "cm_angle"),
-    shiny::tableOutput(ns("FeatureTable_function")),
-    shiny::downloadButton(ns('downloadData_function'), 'Download'))
+    shiny::selectInput(ns("FeatureSet_function"),
+                       label = p("Feature Set",span(a("(?)", href = "http://kerschke.github.io/flacco-tutorial/site/feat/", target = "_blank"), title = "Link to the feature sets tutorial")),
+                       choices = c("all Features", listAvailableFeatureSets()), selected = "cm_angle"),
+    shiny::downloadButton(ns('downloadData_function'), 'Download'),
+    shiny::tableOutput(ns("FeatureTable_function"))
+  )
 }
-
 
 #' Shiny Server Function for Feature Set Component
 #'
